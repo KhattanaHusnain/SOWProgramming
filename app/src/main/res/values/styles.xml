@@ -1,0 +1,11 @@
+<resources>
+    <!-- Base Theme -->
+    <style name="Theme.NexCode.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize colors -->
+        <item name="colorPrimary">#002B5B</item>
+        <item name="colorPrimaryDark">#002B5B</item>
+        <item name="colorAccent">#002B5B</item>
+        <!-- Remove BottomNavigation default ripple -->
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+</resources>

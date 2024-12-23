@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "92775972072",
+    "project_id": "nexcode-app",
+    "storage_bucket": "nexcode-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92775972072:android:1ea9f30ae6436bda395d5d",
+        "android_client_info": {
+          "package_name": "com.android.nexcode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92775972072-rqd8dh410acs1cp7p623066nuhdj4v83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.nexcode",
+            "certificate_hash": "5006efdff0b06f4cb29d6637e1b9465faed1e659"
+          }
+        },
+        {
+          "client_id": "92775972072-dhgu6ah6aqjuabtfb51bfnf7jhrl7n82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfTVV9iplc0UfjW5QyseoZER58d-QuCto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92775972072-dhgu6ah6aqjuabtfb51bfnf7jhrl7n82.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

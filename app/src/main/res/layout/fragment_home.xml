@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/main_layout"
+    android:backgroundTint="@color/Light_Gray"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <!-- Logo -->
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_logo"
+                android:contentDescription="Logo" />
+
+            <!-- App Name -->
+            <TextView
+                android:id="@+id/app_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="  NexCode"
+                android:textColor="#002B5B"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <!-- Notification Button -->
+            <ImageButton
+                android:id="@+id/notification_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_notification"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Notification Button" />
+
+            <!-- Menu Button -->
+            <ImageButton
+                android:id="@+id/menu_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_menu"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menu Button" />
+        </LinearLayout>
+
+        <!-- CardView Dashboard -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp"
+                android:background="#002B5B">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome to Your Dashboard"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Here you can track your progress and manage your courses."
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="8dp"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Search Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- Search Box -->
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:gravity="center_vertical">
+
+                <!-- Search Input -->
+                <SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:queryHint="   Search here"
+                    android:background="@drawable/input_border"
+                    android:textColorHint="#808080"
+                    android:drawableStart="@drawable/ic_search"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/Dark_Blue" />
+            </LinearLayout>
+
+            <!-- Filter Button -->
+            <ImageButton
+                android:id="@+id/filter_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_filter"
+                android:background="@null"
+                android:contentDescription="Filter Button"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Quick Search Options -->
+        <!-- Horizontal Scrollable Quick Search Options -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/btn_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    android:textColor="@color/white"
+                    android:background="#002B5B"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="5dp" />
+
+                <TextView
+                    android:id="@+id/btn_popular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Popular"
+                    android:textColor="@color/Dark_Blue"
+                    android:background="@color/white"
+                    android:layout_marginStart="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="5dp" />
+
+                <TextView
+                    android:id="@+id/btn_programming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Programming"
+                    android:textColor="@color/Dark_Blue"
+                    android:background="@color/white"
+                    android:layout_marginStart="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="5dp" />
+
+                <TextView
+                    android:id="@+id/btn_non_programming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Non-Programming"
+                    android:textColor="@color/Dark_Blue"
+                    android:background="@color/white"
+                    android:layout_marginStart="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="5dp" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
+        <!-- Courses Results Section -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </LinearLayout>
