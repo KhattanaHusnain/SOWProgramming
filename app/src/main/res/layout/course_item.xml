@@ -1,74 +1,116 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/courseCardView"
     android:layout_width="match_parent"
-    android:layout_weight="1"
-    android:gravity="center">
-<androidx.cardview.widget.CardView
-    android:id="@+id/course_card"
-    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
 
-    <LinearLayout
-        android:layout_width="140dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        android:padding="8dp">
+        android:padding="16dp">
 
-        <!-- Course Image -->
         <ImageView
-            android:id="@+id/course_image"
-            android:layout_width="114dp"
-            android:layout_height="87dp"
-            android:contentDescription="Course Image"
+            android:id="@+id/courseImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/profile_banner"
+            android:contentDescription="Course image"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_course" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/course_placeholder" />
 
-        <LinearLayout
-            android:layout_width="120dp"
+        <TextView
+            android:id="@+id/courseTitleTextView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            >
-            <!-- Course Details -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingStart="8dp">
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/courseImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Introduction to Mobile App Development" />
 
-                <TextView
-                    android:id="@+id/course_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Data Structures"
-                    android:textStyle="bold"
-                    android:textSize="10sp"
-                    android:textColor="#002B5B" />
+        <TextView
+            android:id="@+id/instructorTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/courseTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView"
+            tools:text="Dr. Jane Smith" />
 
-                <TextView
-                    android:id="@+id/course_members"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 50+ Learning"
-                    android:textSize="10sp"
-                    android:drawableLeft="@drawable/ic_members"
-                    android:textColor="#002B5B"
-                    android:layout_marginTop="4dp" />
-            </LinearLayout>
+        <RatingBar
+            android:id="@+id/courseRatingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.1"
+            app:layout_constraintStart_toStartOf="@+id/courseTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/instructorTextView"
+            tools:rating="4.5" />
 
-            <!-- Open Course Icon -->
-            <ImageButton
-                android:id="@+id/open_course_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_open_course"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Open Course Button" />
-        </LinearLayout>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/ratingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/courseRatingBar"
+            app:layout_constraintStart_toEndOf="@+id/courseRatingBar"
+            app:layout_constraintTop_toTopOf="@+id/courseRatingBar"
+            tools:text="4.5 (128)" />
+
+        <ProgressBar
+            android:id="@+id/courseProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:progress="65"
+            android:progressTint="@color/accent_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseRatingBar" />
+
+        <TextView
+            android:id="@+id/progressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseProgressBar"
+            tools:text="65% complete" />
+
+        <TextView
+            android:id="@+id/timeRemainingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/progressTextView"
+            tools:text="3h 20m remaining" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
-</LinearLayout>

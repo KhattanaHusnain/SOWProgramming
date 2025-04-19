@@ -1,179 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="16dp"
-    android:background="@color/Light_Gray">
-
-    <!-- Back Icon -->
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="start"
-        android:background="@null"
-        android:src="@drawable/ic_back"
-        android:contentDescription="Back" />
-
-    <!-- App Name -->
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="NexCode"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#002B5B"
-        android:gravity="center" />
-
-    <!-- Welcome Text -->
-    <TextView
-        android:id="@+id/welcome_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Welcome back!\nLogin to continue."
-        android:textColor="#002B5B"
-        android:textSize="16sp"
-        android:gravity="center" />
-
-    <!-- Login Heading -->
-    <TextView
-        android:id="@+id/login_heading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Login"
-        android:textColor="#002B5B"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center" />
-
-    <!-- Subtext -->
-    <TextView
-        android:id="@+id/login_subtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Please enter the details below to continue."
-        android:textColor="#707070"
-        android:textSize="12sp"
-        android:gravity="center" />
-
-    <!-- Email Input Field -->
-    <EditText
-        android:id="@+id/email_input"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:hint="  Email"
-        android:textColor="#000000"
-        android:textColorHint="#707070"
-        android:drawableStart="@drawable/ic_email"
-        android:paddingStart="10dp"
-        android:background="@drawable/input_border" />
-
-    <!-- Password Input Field -->
-    <EditText
-        android:id="@+id/password_input"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="15dp"
-        android:hint="  Password"
-        android:inputType="textPassword"
-        android:textColor="#000000"
-        android:textColorHint="#707070"
-        android:drawableStart="@drawable/ic_password"
-        android:paddingStart="10dp"
-        android:background="@drawable/input_border" />
-
-    <!-- Login Button -->
-    <Button
-        android:id="@+id/login_button"
+    android:layout_width="match_parent">
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Login"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#002B5B"
-        android:textStyle="bold" />
+        android:padding="24dp"
+        android:background="@drawable/gradient_background">
 
-    <!-- Forget Password -->
-    <TextView
-        android:id="@+id/forget_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Forget Password?"
-        android:textColor="#707070"
-        android:textSize="12sp"
-        android:gravity="center" />
+        <!-- Back Icon with better touch target -->
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:padding="8dp" />
 
-    <!-- Divider -->
-    <TextView
-        android:id="@+id/continue_with"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="- or continue with -"
-        android:textColor="#707070"
-        android:textSize="12sp"
-        android:gravity="center" />
-
-    <!-- Social Login Options -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        android:gravity="center">
-
+        <!-- App Logo -->
         <ImageView
-            android:id="@+id/facebook"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_facebook"
-            android:contentDescription="Facebook Login" />
+            android:id="@+id/app_logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/back_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/logo"
+            android:contentDescription="NexCode Logo" />
 
-        <ImageView
-            android:id="@+id/google"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_google"
-            android:contentDescription="Google Login" />
+        <!-- App Name -->
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/app_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="NexCode"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/poppins_bold" />
 
-    </LinearLayout>
+        <!-- Card Container for Login Form -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/app_name"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="24dp">
 
-    <!-- Footer Links -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
 
+                <!-- Welcome Text -->
+                <TextView
+                    android:id="@+id/welcome_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome back!"
+                    android:textColor="#002B5B"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
+
+                <!-- Login Subtext -->
+                <TextView
+                    android:id="@+id/login_subtext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Login to continue your journey"
+                    android:textColor="#707070"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/poppins_regular" />
+
+                <!-- Email Input with Material Design -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:hint="Email"
+                    app:startIconDrawable="@drawable/ic_email"
+                    app:startIconTint="#002B5B"
+                    app:boxStrokeColor="#002B5B"
+                    app:hintTextColor="#002B5B"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:fontFamily="@font/poppins_regular" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password Input with Material Design -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password_input_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Password"
+                    app:startIconDrawable="@drawable/ic_password"
+                    app:startIconTint="#002B5B"
+                    app:boxStrokeColor="#002B5B"
+                    app:hintTextColor="#002B5B"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="#707070"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:fontFamily="@font/poppins_regular" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Forgot Password - Aligned to right -->
+                <TextView
+                    android:id="@+id/forget_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Forgot Password?"
+                    android:textColor="#002B5B"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp" />
+
+                <!-- Login Button with improved design -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Login"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_bold"
+                    app:cornerRadius="10dp"
+                    app:backgroundTint="#002B5B" />
+
+                <!-- Divider with text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="#E0E0E0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:text="or continue with"
+                        android:textColor="#707070"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/poppins_regular" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="#E0E0E0" />
+                </LinearLayout>
+
+                <!-- Social Login Buttons with better design -->
+                <LinearLayout
+                    android:id="@+id/social_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+
+                    <!-- Google Button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/google_card"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="2dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:rippleColor="#DDDDDD">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_google"
+                            android:contentDescription="Google Login" />
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </LinearLayout>
+
+                <!-- No Account Yet? Sign Up -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Don't have an account? "
+                        android:textColor="#707070"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/poppins_regular" />
+
+                    <TextView
+                        android:id="@+id/sign_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign Up"
+                        android:textColor="#002B5B"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Footer - Help Link -->
         <TextView
             android:id="@+id/contact_us"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Contact Us"
-            android:textColor="#002B5B"
-            android:textSize="12sp"
-            android:layout_marginEnd="5dp" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Need help? Contact Us"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:fontFamily="@font/poppins_medium"
+            android:background="?attr/selectableItemBackground"
+            android:padding="8dp" />
+    </RelativeLayout>
 
-        <TextView
-            android:id="@+id/sign_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign Up"
-            android:textColor="#002B5B"
-            android:textStyle="bold"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
