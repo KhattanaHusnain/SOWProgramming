@@ -45,6 +45,7 @@ dependencies {
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
+    implementation libs.viewpager2
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
     implementation libs.navigation.fragment.ktx.v271
