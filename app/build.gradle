@@ -14,7 +14,10 @@ android {
         }
         python {
             pip {
-                install "nltk"
+                install "numpy==1.19.5"
+                install "scipy==1.4.1"
+                install "pandas==1.3.2"
+                install "scikit-learn==1.1.3"
             }
         }
         applicationId "com.android.nexcode"

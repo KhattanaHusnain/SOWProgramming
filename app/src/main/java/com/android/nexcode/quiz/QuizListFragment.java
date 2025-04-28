@@ -1,5 +1,6 @@
 package com.android.nexcode.quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,8 +96,9 @@ public class QuizListFragment extends Fragment {
             holder.dueDateTextView.setText(quiz.getDueDate());
 
             holder.itemView.setOnClickListener(v -> {
-                // Handle quiz item click
-                // Navigate to quiz details or start quiz
+                Intent intent = new Intent(getActivity(), QuizActivity.class);
+                intent.putExtra("QUIZ_ID", quiz.getId());
+                startActivity(intent);
             });
         }
 
