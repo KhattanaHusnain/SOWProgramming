@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Admin Primary Colors -->
+    <color name="admin_primary">#1565C0</color>
+    <color name="admin_primary_dark">#0D47A1</color>
+    <color name="admin_primary_light">#42A5F5</color>
+
+    <!-- Admin Accent Colors -->
+    <color name="admin_accent">#FF6F00</color>
+    <color name="admin_accent_dark">#E65100</color>
+    <color name="admin_accent_light">#FFB74D</color>
+
+    <!-- Admin Text Colors -->
+    <color name="admin_text_primary">#212121</color>
+    <color name="admin_text_secondary">#757575</color>
+    <color name="admin_text_light">#9E9E9E</color>
+    <color name="admin_text_light_secondary">#BDBDBD</color>
+
+    <!-- Admin Background Colors -->
+    <color name="admin_background">#FAFAFA</color>
+    <color name="admin_background_dark">#303030</color>
+    <color name="admin_surface">#FFFFFF</color>
+
+    <!-- Admin Status Colors -->
+    <color name="admin_success">#4CAF50</color>
+    <color name="admin_warning">#FF9800</color>
+    <color name="admin_error">#F44336</color>
+    <color name="admin_info">#2196F3</color>
+
+    <!-- Common Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Gradient Colors -->
+    <color name="admin_gradient_start">#1565C0</color>
+    <color name="admin_gradient_center">#1976D2</color>
+    <color name="admin_gradient_end">#1E88E5</color>
+</resources>

@@ -20,4 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "NexCode"
-include ':app'
+include ':EndUserApp'
+include ':AdminApp'
