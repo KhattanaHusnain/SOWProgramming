@@ -47,6 +47,15 @@ public class Course {
     @ColumnInfo(name = "lectures")
     private int lectures;
 
+    @ColumnInfo(name = "completed")
+    private boolean completed;
+
+    @ColumnInfo(name = "semester")
+    private String semester;
+
+    @ColumnInfo(name = "tags")
+    private List<String> tags;
+
     @Ignore
     public Course() {
 
@@ -84,7 +93,7 @@ public class Course {
         this.lectures = lectures;
     }
 
-    public Course(int id, String illustration, String title, int members, String description, String duration, String category, String outline, long createdAt, long updatedAt, boolean isPublic, int lectures) {
+    public Course(int id, String illustration, String title, int members, String description, String duration, String category, String outline, long createdAt, long updatedAt, boolean isPublic, int lectures, boolean completed) {
         this.id = id;
         this.illustration = illustration;
         this.title = title;
@@ -97,6 +106,7 @@ public class Course {
         this.updatedAt = updatedAt;
         this.isPublic = isPublic;
         this.lectures = lectures;
+        this.completed = completed;
     }
 
     @Ignore
@@ -109,6 +119,31 @@ public class Course {
         this.duration = duration;
         this.category = category;
         this.outline = outline;
+    }
+
+    public boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+    
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     // Getters and Setters

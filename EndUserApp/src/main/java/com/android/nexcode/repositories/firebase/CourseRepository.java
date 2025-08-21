@@ -44,7 +44,7 @@ public class CourseRepository {
                         queryDocumentSnapshots -> {
                             List<Course> courses = new ArrayList<>();
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                Course course = new Course(Integer.parseInt(documentSnapshot.getId()), documentSnapshot.getString("illustration"), documentSnapshot.getString("title"), Math.toIntExact(documentSnapshot.getLong("members")), documentSnapshot.getString("description"), documentSnapshot.getString("duration"), documentSnapshot.getString("category"), documentSnapshot.getString("outline"), documentSnapshot.getLong("createdAt"), documentSnapshot.getLong("updatedAt"), documentSnapshot.getBoolean("isPublic"), Math.toIntExact(documentSnapshot.getLong("lectures")));
+                                Course course = documentSnapshot.toObject(Course.class);
                                 courses.add(course);
                             }
                             callback.onSuccess(courses);
@@ -65,7 +65,7 @@ public class CourseRepository {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Course> courses = new ArrayList<>();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        Course course = new Course(Integer.parseInt(documentSnapshot.getId()), documentSnapshot.getString("illustration"), documentSnapshot.getString("title"), Math.toIntExact(documentSnapshot.getLong("members")), documentSnapshot.getString("description"), documentSnapshot.getString("duration"), documentSnapshot.getString("category"), documentSnapshot.getString("outline"), documentSnapshot.getLong("createdAt"), documentSnapshot.getLong("updatedAt"), documentSnapshot.getBoolean("isPublic"), Math.toIntExact(documentSnapshot.getLong("lectures")));
+                        Course course = documentSnapshot.toObject(Course.class);
                         courses.add(course);
                     }
                     callback.onSuccess(courses);
@@ -79,7 +79,7 @@ public class CourseRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Course course = new Course(Integer.parseInt(documentSnapshot.getId()), documentSnapshot.getString("illustration"), documentSnapshot.getString("title"), Math.toIntExact(documentSnapshot.getLong("members")), documentSnapshot.getString("description"), documentSnapshot.getString("duration"), documentSnapshot.getString("category"), documentSnapshot.getString("outline"), documentSnapshot.getLong("createdAt"), documentSnapshot.getLong("updatedAt"), documentSnapshot.getBoolean("isPublic"), Math.toIntExact(documentSnapshot.getLong("lectures")));
+                        Course course = documentSnapshot.toObject(Course.class);
                         callback.onSuccess(List.of(course));
                     } else {
                         callback.onFailure("Course not found");

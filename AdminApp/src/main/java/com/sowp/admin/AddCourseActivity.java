@@ -3,6 +3,8 @@ package com.sowp.admin;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,17 +19,21 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AddCourseActivity extends AppCompatActivity {
 
-    private TextInputEditText etId, etTitle, etCategory, etDuration, etIllustration,
+    private TextInputEditText etId, etTitle, etCategory, etDuration, etTags, etIllustration,
             etDescription, etOutline, etLectures, etMembers;
     private SwitchMaterial switchIsPublic;
     private MaterialButton btnAddCourse;
+    private AutoCompleteTextView etSemester;
     private ProgressBar progressBar;
-
+    private String[] semesterOptions = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "Graduated"};
     private FirebaseFirestore db;
 
     @Override
@@ -58,6 +64,12 @@ public class AddCourseActivity extends AppCompatActivity {
         switchIsPublic = findViewById(R.id.switchIsPublic);
         btnAddCourse = findViewById(R.id.btnAddCourse);
         progressBar = findViewById(R.id.progressBar);
+        etSemester = findViewById(R.id.etSemester);
+        etTags = findViewById(R.id.etTags);
+        // Setup Semester dropdown
+        ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, semesterOptions);
+        etSemester.setAdapter(semesterAdapter);
     }
 
     private void addCourseToFirestore() {
@@ -81,12 +93,14 @@ public class AddCourseActivity extends AppCompatActivity {
         course.put("isPublic", switchIsPublic.isChecked());
         course.put("createdAt", now);
         course.put("updatedAt", now);
+        course.put("completed", false);
+        course.put("semester", etSemester.getText().toString());
 
         db.collection("Course")
                 .document(docId)
                 .set(course)
                 .addOnCompleteListener(task -> {
-                    showProgressBar(false); // <-- ALWAYS hides spinner
+                    showProgressBar(false);
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Course added successfully!", Toast.LENGTH_LONG).show();
                         clearForm();
@@ -101,6 +115,7 @@ public class AddCourseActivity extends AppCompatActivity {
 
 
     private boolean validateInputs() {
+        String idText = getTextFromEditText(etId);
         if (TextUtils.isEmpty(getTextFromEditText(etId))) {
             etId.setError("Id is required");
             etId.requestFocus();
@@ -125,9 +140,27 @@ public class AddCourseActivity extends AppCompatActivity {
             return false;
         }
 
+        if (TextUtils.isEmpty(etSemester.getText().toString())) {
+            etSemester.setError("Semester is required");
+            etSemester.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(getTextFromEditText(etIllustration))) {
+            etIllustration.setError("Illustration is required");
+            etIllustration.requestFocus();
+            return false;
+        }
+
         if (TextUtils.isEmpty(getTextFromEditText(etDescription))) {
             etDescription.setError("Description is required");
             etDescription.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(getTextFromEditText(etTags))) {
+            etTags.setError("Tags is required");
+            etTags.requestFocus();
             return false;
         }
 
@@ -144,6 +177,8 @@ public class AddCourseActivity extends AppCompatActivity {
             return false;
         }
 
+
+
         String membersText = getTextFromEditText(etMembers);
         if (TextUtils.isEmpty(membersText)) {
             etMembers.setError("Number of members is required");
@@ -152,6 +187,13 @@ public class AddCourseActivity extends AppCompatActivity {
         }
 
         // Validate numeric fields
+        try {
+            Integer.parseInt(idText);
+        } catch (NumberFormatException e) {
+            etId.setError("Please enter a valid number");
+            etId.requestFocus();
+            return false;
+        }
         try {
             Integer.parseInt(lecturesText);
         } catch (NumberFormatException e) {
@@ -185,7 +227,20 @@ public class AddCourseActivity extends AppCompatActivity {
         btnAddCourse.setEnabled(!show);
     }
 
+    private List<String> getTags(TextInputEditText editText) {
+        // Split by commas and remove extra spaces
+        // remove spaces
+        // remove empty tags
+        return Arrays.stream(getTextFromEditText(editText).split(","))
+                .map(String::trim)                 // remove spaces
+                .filter(s -> !s.isEmpty())         // remove empty tags
+                .collect(Collectors.toList());
+    }
+
     private void clearForm() {
+        etId.setText("");
+        etTags.setText("");
+        etSemester.setText("");
         etTitle.setText("");
         etCategory.setText("");
         etDuration.setText("");

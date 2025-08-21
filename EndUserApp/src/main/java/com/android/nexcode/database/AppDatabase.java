@@ -5,14 +5,17 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.android.nexcode.models.Course;
 import com.android.nexcode.repositories.roomdb.CourseDao;
 import com.android.nexcode.models.Topic;
 import com.android.nexcode.repositories.roomdb.TopicDao;
 import com.android.nexcode.models.UserProgress;
+import com.android.nexcode.utils.Converters;
 
-@Database(entities = {Course.class, Topic.class}, version = 13, exportSchema = false)
+@Database(entities = {Course.class, Topic.class}, version = 14, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CourseDao courseDao();
     public abstract TopicDao topicDao();
