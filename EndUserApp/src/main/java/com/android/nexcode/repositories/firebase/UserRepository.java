@@ -68,7 +68,7 @@ public class UserRepository {
                          long createdAt, RegistrationCallback callback) {
                 // Create user object and save to Firestore
                 user = new User(userAuthenticationUtils.getUserId(), fullName, photo, email, phone,
-                        gender, birthdate, degree, semester, role, notification, createdAt);
+                        gender, birthdate, degree, semester, role, notification, createdAt, false);
 
                 firestore.collection("User")
                         .document(userAuthenticationUtils.getCurrentUserEmail())
@@ -179,7 +179,8 @@ public class UserRepository {
                 "", // semester - empty, user can update later
                 "User", // role - empty, user can update later
                 true, // notification - default true
-                System.currentTimeMillis() // createdAt - current timestamp
+                System.currentTimeMillis(), // createdAt - current timestamp
+                false
         );
 
         // Save to Firestore
@@ -405,6 +406,11 @@ public class UserRepository {
                         );
                     }
                 });
+    }
+    public void setIsVerifiedTrue() {
+        firestore.collection("User")
+                .document(userAuthenticationUtils.getCurrentUserEmail())
+                .update("isVerified", true);
     }
 
 }

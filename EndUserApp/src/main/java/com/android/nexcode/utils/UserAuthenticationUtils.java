@@ -19,6 +19,7 @@ import androidx.credentials.exceptions.GetCredentialException;
 
 import com.android.nexcode.R;
 import com.android.nexcode.presenters.activities.ForgotPassword;
+import com.android.nexcode.repositories.firebase.UserRepository;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.firebase.auth.AuthCredential;
@@ -135,6 +136,8 @@ public class UserAuthenticationUtils {
                             logoutUser();
                             callback.onFailure("Email not verified");
                         } else {
+                            UserRepository userRepository = new UserRepository(context);
+                            userRepository.setIsVerifiedTrue();
                             callback.onSuccess();
                         }
                     } else {

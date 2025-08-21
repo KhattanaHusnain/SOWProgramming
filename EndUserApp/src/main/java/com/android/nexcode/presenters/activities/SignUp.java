@@ -169,9 +169,6 @@ public class SignUp extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
         dobInput.setOnClickListener(v -> showDatePicker());
         signupButton.setOnClickListener(view -> {
-            signupButton.setEnabled(false);
-            signupButton.setText(null);
-            progressSign.setVisibility(View.VISIBLE);
             validateAndCreateAccount();
 
         });
@@ -301,6 +298,10 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(this, "Please agree to the Terms and Privacy Policy", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        signupButton.setEnabled(false);
+        signupButton.setText(null);
+        progressSign.setVisibility(View.VISIBLE);
 
         userAuthenticationUtils.register(email, password, new UserAuthenticationUtils.Callback() {
 
