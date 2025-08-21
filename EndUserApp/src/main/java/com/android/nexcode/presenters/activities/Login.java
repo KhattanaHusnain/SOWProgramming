@@ -46,7 +46,6 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     // Loading state
-    private boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +114,7 @@ public class Login extends AppCompatActivity {
 
         // Login button
         loginButton.setOnClickListener(v -> {
-            if (!isLoading) {
                 validateAndLogin();
-            }
         });
 
         // Forgot password
@@ -144,9 +141,8 @@ public class Login extends AppCompatActivity {
 
         // Google Sign-In button
         googleCard.setOnClickListener(v -> {
-            if (!isLoading) {
+
                 signInWithGoogle();
-            }
         });
     }
 
@@ -182,7 +178,12 @@ public class Login extends AppCompatActivity {
         }
 
         // All validations passed, proceed with login
-        setLoading(true);
+        loginButton.setEnabled(false);
+        loginButton.setText(null);
+        loginProgress.setVisibility(View.VISIBLE);
+        emailInput.setEnabled(false);
+        passwordInput.setEnabled(false);
+
 
         userAuthenticationUtils.login(email, password, new UserAuthenticationUtils.Callback() {
             @Override
@@ -192,7 +193,11 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                setLoading(false);
+                loginButton.setEnabled(true);
+                loginButton.setText("Login");
+                loginProgress.setVisibility(View.GONE);
+                emailInput.setEnabled(true);
+                passwordInput.setEnabled(true);
                 Log.e(TAG, "Login failed: " + message);
                 Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
             }
@@ -207,8 +212,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 // Google Sign-In successful
-                setLoading(false);
-                setGoogleLoading(false);
 
                 Login.this.user = user;
 
@@ -222,8 +225,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 // Google Sign-In failed
-                setLoading(false);
-                setGoogleLoading(false);
 
                 Log.e(TAG, "Google Sign-In failed: " + message);
                 Toast.makeText(Login.this, "Google Sign-In failed: " + message, Toast.LENGTH_LONG).show();
@@ -252,34 +253,6 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-    private void setLoading(boolean loading) {
-        isLoading = loading;
-
-        // Update UI to show loading state
-        if (loading) {
-            loginButton.setText("Logging in...");
-            loginButton.setEnabled(false);
-            emailInput.setEnabled(false);
-            passwordInput.setEnabled(false);
-            googleCard.setEnabled(false);
-
-            // Show progress indicators if available
-            if (loginProgress != null) {
-                loginProgress.setVisibility(View.VISIBLE);
-            }
-        } else {
-            loginButton.setText("Login");
-            loginButton.setEnabled(true);
-            emailInput.setEnabled(true);
-            passwordInput.setEnabled(true);
-            googleCard.setEnabled(true);
-
-            // Hide progress indicators if available
-            if (loginProgress != null) {
-                loginProgress.setVisibility(View.GONE);
-            }
-        }
-    }
 
     private void setGoogleLoading(boolean loading) {
         if (googleProgress != null && googleIcon != null) {

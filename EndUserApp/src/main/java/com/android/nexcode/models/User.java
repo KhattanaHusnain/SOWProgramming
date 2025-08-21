@@ -14,6 +14,16 @@ public class User {
     private String degree;
     private String semester;
     private String role;
+
+    public boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    private boolean isVerified;
     private boolean notification;
     private long createdAt;
     private float assignmentAvg;
@@ -24,6 +34,30 @@ public class User {
     private List<String> assignments;
     private List<Integer> completedCourses;
     private List<String> certificates;
+
+    public User(String userId, String fullName, String photo, String email, String phone, String gender, String birthdate, String degree, String semester, String role, boolean isVerified, boolean notification, long createdAt, float assignmentAvg, float quizzesAvg, List<Integer> enrolledCourses, List<Integer> favorites, List<String> quizzes, List<String> assignments, List<Integer> completedCourses, List<String> certificates) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.photo = photo;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+        this.birthdate = birthdate;
+        this.degree = degree;
+        this.semester = semester;
+        this.role = role;
+        this.isVerified = isVerified;
+        this.notification = notification;
+        this.createdAt = createdAt;
+        this.assignmentAvg = assignmentAvg;
+        this.quizzesAvg = quizzesAvg;
+        this.enrolledCourses = enrolledCourses;
+        this.favorites = favorites;
+        this.quizzes = quizzes;
+        this.assignments = assignments;
+        this.completedCourses = completedCourses;
+        this.certificates = certificates;
+    }
 
     public User(String userId, String fullName, String photo, String email, String phone, String gender, String birthdate, String degree, String semester, String role, boolean notification, long createdAt, float assignmentAvg, float quizzesAvg, List<Integer> enrolledCourses, List<Integer> favorites, List<String> quizzes, List<String> assignments, List<Integer> completedCourses, List<String> certificates) {
         this.userId = userId;
@@ -48,7 +82,7 @@ public class User {
         this.certificates = certificates;
     }
 
-    public User(String userId, String fullName, String photo, String email, String phone, String gender, String birthdate, String degree, String semester, String role, boolean notification, long createdAt) {
+    public User(String userId, String fullName, String photo, String email, String phone, String gender, String birthdate, String degree, String semester, String role, boolean notification, long createdAt, boolean isVerified) {
         this.userId = userId;
         this.fullName = fullName;
         this.photo = photo;
@@ -61,6 +95,7 @@ public class User {
         this.role = role;
         this.notification = notification;
         this.createdAt = createdAt;
+        this.isVerified = isVerified;
     }
 
     public List<Integer> getEnrolledCourses() {
