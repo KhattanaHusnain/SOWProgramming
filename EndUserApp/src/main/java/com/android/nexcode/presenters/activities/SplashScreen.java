@@ -8,10 +8,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.nexcode.repositories.firebase.CourseRepository;
-import com.android.nexcode.R;
+import com.android.nexcode  .R;
 import com.android.nexcode.utils.NetworkUtils;
-import com.google.firebase.auth.FirebaseAuth;
+import com.android.nexcode.utils.UserAuthenticationUtils;
 
 public class SplashScreen extends AppCompatActivity {
     // UI elements
@@ -20,6 +19,7 @@ public class SplashScreen extends AppCompatActivity {
     private TextView tagline;
     private TextView versionText;
     private ProgressBar loadingIndicator;
+    private UserAuthenticationUtils userAuthenticationUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +31,7 @@ public class SplashScreen extends AppCompatActivity {
         // Check and load data in background
 
         // Navigate after delay
+
         new Thread(() -> {
             try {
                 Thread.sleep(3000); // Increased to 3 seconds to give more time for data loading
@@ -46,21 +47,20 @@ public class SplashScreen extends AppCompatActivity {
         tagline = findViewById(R.id.tagline);
         versionText = findViewById(R.id.version_text);
         loadingIndicator = findViewById(R.id.loading_indicator);
+        userAuthenticationUtils = new UserAuthenticationUtils(this);
     }
     private void goToNextScreen() {
         // Only proceed if we haven't already navigated away
-        if (!isFinishing()) {
-            if(!NetworkUtils.isNetworkAvailable(this)) {
-                Intent intent = new Intent(this, OfflineCourseActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent intent = FirebaseAuth.getInstance().getCurrentUser() != null
-                        ? new Intent(this, Main.class)
-                        : new Intent(this, Authentication.class);
-                startActivity(intent);
-                finish();
-            }
+        if(!NetworkUtils.isNetworkAvailable(this)) {
+            Intent intent = new Intent(this, OfflineCourseActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = userAuthenticationUtils.isUserLoggedIn()
+                    ? new Intent(this, Main.class)
+                    : new Intent(this, Authentication.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

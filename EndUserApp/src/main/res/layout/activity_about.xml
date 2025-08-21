@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:padding="16dp"
+    tools:context=".presenters.activities.AboutActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="24dp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <!-- App Logo -->
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/logo"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="NexCode App Logo" />
+
+            <!-- App Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NexCode"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Version -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Version: v1.0.0"
+                android:textSize="16sp"
+                android:textColor="@color/secondary_text_color" />
+
+        </LinearLayout>
+
+        <!-- App Description Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="App Description"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NexCode is an innovative learning platform designed to enhance your programming journey with AI-powered assistance, offline access, and comprehensive progress tracking."
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text_color"
+                android:lineSpacingMultiplier="1.2" />
+
+        </LinearLayout>
+
+        <!-- Key Features Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Key Features"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bullet_point"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="AI Chatbot for Doubts"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bullet_point"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Offline Course Access"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bullet_point"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Quizzes and Assignments"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bullet_point"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Progress Tracking"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Developed By Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developed By"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Mujahid Husnain"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text_color"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Mahnoor Ramazan"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text_color"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Suleman Ali"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text_color"
+                android:layout_marginBottom="8dp" />
+
+
+        </LinearLayout>
+
+        <!-- Collaboration Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collaboration"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• With PUACP – Punjab University Affiliated Colleges Program"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text_color"
+                android:lineSpacingMultiplier="1.2" />
+
+        </LinearLayout>
+
+        <!-- Useful Links Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Useful Links"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="• PUACP WhatsApp Channel"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/whatsappLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Click to Join"
+                    android:textSize="12sp"
+                    android:textColor="@color/link_color"
+                    android:autoLink="web"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="• PUACP IT Community"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/linkedinLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Click to join"
+                    android:textSize="12sp"
+                    android:textColor="@color/link_color"
+                    android:autoLink="web"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Contact Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_color"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="• Email: "
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text_color" />
+
+                <TextView
+                    android:id="@+id/emailLink"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="mujahid.husnain.56@gmail.com"
+                    android:textSize="14sp"
+                    android:textColor="@color/link_color"
+                    android:autoLink="email" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• YouTube: Www.Youtube.Com/@SOWProgramming"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text_color" />
+
+        </LinearLayout>
+
+        <!-- Privacy Policy Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/privacyPolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy Policy"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/accent_color"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

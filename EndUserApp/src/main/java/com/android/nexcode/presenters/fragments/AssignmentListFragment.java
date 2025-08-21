@@ -1,5 +1,6 @@
 package com.android.nexcode.presenters.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.nexcode.models.Assignment;
+import com.android.nexcode.presenters.activities.AssignmentActivity;
 import com.android.nexcode.R;
 
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class AssignmentListFragment extends Fragment {
         if (assignmentList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
-            emptyView.setText("No data available");
+            emptyView.setText("No assignments available");
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
@@ -95,13 +97,30 @@ public class AssignmentListFragment extends Fragment {
             Assignment assignment = assignmentList.get(position);
             holder.titleTextView.setText(assignment.getTitle());
             holder.descriptionTextView.setText(assignment.getDescription());
-            holder.dueDateTextView.setText(assignment.getDueDate());
+            holder.dueDateTextView.setText("Due: " + assignment.getDueDate());
             holder.statusTextView.setText(assignment.getStatus());
 
+            // Set status color based on assignment status
+            setStatusColor(holder.statusTextView, assignment.getStatus());
+
             holder.itemView.setOnClickListener(v -> {
-                // Handle assignment item click
-                // Navigate to assignment details or submit assignment
+                // Navigate to AssignmentActivity
+                Intent intent = AssignmentActivity.createIntent(getContext(), assignment);
+                startActivity(intent);
             });
+        }
+
+        private void setStatusColor(TextView statusTextView, String status) {
+            int colorResId;
+            switch (status.toLowerCase()) {
+                case "submitted":
+                    colorResId = R.color.status_submitted;
+                    break;
+                default: // "not started"
+                    colorResId = R.color.status_not_started;
+                    break;
+            }
+            statusTextView.setTextColor(getResources().getColor(colorResId));
         }
 
         @Override

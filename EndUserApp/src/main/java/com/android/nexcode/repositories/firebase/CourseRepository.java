@@ -60,6 +60,7 @@ public class CourseRepository {
     public void loadPopularCourses(Callback callback) {
         db.collection("Course")
                 .limit(2)
+                .whereGreaterThan("members", 100)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Course> courses = new ArrayList<>();

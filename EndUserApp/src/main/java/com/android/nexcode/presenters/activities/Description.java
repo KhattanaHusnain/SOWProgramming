@@ -3,13 +3,16 @@ package com.android.nexcode.presenters.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.nexcode.models.Topic;
 import com.android.nexcode.models.User;
@@ -57,12 +60,24 @@ public class Description extends AppCompatActivity {
     private MaterialButton btnAddFavorite;
     private MaterialButton btnMakeOffline;
 
+    // Skeleton Views
+    private View skeletonCourseIllustration;
+    private LinearLayout skeletonCourseHeader;
+    private LinearLayout skeletonCourseOutline;
+    private LinearLayout skeletonQuickActions;
+    private ConstraintLayout skeletonBottomActions;
+
+    // Content Views
+    private LinearLayout layoutCourseHeaderContent;
+    private LinearLayout layoutCourseOutlineContent;
+    private LinearLayout layoutQuickActionsContent;
+    private ConstraintLayout layoutBottomActionsContent;
+
     // Data components
     private CourseDao courseDao;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private boolean isFavorite = false;
-    private boolean isEnrolled = false;
     private boolean isOfflineAvailable = false;
     private int courseId;
     private Course course;
@@ -83,12 +98,13 @@ public class Description extends AppCompatActivity {
         initialize();
         setupToolbar();
 
-        courseId = getIntent().getIntExtra("ID", 0);
-        loadCourseData(courseId);
+        // Show skeleton loading initially
+        showSkeletonLoading();
 
-        checkEnrollmentStatus(courseId);
-        checkFavoriteStatus(courseId);
-        checkOfflineAvailability(courseId);
+        courseId = getIntent().getIntExtra("ID", 0);
+
+        // Load data and hide skeleton when complete
+        loadAllData();
 
         setupListeners();
     }
@@ -126,11 +142,125 @@ public class Description extends AppCompatActivity {
         btnAddFavorite = findViewById(R.id.btn_add_favorite);
         btnMakeOffline = findViewById(R.id.btn_make_offline);
 
+        // Skeleton views
+        skeletonCourseIllustration = findViewById(R.id.skeleton_course_illustration);
+        skeletonCourseHeader = findViewById(R.id.skeleton_course_header);
+        skeletonCourseOutline = findViewById(R.id.skeleton_course_outline);
+        skeletonQuickActions = findViewById(R.id.skeleton_quick_actions);
+        skeletonBottomActions = findViewById(R.id.skeleton_bottom_actions);
+
+        // Content views
+        layoutCourseHeaderContent = findViewById(R.id.layout_course_header_content);
+        layoutCourseOutlineContent = findViewById(R.id.layout_course_outline_content);
+        layoutQuickActionsContent = findViewById(R.id.layout_quick_actions_content);
+        layoutBottomActionsContent = findViewById(R.id.layout_bottom_actions_content);
+
         courseRepository = new CourseRepository(this);
         userReposititory = new UserRepository(this);
         courseDao = AppDatabase.getInstance(this).courseDao();
         topicRepository = new TopicRepository();
         topicDao = AppDatabase.getInstance(this).topicDao();
+    }
+
+    private void showSkeletonLoading() {
+        // Show skeleton views
+        skeletonCourseIllustration.setVisibility(View.VISIBLE);
+        skeletonCourseHeader.setVisibility(View.VISIBLE);
+        skeletonCourseOutline.setVisibility(View.VISIBLE);
+        skeletonQuickActions.setVisibility(View.VISIBLE);
+        skeletonBottomActions.setVisibility(View.VISIBLE);
+
+        // Hide content views
+        layoutCourseHeaderContent.setVisibility(View.GONE);
+        layoutCourseOutlineContent.setVisibility(View.GONE);
+        layoutQuickActionsContent.setVisibility(View.GONE);
+        layoutBottomActionsContent.setVisibility(View.GONE);
+
+        // Start shimmer animation
+        startShimmerAnimation();
+    }
+
+    private void hideSkeletonLoading() {
+        // Clear shimmer animations
+        skeletonCourseIllustration.clearAnimation();
+        skeletonCourseHeader.clearAnimation();
+        skeletonCourseOutline.clearAnimation();
+        skeletonQuickActions.clearAnimation();
+        skeletonBottomActions.clearAnimation();
+
+        // Hide skeleton views
+        skeletonCourseIllustration.setVisibility(View.GONE);
+        skeletonCourseHeader.setVisibility(View.GONE);
+        skeletonCourseOutline.setVisibility(View.GONE);
+        skeletonQuickActions.setVisibility(View.GONE);
+        skeletonBottomActions.setVisibility(View.GONE);
+
+        // Show content views with fade-in animation
+        showContentWithAnimation();
+    }
+
+
+    private void startShimmerAnimation() {
+        android.view.animation.Animation shimmerAnimation = AnimationUtils.loadAnimation(this, R.anim.shimmer_animation);
+
+        skeletonCourseIllustration.startAnimation(shimmerAnimation);
+        skeletonCourseHeader.startAnimation(shimmerAnimation);
+        skeletonCourseOutline.startAnimation(shimmerAnimation);
+        skeletonQuickActions.startAnimation(shimmerAnimation);
+        skeletonBottomActions.startAnimation(shimmerAnimation);
+    }
+
+    private void showContentWithAnimation() {
+        android.view.animation.Animation fadeInAnimation = android.view.animation.AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+
+        layoutCourseHeaderContent.setVisibility(View.VISIBLE);
+        layoutCourseHeaderContent.startAnimation(fadeInAnimation);
+
+        layoutCourseOutlineContent.setVisibility(View.VISIBLE);
+        layoutCourseOutlineContent.startAnimation(fadeInAnimation);
+
+        layoutQuickActionsContent.setVisibility(View.VISIBLE);
+        layoutQuickActionsContent.startAnimation(fadeInAnimation);
+
+        layoutBottomActionsContent.setVisibility(View.VISIBLE);
+        layoutBottomActionsContent.startAnimation(fadeInAnimation);
+    }
+
+    private void loadAllData() {
+        // Counter to track completed operations
+        final int[] completedOperations = {0};
+        final int totalOperations = 4; // course data, enrollment, favorite, offline status
+
+        // Load course data
+        loadCourseData(courseId, () -> {
+            completedOperations[0]++;
+            checkDataLoadingComplete(completedOperations[0], totalOperations);
+        });
+
+        // Check enrollment status
+        checkEnrollmentStatus(courseId, () -> {
+            completedOperations[0]++;
+            checkDataLoadingComplete(completedOperations[0], totalOperations);
+        });
+
+        // Check favorite status
+        checkFavoriteStatus(courseId, () -> {
+            completedOperations[0]++;
+            checkDataLoadingComplete(completedOperations[0], totalOperations);
+        });
+
+        // Check offline availability
+        checkOfflineAvailability(courseId, () -> {
+            completedOperations[0]++;
+            checkDataLoadingComplete(completedOperations[0], totalOperations);
+        });
+    }
+
+    private void checkDataLoadingComplete(int completed, int total) {
+        if (completed >= total) {
+            // All data loaded, hide skeleton
+            hideSkeletonLoading();
+        }
     }
 
     private void setupToolbar() {
@@ -153,7 +283,7 @@ public class Description extends AppCompatActivity {
         btnMakeOffline.setOnClickListener(v -> toggleOfflineAvailability());
     }
 
-    private void loadCourseData(int courseId) {
+    private void loadCourseData(int courseId, Runnable onComplete) {
         courseRepository.getCourse(courseId, new CourseRepository.Callback() {
             @Override
             public void onSuccess(List<Course> courses) {
@@ -174,11 +304,14 @@ public class Description extends AppCompatActivity {
                         .load(course.getIllustration())
                         .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                         .into(ivCourseIllustration);
+
+                if (onComplete != null) onComplete.run();
             }
 
             @Override
             public void onFailure(String message) {
                 Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
+                if (onComplete != null) onComplete.run();
             }
         });
     }
@@ -210,17 +343,18 @@ public class Description extends AppCompatActivity {
         });
     }
 
-    private void checkEnrollmentStatus(int courseId) {
+    private void checkEnrollmentStatus(int courseId, Runnable onComplete) {
         userReposititory.checkEnrollmentStatus(courseId, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
                 btnEnrollCourse.setText("CONTINUE LEARNING");
+                if (onComplete != null) onComplete.run();
             }
 
             @Override
             public void onFailure(String message) {
                 btnEnrollCourse.setText("ENROLL NOW");
-                Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
+                if (onComplete != null) onComplete.run();
             }
         });
     }
@@ -259,19 +393,20 @@ public class Description extends AppCompatActivity {
         }
     }
 
-    private void checkFavoriteStatus(int courseId) {
+    private void checkFavoriteStatus(int courseId, Runnable onComplete) {
         userReposititory.checkFavoriteStatus(courseId, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
                 isFavorite = true;
                 updateFavoriteButton();
+                if (onComplete != null) onComplete.run();
             }
 
             @Override
             public void onFailure(String message) {
                 isFavorite = false;
                 updateFavoriteButton();
-                Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
+                if (onComplete != null) onComplete.run();
             }
         });
     }
@@ -351,18 +486,20 @@ public class Description extends AppCompatActivity {
         });
     }
 
-    private void checkOfflineAvailability(int courseId) {
+    private void checkOfflineAvailability(int courseId, Runnable onComplete) {
         executor.execute(() -> {
             try {
                 Course course = courseDao.getCourseById(courseId);
                 runOnUiThread(() -> {
                     isOfflineAvailable = (course != null);
                     updateOfflineButton();
+                    if (onComplete != null) onComplete.run();
                 });
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     isOfflineAvailable = false;
                     updateOfflineButton();
+                    if (onComplete != null) onComplete.run();
                     Toast.makeText(Description.this, "Error checking offline status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }

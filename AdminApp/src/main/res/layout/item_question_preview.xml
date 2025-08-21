@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- Header Row with Question Number and Delete Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <!-- Question Number -->
+            <TextView
+                android:id="@+id/tvQuestionNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Question 1"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#27ae60"
+                android:background="@drawable/question_number_background"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Delete Button -->
+            <Button
+                android:id="@+id/btnDeleteQuestion"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/delete_button_background"
+                android:text="×"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#e74c3c"
+                android:gravity="center"
+                android:padding="0dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp" />
+
+        </LinearLayout>
+
+        <!-- Question Text -->
+        <TextView
+            android:id="@+id/tvQuestionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What is the capital of France?"
+            android:textSize="14sp"
+            android:textColor="#2c3e50"
+            android:lineSpacingExtra="2dp"
+            android:layout_marginBottom="8dp"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ecf0f1"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Correct Answer Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Correct Answer Icon -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓"
+                android:textSize="14sp"
+                android:textColor="#27ae60"
+                android:textStyle="bold"
+                android:background="@drawable/correct_answer_icon_background"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Correct Answer Text -->
+            <TextView
+                android:id="@+id/tvCorrectAnswer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Correct: Paris"
+                android:textSize="12sp"
+                android:textColor="#27ae60"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+        <!-- Question Stats (Optional - for additional info) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 Options"
+                android:textSize="10sp"
+                android:textColor="#95a5a6"
+                android:background="@drawable/info_tag_background"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Multiple Choice"
+                android:textSize="10sp"
+                android:textColor="#95a5a6"
+                android:background="@drawable/info_tag_background"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,11 +1,13 @@
 package com.android.nexcode.presenters.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.Quiz;
+import com.android.nexcode.models.User;
 import com.android.nexcode.presenters.activities.QuizActivity;
+import com.android.nexcode.repositories.firebase.UserRepository;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +66,7 @@ public class QuizListFragment extends Fragment {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        QuizAdapter adapter = new QuizAdapter(quizList);
+        QuizAdapter adapter = new QuizAdapter(quizList, getContext());
         recyclerView.setAdapter(adapter);
 
         // Show empty view if list is empty
@@ -79,9 +84,11 @@ public class QuizListFragment extends Fragment {
     private class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder> {
 
         private final List<Quiz> quizList;
+        UserRepository userRepository;
 
-        public QuizAdapter(List<Quiz> quizList) {
+        public QuizAdapter(List<Quiz> quizList, Context context) {
             this.quizList = quizList;
+            userRepository = new UserRepository(context);
         }
 
         @NonNull
@@ -99,9 +106,21 @@ public class QuizListFragment extends Fragment {
             holder.descriptionTextView.setText(quiz.getDescription());
             holder.dueDateTextView.setText(quiz.getDueDate());
 
-            holder.itemView.setOnClickListener(v -> {
+            holder.startQuizButton.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), QuizActivity.class);
                 intent.putExtra("QUIZ_ID", quiz.getId());
+                userRepository.addQuiz(quiz.getId(), new UserRepository.UserCallback() {
+
+                    @Override
+                    public void onSuccess(User user) {
+                        // nothing
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
                 startActivity(intent);
             });
         }
@@ -115,12 +134,14 @@ public class QuizListFragment extends Fragment {
             TextView titleTextView;
             TextView descriptionTextView;
             TextView dueDateTextView;
+            MaterialButton startQuizButton;
 
             public QuizViewHolder(@NonNull View itemView) {
                 super(itemView);
                 titleTextView = itemView.findViewById(R.id.titleTextView);
                 descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
                 dueDateTextView = itemView.findViewById(R.id.dueDateTextView);
+                startQuizButton = itemView.findViewById(R.id.startQuizButton);
             }
         }
     }

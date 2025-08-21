@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.Assignment;
 import com.android.nexcode.models.Quiz;
+import com.android.nexcode.utils.UserAuthenticationUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,7 +25,7 @@ import java.util.List;
 
 public class AssessmentFragment extends Fragment {
 
-    private static final String TAG = "QuizzesFragment";
+    private static final String TAG = "AssessmentFragment";
     private static final String[] TAB_TITLES = new String[]{"Quizzes", "Assignments"};
 
     private ViewPager2 viewPager;
@@ -32,8 +34,11 @@ public class AssessmentFragment extends Fragment {
 
     private List<Quiz> quizList = new ArrayList<>();
     private List<Assignment> assignmentList = new ArrayList<>();
+    List<Integer> courses = new ArrayList<>();
+
 
     private FirebaseFirestore db;
+    private UserAuthenticationUtils userAuthenticationUtils;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +49,7 @@ public class AssessmentFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPager);
         tabLayout = view.findViewById(R.id.tabLayout);
         progressBar = view.findViewById(R.id.progressBar);
+        userAuthenticationUtils = new UserAuthenticationUtils(getContext());
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
@@ -56,27 +62,39 @@ public class AssessmentFragment extends Fragment {
 
     private void loadData() {
         progressBar.setVisibility(View.VISIBLE);
+        db.collection("User").document(userAuthenticationUtils.getCurrentUserEmail()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                courses = (List<Integer>) task.getResult().get("enrolledCourses");
+                if (courses == null) {
+                    Toast.makeText(getContext(),"Join a course to view it's quizzes", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Load quizzes
+                    db.collection("quizzes")
+                            .whereEqualTo("active", true)
+                            .whereIn("course", courses)
+                            .get()
+                            .addOnCompleteListener(task1 -> {
+                                if (task.isSuccessful()) {
+                                    quizList.clear();
+                                    for (QueryDocumentSnapshot document : task1.getResult()) {
+                                        Quiz quiz = document.toObject(Quiz.class);
+                                        quiz.setId(document.getId());
+                                        quizList.add(quiz);
+                                    }
+                                    Log.d(TAG, "Loaded " + quizList.size() + " quizzes");
 
-        // Load quizzes
-        db.collection("quizzes")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        quizList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Quiz quiz = document.toObject(Quiz.class);
-                            quiz.setId(document.getId());
-                            quizList.add(quiz);
-                        }
-                        Log.d(TAG, "Loaded " + quizList.size() + " quizzes");
+                                    // Check if both data sets are loaded
+                                    checkDataLoaded();
+                                } else {
+                                    Log.e(TAG, "Error loading quizzes", task1.getException());
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            });
+                }
+            }
+        });
 
-                        // Check if both data sets are loaded
-                        checkDataLoaded();
-                    } else {
-                        Log.e(TAG, "Error loading quizzes", task.getException());
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+
 
         // Load assignments
         db.collection("assignments")
@@ -87,6 +105,19 @@ public class AssessmentFragment extends Fragment {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Assignment assignment = document.toObject(Assignment.class);
                             assignment.setId(document.getId());
+                            db.collection("User/"+userAuthenticationUtils.getCurrentUserEmail()+"/AssignmentProgress")
+                                    .whereEqualTo("assignmentId", assignment.getId())
+                                    .get().addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            if (!task1.getResult().isEmpty()) {
+                                            assignment.setStatus("Submitted");
+                                            assignment.setEarnedScore(task1.getResult().getDocuments().get(0).getDouble("score"));
+                                            }
+                                        }
+                                        else {
+                                            assignment.setStatus("Not Started");
+                                        }
+                                    });
                             assignmentList.add(assignment);
                         }
                         Log.d(TAG, "Loaded " + assignmentList.size() + " assignments");
@@ -109,7 +140,7 @@ public class AssessmentFragment extends Fragment {
     }
 
     private void setupViewPager() {
-        QuizPagerAdapter pagerAdapter = new QuizPagerAdapter(this);
+        PagerAdapter pagerAdapter = new PagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
 
         // Connect TabLayout with ViewPager2
@@ -119,9 +150,9 @@ public class AssessmentFragment extends Fragment {
     }
 
     // ViewPager2 adapter
-    private class QuizPagerAdapter extends FragmentStateAdapter {
+    private class PagerAdapter extends FragmentStateAdapter {
 
-        public QuizPagerAdapter(Fragment fragment) {
+        public PagerAdapter(Fragment fragment) {
             super(fragment);
         }
 

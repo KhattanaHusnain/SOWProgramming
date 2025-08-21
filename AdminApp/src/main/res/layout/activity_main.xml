@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#f5f5f5"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SOWP ADMIN SYSTEM"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#2c3e50"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"
+        android:padding="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnCourseManagement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="1. Course Management"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/button_style"
+                android:layout_marginBottom="12dp"
+                android:drawableLeft="@drawable/ic_courses"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp" />
+
+            <Button
+                android:id="@+id/btnUserManagement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="2. User Management"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/button_style"
+                android:layout_marginBottom="12dp"
+                android:drawableLeft="@drawable/ic_user"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp" />
+
+            <Button
+                android:id="@+id/btnQuizManagement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="3. Quiz Management"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/button_style"
+                android:layout_marginBottom="12dp"
+                android:drawableLeft="@drawable/ic_quizzes"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp" />
+
+            <Button
+                android:id="@+id/btnAssignmentManagement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="4. Assignment Management"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/button_style"
+                android:layout_marginBottom="12dp"
+                android:drawableLeft="@drawable/ic_assignments"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp" />
+
+            <Button
+                android:id="@+id/btnChatManagement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="5. Chat Management"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/button_style"
+                android:layout_marginBottom="12dp"
+                android:drawableLeft="@drawable/ic_chat"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp" />
+
+            <Button
+                android:id="@+id/btnNotificationManagement"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="6. Notification Management"
+                android:textSize="16sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/button_style"
+                android:layout_marginBottom="12dp"
+                android:drawableLeft="@drawable/ic_notification"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -306,6 +306,7 @@ public class SignUp extends AppCompatActivity {
                     public void onSuccess() {
                         Log.d("User Creation", "User Creation Successful");
                         // Registration successful
+                        userAuthenticationUtils.logoutUser();
                         Intent intent = new Intent(SignUp.this, Login.class);
                         intent.putExtra("email", email);
                         intent.putExtra("showVerificationMessage", true);

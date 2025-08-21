@@ -13,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.Question;
-import com.google.firebase.firestore.DocumentReference;
+import com.android.nexcode.models.User;
+import com.android.nexcode.repositories.firebase.UserRepository;
+import com.android.nexcode.utils.UserAuthenticationUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +33,8 @@ public class QuizActivity extends AppCompatActivity {
     private RadioGroup optionsGroup;
     private Button nextButton;
     private Button submitButton;
+    private UserRepository userRepository;
+    private UserAuthenticationUtils userAuthenticationUtils;
 
     private List<Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
@@ -56,6 +60,8 @@ public class QuizActivity extends AppCompatActivity {
         optionsGroup = findViewById(R.id.optionsGroup);
         nextButton = findViewById(R.id.nextButton);
         submitButton = findViewById(R.id.submitButton);
+        userRepository = new UserRepository(this);
+        userAuthenticationUtils = new UserAuthenticationUtils(this);
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
@@ -227,87 +233,33 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         // Update user progress in Firestore
-        updateUserProgress(score);
+        userRepository.updateQuizProgress(quizId, score, new UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                // nothing
+                Toast.makeText(QuizActivity.this, "Progress Updated", Toast.LENGTH_SHORT).show();
+                userRepository.updateQuizAvg(new UserRepository.UserCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        // nothing
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(QuizActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(QuizActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Show score and finish
         Toast.makeText(this, "Quiz submitted! Score: " + score + "%", Toast.LENGTH_LONG).show();
         finish();
-    }
-
-    private void updateUserProgress(int score) {
-        String userId = auth.getCurrentUser().getUid();
-
-// Create or update a user document in UserProgress collection
-        DocumentReference userProgressRef = db.collection("UserProgress").document(userId);
-
-        userProgressRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    Map<String, Object> userData;
-
-                    if (documentSnapshot.exists()) {
-                        // User document exists, get current data
-                        userData = documentSnapshot.getData();
-                    } else {
-                        // Create new user document
-                        userData = new HashMap<>();
-                        userData.put("userId", userId);
-                        userData.put("quizzes", new HashMap<String, Object>());
-                        userData.put("assignments", new HashMap<String, Object>());
-                        userData.put("totalCompleted", 0);
-                        userData.put("averageScore", 0.0);
-                    }
-
-                    // Get current quiz data or create new map
-                    Map<String, Object> quizzes = (Map<String, Object>) userData.getOrDefault("quizzes", new HashMap<String, Object>());
-
-                    // Create quiz progress data
-                    Map<String, Object> quizProgress = new HashMap<>();
-                    quizProgress.put("score", score);
-                    quizProgress.put("completed", true);
-                    quizProgress.put("completedAt", System.currentTimeMillis());
-
-                    // Add or update this quiz in the quizzes map
-                    quizzes.put(quizId, quizProgress);
-
-                    // Update quizzes in the userData
-                    userData.put("quizzes", quizzes);
-
-                    // Calculate total completed quizzes and average score
-                    int totalCompleted = 0;
-                    double totalScore = 0;
-
-                    for (Object quizData : quizzes.values()) {
-                        Map<String, Object> quizMap = (Map<String, Object>) quizData;
-                        Boolean completed = (Boolean) quizMap.get("completed");
-
-                        if (completed != null && completed) {
-                            totalCompleted++;
-                            Number scoreNumber = (Number) quizMap.get("score");
-                            double quizScore = (scoreNumber != null) ? scoreNumber.doubleValue() : 0;
-                            if (quizScore != 0) {
-                                totalScore += quizScore;
-                            }
-                        }
-                    }
-
-                    // Update aggregate stats
-                    userData.put("totalCompleted", totalCompleted);
-                    userData.put("averageScore", totalCompleted > 0 ? totalScore / totalCompleted : 0);
-
-                    // Set or update the document
-                    userProgressRef.set(userData)
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(this, "Progress updated successfully", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Error updating progress: " + e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error accessing user progress: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                });
     }
 
     @Override

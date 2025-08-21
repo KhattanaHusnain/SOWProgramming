@@ -3,6 +3,7 @@ package com.android.nexcode.presenters.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements ChatAdapter.OnMessageActionListener {
 
     private RecyclerView chatRecyclerView;
     private EditText messageInput;
@@ -44,7 +45,8 @@ public class ChatFragment extends Fragment {
     private String currentUserEmail;
     private LinearLayoutManager layoutManager;
     private ValueEventListener modeListener;
-    private String userRole="User";
+    private ValueEventListener messagesListener;
+    private String userRole = "User";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,10 +69,9 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
-
 
         return view;
     }
@@ -89,6 +90,11 @@ public class ChatFragment extends Fragment {
     private void setupRecyclerView() {
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(getContext(), chatMessages, currentUserEmail);
+
+        // Set user role and action listener for long press functionality
+        chatAdapter.setUserRole(userRole);
+        chatAdapter.setOnMessageActionListener(this);
+
         layoutManager = new LinearLayoutManager(getContext());
 
         chatRecyclerView.setAdapter(chatAdapter);
@@ -137,7 +143,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void updateUIBasedOnMode(boolean mode) {
-
         if (!mode && userRole.equals("User")) {
             // Mode is false - hide input controls
             messageInput.setVisibility(View.GONE);
@@ -162,6 +167,8 @@ public class ChatFragment extends Fragment {
         String filteredMsg = filter.filter(message);
         chatMessage.put("message", filteredMsg);
         chatMessage.put("timestamp", currentTime);
+        // Initialize empty deletedForUsers array
+        chatMessage.put("deletedForUsers", new ArrayList<String>());
 
         String messageId = chatDatabaseReference.push().getKey();
         if (messageId != null) {
@@ -173,7 +180,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void loadMessages() {
-        chatDatabaseReference.orderByChild("timestamp").addValueEventListener(new ValueEventListener() {
+        messagesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<ChatMessage> newMessages = new ArrayList<>();
@@ -181,7 +188,18 @@ public class ChatFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
                     if (chatMessage != null) {
-                        newMessages.add(chatMessage);
+                        // Store the Firebase key for deletion purposes
+                        chatMessage.setId(dataSnapshot.getKey());
+
+                        // Handle null or missing deletedForUsers field for existing messages
+                        if (chatMessage.getDeletedForUsers() == null) {
+                            chatMessage.setDeletedForUsers(new ArrayList<>());
+                        }
+
+                        // Only add message if current user hasn't deleted it
+                        if (currentUserEmail == null || !chatMessage.isDeletedForUser(currentUserEmail)) {
+                            newMessages.add(chatMessage);
+                        }
                     }
                 }
 
@@ -201,20 +219,130 @@ public class ChatFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to load messages: " + error.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+
+        chatDatabaseReference.orderByChild("timestamp").addValueEventListener(messagesListener);
+    }
+
+    // Implementation of OnMessageActionListener interface
+    @Override
+    public void onDeleteMessage(ChatMessage message, int position) {
+        showDeleteConfirmation(message, position, false);
+    }
+
+    @Override
+    public void onDeleteForEveryone(ChatMessage message, int position) {
+        showDeleteConfirmation(message, position, true);
+    }
+
+    private void showDeleteConfirmation(ChatMessage message, int position, boolean forEveryone) {
+        if (getContext() == null) return;
+
+        String title = forEveryone ? "Delete for Everyone" : "Delete Message";
+        String content = forEveryone ?
+                "This message will be deleted for everyone. This action cannot be undone." :
+                "This message will be deleted for you only. This action cannot be undone.";
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(title)
+                .setMessage(content)
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    if (forEveryone) {
+                        deleteMessageForEveryone(message, position);
+                    } else {
+                        deleteMessage(message, position);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void deleteMessage(ChatMessage message, int position) {
+        // Add current user to the deletedForUsers array in Firebase
+        if (message.getId() != null && currentUserEmail != null) {
+            DatabaseReference messageRef = chatDatabaseReference.child(message.getId());
+
+            // Get current deletedForUsers array and add current user
+            messageRef.child("deletedForUsers").get().addOnSuccessListener(dataSnapshot -> {
+                List<String> deletedForUsers = new ArrayList<>();
+
+                if (dataSnapshot.exists()) {
+                    // Get existing deleted users list
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String userEmail = userSnapshot.getValue(String.class);
+                        if (userEmail != null) {
+                            deletedForUsers.add(userEmail);
+                        }
+                    }
+                }
+
+                // Add current user if not already in the list
+                if (!deletedForUsers.contains(currentUserEmail)) {
+                    deletedForUsers.add(currentUserEmail);
+
+                    // Update Firebase with new deletedForUsers array
+                    messageRef.child("deletedForUsers").setValue(deletedForUsers)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "Message deleted", Toast.LENGTH_SHORT).show();
+                                // Message will be automatically hidden via the ValueEventListener
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(), "Failed to delete message: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(getContext(), "Failed to delete message: " + e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // Fallback: remove from local list if no ID available
+            if (position < chatMessages.size()) {
+                chatMessages.remove(position);
+                chatAdapter.notifyItemRemoved(position);
+                Toast.makeText(getContext(), "Message deleted locally", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void deleteMessageForEveryone(ChatMessage message, int position) {
+        // Delete from Firebase database completely (existing functionality)
+        if (message.getId() != null) {
+            chatDatabaseReference.child(message.getId()).removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Message deleted for everyone", Toast.LENGTH_SHORT).show();
+                        // The message will be automatically removed from the list via the ValueEventListener
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Failed to delete message: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // Fallback: remove from local list if no ID available
+            if (position < chatMessages.size()) {
+                chatMessages.remove(position);
+                chatAdapter.notifyItemRemoved(position);
+                Toast.makeText(getContext(), "Message deleted locally", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         // Clean up to prevent memory leaks
         if (chatRecyclerView != null) {
             chatRecyclerView.setAdapter(null);
         }
 
-        // Remove mode listener to prevent memory leaks
+        // Remove listeners to prevent memory leaks
         if (modeDatabaseReference != null && modeListener != null) {
             modeDatabaseReference.removeEventListener(modeListener);
+        }
+
+        if (chatDatabaseReference != null && messagesListener != null) {
+            chatDatabaseReference.removeEventListener(messagesListener);
         }
     }
 }

@@ -70,11 +70,6 @@
             android:layout_height="wrap_content"
             android:text="Favorite" />
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabOffline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Offline" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -99,19 +94,6 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/course_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/filterFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="Filter courses"
-        android:src="@drawable/ic_filter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/accent_color"
-        app:tint="@android:color/white" />
 
     <include
         android:id="@+id/emptyStateLayout"

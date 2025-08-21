@@ -334,6 +334,13 @@
                     android:text="Security"
                     android:textColor="#002B5B"
                     android:textSize="18sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Password Must contain one digit, one upper case alphabet, one lower case alphabet, one special character and must be 8 characters long"
+                    android:textColor="#002B5B"
+                    android:textSize="14sp" />
 
                 <!-- Password Input Field -->
                 <com.google.android.material.textfield.TextInputLayout

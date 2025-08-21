@@ -21,11 +21,9 @@ import com.android.nexcode.models.User;
 import com.android.nexcode.presenters.activities.Login;
 import com.android.nexcode.repositories.firebase.UserRepository;
 import com.android.nexcode.utils.UserAuthenticationUtils;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -51,6 +49,12 @@ public class ProfileFragment extends Fragment {
     private SwitchCompat switchNotifications;
     private LinearLayout layoutLogout;
 
+    // Skeleton Loading Views
+    private View skeletonPersonalInfo;
+    private View skeletonProgress;
+    private View skeletonCertificates;
+    private View actualContent;
+
     // Firebase
     UserRepository userRepository;
     UserAuthenticationUtils userAuthenticationUtils;
@@ -61,27 +65,38 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        userRepository = new UserRepository(getContext());
-        userAuthenticationUtils = new UserAuthenticationUtils(getContext());
 
         // Initialize UI components
-        initViews(view);
+        initialize(view);
 
-        // Setup click listeners
-        setupClickListeners();
+        // Show skeleton loading initially
+        showSkeletonLoading(true);
 
         // Load user data from Firestore
         if (userAuthenticationUtils.isUserLoggedIn()) {
             loadUserData();
         } else {
             // Handle not logged in state
+            showSkeletonLoading(false);
             Toast.makeText(getContext(), "No user is logged in", Toast.LENGTH_SHORT).show();
         }
+
+        // Setup click listeners
+        setupClickListeners();
 
         return view;
     }
 
-    private void initViews(View view) {
+    private void initialize(View view) {
+        userRepository = new UserRepository(getContext());
+        userAuthenticationUtils = new UserAuthenticationUtils(getContext());
+
+        // Find skeleton and actual content views
+        skeletonPersonalInfo = view.findViewById(R.id.skeleton_personal_info);
+        skeletonProgress = view.findViewById(R.id.skeleton_progress);
+        skeletonCertificates = view.findViewById(R.id.skeleton_certificates);
+        actualContent = view.findViewById(R.id.actual_content);
+
         // Personal Information
         profileImageView = view.findViewById(R.id.profile_image);
         txtFullName = view.findViewById(R.id.txt_full_name);
@@ -107,6 +122,67 @@ public class ProfileFragment extends Fragment {
         // Settings
         switchNotifications = view.findViewById(R.id.switch_notifications);
         layoutLogout = view.findViewById(R.id.layout_logout);
+    }
+
+    private void showSkeletonLoading(boolean show) {
+        if (show) {
+            // Show skeleton views
+            if (skeletonPersonalInfo != null) skeletonPersonalInfo.setVisibility(View.VISIBLE);
+            if (skeletonProgress != null) skeletonProgress.setVisibility(View.VISIBLE);
+            if (skeletonCertificates != null) skeletonCertificates.setVisibility(View.VISIBLE);
+
+            // Hide actual content
+            if (actualContent != null) actualContent.setVisibility(View.GONE);
+
+            // Start shimmer animation if using Shimmer library
+            startShimmerAnimation();
+        } else {
+            // Hide skeleton views
+            if (skeletonPersonalInfo != null) skeletonPersonalInfo.setVisibility(View.GONE);
+            if (skeletonProgress != null) skeletonProgress.setVisibility(View.GONE);
+            if (skeletonCertificates != null) skeletonCertificates.setVisibility(View.GONE);
+
+            // Show actual content
+            if (actualContent != null) actualContent.setVisibility(View.VISIBLE);
+
+            // Stop shimmer animation
+            stopShimmerAnimation();
+        }
+    }
+
+    private void startShimmerAnimation() {
+        // If using Shimmer library, start animation
+        // Example: ((ShimmerFrameLayout) skeletonPersonalInfo).startShimmer();
+
+        // Alternative: Create a simple fade animation for skeleton views
+        if (skeletonPersonalInfo != null) {
+            skeletonPersonalInfo.animate()
+                    .alpha(0.3f)
+                    .setDuration(1000)
+                    .withEndAction(() -> {
+                        if (skeletonPersonalInfo.getVisibility() == View.VISIBLE) {
+                            skeletonPersonalInfo.animate()
+                                    .alpha(1.0f)
+                                    .setDuration(1000)
+                                    .withEndAction(this::startShimmerAnimation)
+                                    .start();
+                        }
+                    })
+                    .start();
+        }
+    }
+
+    private void stopShimmerAnimation() {
+        // Stop any ongoing animations
+        if (skeletonPersonalInfo != null) {
+            skeletonPersonalInfo.clearAnimation();
+        }
+        if (skeletonProgress != null) {
+            skeletonProgress.clearAnimation();
+        }
+        if (skeletonCertificates != null) {
+            skeletonCertificates.clearAnimation();
+        }
     }
 
     private void setupClickListeners() {
@@ -137,16 +213,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onSuccess(User userData) {
                 user = userData;
-                txtFullName.setText(user.getFullName() != null ? user.getFullName() : "Not specified");
-                txtEmail.setText(user.getEmail() != null ? user.getEmail() : "Not specified");
-                txtPhone.setText(user.getPhone() != null ? user.getPhone() : "Not specified");
-                txtDateOfBirth.setText(user.getBirthdate() != null ? user.getBirthdate() : "Not specified");
-                txtGender.setText(user.getGender() != null ? user.getGender() : "Not specified");
-                txtDegree.setText(user.getDegree() != null ? user.getDegree() : "Not specified");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = new Date(user.getCreatedAt());
-                String accountCreated = dateFormat.format(date);
-                txtAccountCreated.setText(accountCreated);
+                Log.d(TAG, "User data loaded successfully: " + user.toString());
+
+                // Hide skeleton loading and show actual content
+                showSkeletonLoading(false);
+
                 // Set profile image from Base64 string
                 if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
                     try {
@@ -161,33 +232,34 @@ public class ProfileFragment extends Fragment {
                     profileImageView.setImageResource(R.drawable.ic_profile);
                 }
 
+                txtFullName.setText(user.getFullName() != null ? user.getFullName() : "Not specified");
+                txtEmail.setText(user.getEmail() != null ? user.getEmail() : "Not specified");
+                txtPhone.setText(user.getPhone() != null ? user.getPhone() : "Not specified");
+                txtDateOfBirth.setText(user.getBirthdate() != null ? user.getBirthdate() : "Not specified");
+                txtGender.setText(user.getGender() != null ? user.getGender() : "Not specified");
+                txtDegree.setText(user.getDegree() != null ? user.getDegree() : "Not specified");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date(user.getCreatedAt());
+                String accountCreated = dateFormat.format(date);
+                txtAccountCreated.setText(accountCreated);
 
                 // Update progress UI
-                txtEnrolledCourses.setText("0");
+                txtEnrolledCourses.setText( user.getEnrolledCourses() != null ? user.getEnrolledCourses().size() + "" : "0");
                 txtCompletedCourses.setText("0");
-                txtFavouriteCourses.setText("0");
-                txtAssignmentsTaken.setText("0");
-                txtAssignmentsScore.setText("0%");
-                txtQuizzesTaken.setText("0");
-                txtQuizzesScore.setText("0%");
+                txtFavouriteCourses.setText(user.getFavorites() != null ? user.getFavorites().size() + "" : "0");
+                txtAssignmentsTaken.setText(user.getAssignments() != null ? user.getAssignments().size() + "" : "0");
+                txtAssignmentsScore.setText(user.getAssignmentAvg() + "%");
+                txtQuizzesTaken.setText(user.getQuizzes() != null ? user.getQuizzes().size() + "" : "0");
+                txtQuizzesScore.setText(user.getQuizzesAvg() + "%");
                 txtCertificatesCount.setText("0");
-
             }
 
             @Override
             public void onFailure(String message) {
+                // Hide skeleton loading even on failure
+                showSkeletonLoading(false);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
-
-    // Optional: Utils to encode/decode profile images
-    public static String encodeImageToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
-
 }

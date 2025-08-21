@@ -58,6 +58,7 @@ dependencies {
     implementation libs.annotation
     implementation libs.glide
     implementation (libs.circleimageview)
+    implementation libs.shimmer
     implementation libs.android.gif.drawable
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx

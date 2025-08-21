@@ -162,18 +162,22 @@ public class Login extends AppCompatActivity {
         // Validate email
         if (email.isEmpty()) {
             emailInputLayout.setError("Email is required");
+            emailInput.requestFocus();
             return;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInputLayout.setError("Please enter a valid email address");
+            emailInput.requestFocus();
             return;
         }
 
         // Validate password
         if (password.isEmpty()) {
             passwordInputLayout.setError("Password is required");
+            passwordInput.requestFocus();
             return;
         } else if (password.length() < 8) {
             passwordInputLayout.setError("Password must be at least 8 characters");
+            passwordInput.requestFocus();
             return;
         }
 
@@ -188,6 +192,8 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
+                setLoading(false);
+                Log.e(TAG, "Login failed: " + message);
                 Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
             }
         });
@@ -195,7 +201,6 @@ public class Login extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
-        setLoading(true);
         setGoogleLoading(true);
 
         userRepository.signInWithGoogle(new UserRepository.GoogleSignInCallback() {
@@ -279,34 +284,20 @@ public class Login extends AppCompatActivity {
     private void setGoogleLoading(boolean loading) {
         if (googleProgress != null && googleIcon != null) {
             if (loading) {
+                loginButton.setEnabled(false);
+                emailInput.setEnabled(false);
+                passwordInput.setEnabled(false);
                 googleIcon.setVisibility(View.GONE);
                 googleProgress.setVisibility(View.VISIBLE);
                 googleCard.setEnabled(false);
             } else {
+                loginButton.setEnabled(true);
+                emailInput.setEnabled(true);
+                passwordInput.setEnabled(true);
                 googleIcon.setVisibility(View.VISIBLE);
                 googleProgress.setVisibility(View.GONE);
                 googleCard.setEnabled(true);
             }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Check if user is already signed in and verified
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            // For Google users, they don't need email verification
-            // For email/password users, check if email is verified
-            if (currentUser.getProviderData().size() > 1 &&
-                    currentUser.getProviderData().get(1).getProviderId().equals("google.com")) {
-                // User signed in with Google, navigate to main
-                navigateToMain();
-            } else if (currentUser.isEmailVerified()) {
-                // User signed in with email/password and is verified
-                navigateToMain();
-            }
-            // If user is signed in but not verified (email/password), stay on login screen
         }
     }
 }

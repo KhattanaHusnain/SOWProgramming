@@ -8,6 +8,8 @@ public class Quiz implements Parcelable {
     private String title;
     private String description;
     private String dueDate;
+    private boolean active;
+    private int course;
     private int totalQuestions;
     private int timeLimit; // in minutes
     private double passingScore;
@@ -104,6 +106,22 @@ public class Quiz implements Parcelable {
 
     public void setPassingScore(double passingScore) {
         this.passingScore = passingScore;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getCourse() {
+        return course;
+    }
+
+    public void setCourse(int course) {
+        this.course = course;
     }
 
     @Override

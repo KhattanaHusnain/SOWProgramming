@@ -6,12 +6,18 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- For Android 13+ (API level 33+), you might need this instead of READ_EXTERNAL_STORAGE -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <!-- For Android 13+ (API level 33+), you might need this instead of READ_EXTERNAL_STORAGE -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
 
     <application
         android:allowBackup="true"
@@ -23,6 +29,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".presenters.activities.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presenters.activities.AssignmentActivity"
+            android:exported="false" />
         <activity
             android:name=".presenters.activities.ChangeProfilePicture"
             android:exported="false" />

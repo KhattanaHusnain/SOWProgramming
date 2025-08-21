@@ -27,6 +27,7 @@ public class QuizRepository {
     public void loadRecentQuizzes(Callback callback) {
         db.collection("quizzes")
                 .limit(2)
+                .whereEqualTo("active", true)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Quiz> quizzes = new ArrayList<>();

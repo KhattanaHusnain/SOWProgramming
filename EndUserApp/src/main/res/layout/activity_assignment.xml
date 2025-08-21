@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".presenters.activities.AssignmentActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Assignment Details Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Assignment Title"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Assignment Description"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Assignment Details Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/dueDateTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Due: May 5, 2025"
+                        android:textColor="@color/accent_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/maxScoreTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Max Score: 100"
+                        android:textColor="@color/primary_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Status -->
+                <TextView
+                    android:id="@+id/statusTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status: Not Started"
+                    android:textColor="@color/status_bar"
+                    android:textSize="14sp"
+                    android:background="@drawable/status_background"
+                    android:padding="8dp"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Assignment Image (if available) -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <ImageView
+                android:id="@+id/assignmentImageView"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="Assignment Image"
+                android:visibility="gone" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Submission Section -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/submissionCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/submissionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Your Work"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Select Images Button -->
+                <Button
+                    android:id="@+id/selectImagesButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select Images from Gallery"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_primary"
+                    android:padding="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:drawableLeft="@drawable/ic_image"
+                    android:drawablePadding="8dp"
+                    android:gravity="center" />
+
+                <!-- Selected Images Container -->
+                <LinearLayout
+                    android:id="@+id/selectedImagesContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Selected Images:"
+                        android:textColor="@color/secondary_text_color"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- RecyclerView for selected images -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/selectedImagesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginBottom="16dp" />
+
+                </LinearLayout>
+
+                <!-- Submit Button -->
+                <Button
+                    android:id="@+id/submitButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Assignment"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_submit"
+                    android:padding="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:drawableLeft="@drawable/ic_send"
+                    android:drawablePadding="8dp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

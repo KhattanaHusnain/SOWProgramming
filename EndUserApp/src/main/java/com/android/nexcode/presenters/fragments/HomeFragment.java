@@ -1,6 +1,5 @@
 package com.android.nexcode.presenters.fragments;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -21,24 +20,19 @@ import com.android.nexcode.adapters.HomeAdapter;
 import com.android.nexcode.adapters.QuizAdapter;
 import com.android.nexcode.adapters.AssignmentAdapter;
 import com.android.nexcode.R;
-import com.android.nexcode.models.UserProgress;
 import com.android.nexcode.models.Quiz;
 import com.android.nexcode.models.Assignment;
 import com.android.nexcode.models.Course;
 import com.android.nexcode.models.User;
 
-import com.android.nexcode.presenters.activities.QuizActivity;
+import com.android.nexcode.presenters.activities.Main;
 import com.android.nexcode.repositories.firebase.AssignmentRepository;
 import com.android.nexcode.repositories.firebase.CourseRepository;
 import com.android.nexcode.repositories.firebase.QuizRepository;
 import com.android.nexcode.repositories.firebase.UserRepository;
 import com.android.nexcode.utils.UserAuthenticationUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,7 +42,6 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     private static final int GRID_SPAN_COUNT = 2;
-    private static final int RECENT_ITEMS_LIMIT = 2;
 
     private UserRepository userRepository;
     private CourseRepository courseRepository;
@@ -56,7 +49,6 @@ public class HomeFragment extends Fragment {
     private AssignmentRepository assignmentRepository;
     private UserAuthenticationUtils userAuthenticationUtils;
     // Firebase
-    private FirebaseFirestore db;
     private FirebaseAuth auth;
 
     // Adapters
@@ -88,12 +80,23 @@ public class HomeFragment extends Fragment {
     private TextView seeAllQuizzes;
     private TextView seeAllAssignments;
 
+    // Shimmer Loading Views
+    private ShimmerFrameLayout profileShimmer;
+    private ShimmerFrameLayout dashboardShimmer;
+    private ShimmerFrameLayout coursesShimmer;
+    private ShimmerFrameLayout quizzesShimmer;
+    private ShimmerFrameLayout assignmentsShimmer;
+
+    // Content containers
+    private View profileContent;
+    private View dashboardContent;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initialize(view);
-        setupRecyclerViews();
+        showSkeletonLoading();
         loadUserData();
         loadDashboardData();
         setupClickListeners();
@@ -109,7 +112,6 @@ public class HomeFragment extends Fragment {
         quizRepository = new QuizRepository(getContext());
         assignmentRepository = new AssignmentRepository(getContext());
 
-        db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
         // Profile Views
@@ -135,6 +137,19 @@ public class HomeFragment extends Fragment {
         seeAllPopular = view.findViewById(R.id.see_all_popular);
         seeAllQuizzes = view.findViewById(R.id.see_all_quizzes);
         seeAllAssignments = view.findViewById(R.id.see_all_assignments);
+
+        // Shimmer Views
+        profileShimmer = view.findViewById(R.id.profile_shimmer);
+        dashboardShimmer = view.findViewById(R.id.dashboard_shimmer);
+        coursesShimmer = view.findViewById(R.id.courses_shimmer);
+        quizzesShimmer = view.findViewById(R.id.quizzes_shimmer);
+        assignmentsShimmer = view.findViewById(R.id.assignments_shimmer);
+
+        // Content containers
+        profileContent = view.findViewById(R.id.profile_content);
+        dashboardContent = view.findViewById(R.id.dashboard_content);
+
+        setupRecyclerViews();
     }
 
     private void setupRecyclerViews() {
@@ -147,9 +162,6 @@ public class HomeFragment extends Fragment {
         quizzesRecycler.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         quizAdapter = new QuizAdapter(requireContext(), new ArrayList<>());
-        quizAdapter.setOnQuizItemClickListener(quiz -> {
-            openQuiz(quiz);
-        });
         quizzesRecycler.setAdapter(quizAdapter);
 
         // Setup Assignments RecyclerView (Horizontal Layout)
@@ -162,21 +174,76 @@ public class HomeFragment extends Fragment {
         assignmentsRecycler.setAdapter(assignmentAdapter);
     }
 
+    private void showSkeletonLoading() {
+        // Show shimmer effects and hide content
+        profileShimmer.setVisibility(View.VISIBLE);
+        profileShimmer.startShimmer();
+        profileContent.setVisibility(View.GONE);
+
+        dashboardShimmer.setVisibility(View.VISIBLE);
+        dashboardShimmer.startShimmer();
+        dashboardContent.setVisibility(View.GONE);
+
+        coursesShimmer.setVisibility(View.VISIBLE);
+        coursesShimmer.startShimmer();
+        popularCoursesRecycler.setVisibility(View.GONE);
+
+        quizzesShimmer.setVisibility(View.VISIBLE);
+        quizzesShimmer.startShimmer();
+        quizzesRecycler.setVisibility(View.GONE);
+
+        assignmentsShimmer.setVisibility(View.VISIBLE);
+        assignmentsShimmer.startShimmer();
+        assignmentsRecycler.setVisibility(View.GONE);
+    }
+
+    private void hideProfileSkeleton() {
+        profileShimmer.stopShimmer();
+        profileShimmer.setVisibility(View.GONE);
+        profileContent.setVisibility(View.VISIBLE);
+    }
+
+    private void hideDashboardSkeleton() {
+        dashboardShimmer.stopShimmer();
+        dashboardShimmer.setVisibility(View.GONE);
+        dashboardContent.setVisibility(View.VISIBLE);
+    }
+
+    private void hideCoursesSkeleton() {
+        coursesShimmer.stopShimmer();
+        coursesShimmer.setVisibility(View.GONE);
+        popularCoursesRecycler.setVisibility(View.VISIBLE);
+    }
+
+    private void hideQuizzesSkeleton() {
+        quizzesShimmer.stopShimmer();
+        quizzesShimmer.setVisibility(View.GONE);
+        quizzesRecycler.setVisibility(View.VISIBLE);
+    }
+
+    private void hideAssignmentsSkeleton() {
+        assignmentsShimmer.stopShimmer();
+        assignmentsShimmer.setVisibility(View.GONE);
+        assignmentsRecycler.setVisibility(View.VISIBLE);
+    }
+
     private void loadUserData() {
-        if (userAuthenticationUtils.getUserId() == null) {
+        if (!userAuthenticationUtils.isUserLoggedIn()) {
             Log.w(TAG, "Current user ID is null");
+            hideProfileSkeleton();
+            hideDashboardSkeleton();
             return;
         }
-
 
         userRepository.loadUserData(new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
+                // Update profile UI
                 userFullName.setText(user.getFullName() != null ? user.getFullName() : "User");
-                userDegree.setText(user.getDegree() != null ? user.getDegree() : "");
-                userEmail.setText(user.getEmail() != null ? user.getEmail() : "");
+                userDegree.setText(user.getDegree() != null ? user.getDegree() : "No Degree Assigned");
+                userEmail.setText(user.getEmail() != null ? user.getEmail() : "No Email Assigned");
+
                 // Set profile image from Base64 string
-                Log.d(TAG, "p0");
                 if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
                     try {
                         byte[] decodedString = Base64.decode(user.getPhoto(), Base64.DEFAULT);
@@ -189,16 +256,17 @@ public class HomeFragment extends Fragment {
                 } else {
                     profileImage.setImageResource(R.drawable.ic_profile);
                 }
+
+                // Update dashboard stats
                 completedCoursesCount.setText(user.getCompletedCourses() != null ? user.getCompletedCourses().size()+"" : "0");
-                Log.d(TAG, "p1");
                 enrolledCoursesCount.setText(user.getEnrolledCourses() != null ? user.getEnrolledCourses().size()+"" : "0");
-                Log.d(TAG, "p2");
                 quizScore.setText(String.format("%.0f%%", user.getQuizzesAvg()));
-                Log.d(TAG, "p3");
                 assignmentScore.setText(String.format("%.0f%%", user.getAssignmentAvg()));
-                Log.d(TAG, "p4");
                 certificatesCount.setText(user.getCertificates() != null ? user.getCertificates().size()+"" : "0");
-                Log.d(TAG, "p5");
+
+                // Hide skeleton loading
+                hideProfileSkeleton();
+                hideDashboardSkeleton();
             }
 
             @Override
@@ -207,9 +275,12 @@ public class HomeFragment extends Fragment {
                 userFullName.setText("User");
                 userDegree.setText("");
                 userEmail.setText(auth.getCurrentUser() != null ? auth.getCurrentUser().getEmail() : "");
+
+                // Hide skeleton loading even on failure
+                hideProfileSkeleton();
+                hideDashboardSkeleton();
             }
         });
-
     }
 
     private void loadDashboardData() {
@@ -224,11 +295,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(List<Course> courses) {
                 coursesAdapter.updateCourses(courses);
+                hideCoursesSkeleton();
             }
 
             @Override
             public void onFailure(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                hideCoursesSkeleton();
             }
         });
     }
@@ -238,11 +311,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(List<Quiz> quizzes) {
                 quizAdapter.updateQuizzes(quizzes);
+                hideQuizzesSkeleton();
             }
 
             @Override
             public void onFailure(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                hideQuizzesSkeleton();
             }
         });
     }
@@ -252,11 +327,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(List<Assignment> assignments) {
                 assignmentAdapter.updateAssignments(assignments);
+                hideAssignmentsSkeleton();
             }
 
             @Override
             public void onFailure(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                hideAssignmentsSkeleton();
             }
         });
     }
@@ -281,33 +358,36 @@ public class HomeFragment extends Fragment {
         assignmentScore.setOnClickListener(v -> navigateToAssignmentHistory());
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Stop all shimmer effects to prevent memory leaks
+        if (profileShimmer != null) profileShimmer.stopShimmer();
+        if (dashboardShimmer != null) dashboardShimmer.stopShimmer();
+        if (coursesShimmer != null) coursesShimmer.stopShimmer();
+        if (quizzesShimmer != null) quizzesShimmer.stopShimmer();
+        if (assignmentsShimmer != null) assignmentsShimmer.stopShimmer();
+    }
+
     // Navigation methods
     private void openProfile() {
-        ProfileFragment fragment = new ProfileFragment();
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_profile);
     }
 
     private void openNotifications() {
         // Navigate to notifications screen
-        // Use Navigation Component or start NotificationsActivity
     }
 
     private void navigateToAllCourses() {
-        // Navigate to all courses screen
-        // Use Navigation Component or start CoursesActivity
+        ((Main) getActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_courses);
     }
 
     private void navigateToAllQuizzes() {
-        // Navigate to all quizzes screen
-        // Use Navigation Component or start QuizzesActivity
+        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_quizzes);
     }
 
     private void navigateToAllAssignments() {
-        // Navigate to all assignments screen
-        // Use Navigation Component or start AssignmentsActivity
+        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_quizzes);
     }
 
     private void navigateToCompletedCourses() {
@@ -330,14 +410,7 @@ public class HomeFragment extends Fragment {
         // Navigate to assignment history screen
     }
 
-    private void openQuiz(Quiz quiz) {
-        Intent intent = new Intent(getContext(), QuizActivity.class);
-        intent.putExtra("QUIZ_ID", quiz.getId());
-        startActivity(intent);
-    }
-
     private void openAssignment(Assignment assignment) {
         // Navigate to assignment details/submission screen
-        // Pass assignment ID and other necessary data
     }
 }

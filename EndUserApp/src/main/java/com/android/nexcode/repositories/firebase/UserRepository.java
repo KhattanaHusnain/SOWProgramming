@@ -11,11 +11,18 @@ import android.widget.Toast;
 import com.android.nexcode.models.User;
 import com.android.nexcode.utils.UserAuthenticationUtils;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,7 +60,7 @@ public class UserRepository {
     }
 
     public void updateNotificationPreference(boolean isChecked) {
-        firestore.collection("User").document(userAuthenticationUtils.getUserId()).update("notification", isChecked);
+        firestore.collection("User").document(userAuthenticationUtils.getCurrentUserEmail()).update("notification", isChecked);
     }
 
     public void createUser(String email, String fullName, String photo, String phone,
@@ -64,7 +71,7 @@ public class UserRepository {
                         gender, birthdate, degree, semester, role, notification, createdAt);
 
                 firestore.collection("User")
-                        .document(userAuthenticationUtils.getUserId())
+                        .document(userAuthenticationUtils.getCurrentUserEmail())
                         .set(user)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -86,28 +93,13 @@ public class UserRepository {
                     // Create new user document in Firestore
                     createGoogleUser(firebaseUser, callback);
                 } else {
-                    // Load existing user data
-                    loadUserData(new UserCallback() {
-                        @Override
-                        public void onSuccess(User loadedUser) {
-                            user = loadedUser;
-                            if (callback != null) callback.onSuccess(user);
-                        }
-
-                        @Override
-                        public void onFailure(String message) {
-                            // If user data doesn't exist in Firestore but user exists in Auth,
-                            // create the user document
-                            Log.w(TAG, "User exists in Auth but not in Firestore, creating user document");
-                            createGoogleUser(firebaseUser, callback);
-                        }
-                    });
+                    callback.onSuccess(null);
                 }
             }
 
             @Override
             public void onFailure(String message) {
-                if (callback != null) callback.onFailure(message);
+                callback.onFailure(message);
             }
         });
     }
@@ -192,20 +184,18 @@ public class UserRepository {
 
         // Save to Firestore
         firestore.collection("User")
-                .document(userId)
+                .document(email)
                 .set(newUser)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Google user created successfully in Firestore");
                         user = newUser;
-                        Toast.makeText(context, "Welcome " + fullName + "!", Toast.LENGTH_SHORT).show();
-                        if (callback != null) callback.onSuccess(newUser);
+                        callback.onSuccess(newUser);
                     } else {
                         String error = task.getException() != null ?
                                 task.getException().getMessage() : "Failed to create user document";
                         Log.e(TAG, "Failed to create Google user in Firestore: " + error);
-                        Toast.makeText(context, "Sign-in successful but failed to save user data: " + error, Toast.LENGTH_LONG).show();
-                        if (callback != null) callback.onFailure(error);
+                        callback.onFailure(error);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -218,27 +208,27 @@ public class UserRepository {
     }
 
     public void loadUserData(UserCallback callback) {
-        String userId = userAuthenticationUtils.getUserId();
-        if (userId == null) {
-            if (callback != null) callback.onFailure("No user is logged in");
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
             return;
         }
 
         firestore.collection("User")
-                .document(userId)
+                .document(email)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         User loadedUser = task.getResult().toObject(User.class);
                         if (loadedUser != null) {
-                            if (callback != null) callback.onSuccess(loadedUser);
+                            callback.onSuccess(loadedUser);
                         } else {
-                            if (callback != null) callback.onFailure("User data not found");
+                            callback.onFailure("User data not found");
                         }
                     } else {
                         String error = task.getException() != null ?
                                 task.getException().getMessage() : "Failed to load user data";
-                        if (callback != null) callback.onFailure(error);
+                        callback.onFailure(error);
                     }
                 });
     }
@@ -271,7 +261,7 @@ public class UserRepository {
 
     public void enrollUserInCourse(int courseId, UserCallback callback) {
         firestore.collection("User")
-                .document(userAuthenticationUtils.getUserId())
+                .document(userAuthenticationUtils.getCurrentUserEmail())
                 .update("enrolledCourses", FieldValue.arrayUnion(courseId))
                 .addOnSuccessListener(
                         aVoid -> {
@@ -284,27 +274,10 @@ public class UserRepository {
                         }
                 );
     }
-    public void checkEnrollmentStatus(int courseId, UserCallback callback) {
-        firestore.collection("User")
-                .document(userAuthenticationUtils.getUserId())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    List<Integer> enrolledCourses = (List<Integer>) documentSnapshot.get("enrolledCourses");
-                    if (enrolledCourses != null && enrolledCourses.contains(courseId)) {
-                        callback.onSuccess(null);
-                    } else {
-                        callback.onFailure("User is not enrolled in this course");
-                    }
-                })
-                .addOnFailureListener(
-                        e -> {
-                            callback.onFailure("Failed to check enrollment status: " + e.getMessage());
-                        }
-                );
-    }
+
     public void addtoFavorite(int courseId, UserCallback callback) {
         firestore.collection("User")
-                .document(userAuthenticationUtils.getUserId())
+                .document(userAuthenticationUtils.getCurrentUserEmail())
                 .update("favorites", FieldValue.arrayUnion(courseId))
                 .addOnSuccessListener(
                         aVoid -> {
@@ -319,7 +292,7 @@ public class UserRepository {
     }
     public void removeFromFavorite(int courseId, UserCallback callback) {
         firestore.collection("User")
-                .document(userAuthenticationUtils.getUserId())
+                .document(userAuthenticationUtils.getCurrentUserEmail())
                 .update("favorites", FieldValue.arrayRemove(courseId))
                 .addOnSuccessListener(aVoid -> {
                     callback.onSuccess(null);
@@ -330,18 +303,134 @@ public class UserRepository {
     }
     public void checkFavoriteStatus(int courseId, UserCallback callback) {
         firestore.collection("User")
-                .document(userAuthenticationUtils.getUserId())
+                .document(userAuthenticationUtils.getCurrentUserEmail())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    List<Integer> favorites = (List<Integer>) documentSnapshot.get("favorites");
-                    if (favorites != null && favorites.contains(courseId)) {
+                    if (!documentSnapshot.exists()) {
+                        callback.onFailure("User not found");
+                        return;
+                    }
+
+                    List<Object> favorites = (List<Object>) documentSnapshot.get("favorites");
+                    if (favorites != null && containsCourseId(favorites, courseId)) {
+                        callback.onSuccess(null);
+                    } else {
+                        callback.onFailure("Course is not in favorites");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onFailure("Failed to check favorite status: " + e.getMessage());
+                });
+    }
+
+    public void checkEnrollmentStatus(int courseId, UserCallback callback) {
+        firestore.collection("User")
+                .document(userAuthenticationUtils.getCurrentUserEmail())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        callback.onFailure("User not found");
+                        return;
+                    }
+
+                    List<Object> enrolledCourses = (List<Object>) documentSnapshot.get("enrolledCourses");
+                    if (enrolledCourses != null && containsCourseId(enrolledCourses, courseId)) {
                         callback.onSuccess(null);
                     } else {
                         callback.onFailure("User is not enrolled in this course");
                     }
                 })
                 .addOnFailureListener(e -> {
-                            callback.onFailure("Failed to check favorite status: " + e.getMessage());
+                    callback.onFailure("Failed to check enrollment status: " + e.getMessage());
                 });
     }
+    public void addQuiz(String quizId, UserCallback callback) {
+        firestore.collection("User")
+                .document(userAuthenticationUtils.getCurrentUserEmail())
+                .update("quizzes", FieldValue.arrayUnion(quizId))
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess(null);
+                    } else {
+                        String error = task.getException() != null ?
+                                task.getException().getMessage() : "Failed to add quiz";
+                        callback.onFailure(error);
+                    }
+                });
+    }
+    public void updateQuizProgress(String quizId, int score, UserCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        DocumentReference docRef = firestore
+                .collection("User")
+                .document(email)
+                .collection("QuizProgress")
+                .document(quizId);
+
+        Map<String, Object> updateData = new HashMap<>();
+        updateData.put("score", score);
+        updateData.put("completed", true);
+        updateData.put("completedAt", System.currentTimeMillis());
+
+        docRef.set(updateData, SetOptions.merge()) // ✅ will create if not exists
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                .addOnFailureListener(e -> callback.onFailure(
+                        e.getMessage() != null ? e.getMessage() : "Failed to submit quiz"
+                ));
+    }
+    private boolean containsCourseId(List<Object> list, int courseId) {
+        if (list == null) return false;
+
+        for (Object item : list) {
+            if (item instanceof Number) {
+                if (((Number) item).intValue() == courseId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void updateQuizAvg(UserCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        CollectionReference progressRef = firestore
+                .collection("User")
+                .document(email)
+                .collection("QuizProgress");
+
+        progressRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                        if (docs.isEmpty()) {
+                            callback.onFailure("No quiz attempts found.");
+                            return;
+                        }
+
+                        int totalScore = 0;
+                        for (DocumentSnapshot doc : docs) {
+                            Long score = doc.getLong("score");
+                            if (score != null) {
+                                totalScore += score;
+                            }
+                        }
+
+                        float avg = (float) totalScore / docs.size();
+
+                        firestore.collection("User")
+                                .document(email)
+                                .update("quizzesAvg", avg)
+                                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                                .addOnFailureListener(e -> callback.onFailure(
+                                        e.getMessage() != null ? e.getMessage() : "Failed to update average"
+                                ));
+
+                    } else {
+                        callback.onFailure(
+                                task.getException() != null ?
+                                        task.getException().getMessage() : "Failed to fetch progress"
+                        );
+                    }
+                });
+    }
+
 }

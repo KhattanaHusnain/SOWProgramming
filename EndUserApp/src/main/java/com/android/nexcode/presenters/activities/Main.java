@@ -2,6 +2,7 @@ package com.android.nexcode.presenters.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -23,8 +24,8 @@ import java.util.Map;
 
 public class Main extends AppCompatActivity {
 
-    BottomNavigationView bottomNavigationView;
-    Map<Integer, Fragment> fragmentMap = new HashMap<>();
+    public BottomNavigationView bottomNavigationView;
+    Map<Integer, Fragment> fragmentMap;
     Fragment currentFragment;
     ImageView menuIcon;
     PopupMenu popupMenu;
@@ -33,33 +34,22 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initialize(savedInstanceState);
+        setUpClickListeners();
+    }
+
+    private void initialize(Bundle savedInstanceState) {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         menuIcon = findViewById(R.id.menu_icon);
         popupMenu = new PopupMenu(this, menuIcon);
         popupMenu.inflate(R.menu.header_menu);
-        menuIcon.setOnClickListener(v -> popupMenu.show());
-        popupMenu.setOnMenuItemClickListener(item -> {
-                    if(item.getItemId() == R.id.profile)
-                        switchFragment(fragmentMap.get(R.id.nav_profile));
-                    else if(item.getItemId()==R.id.settings)
-                        startActivity(new Intent(this, SettingsActivity.class));
-                    else if(item.getItemId()==R.id.chatbot)
-                        startActivity(new Intent(this, Main.class));
-                    else if(item.getItemId()==R.id.logout) {
-                        FirebaseAuth.getInstance().signOut();
-                        startActivity(new Intent(this, Authentication.class));
-                        finish();
-                    }
-                    return true;
-        });
-
+        fragmentMap = new HashMap<>();
         // Initialize fragments
         fragmentMap.put(R.id.nav_home, new HomeFragment());
         fragmentMap.put(R.id.nav_courses, new CoursesFragment());
         fragmentMap.put(R.id.nav_chat, new ChatFragment());
         fragmentMap.put(R.id.nav_quizzes, new AssessmentFragment());
         fragmentMap.put(R.id.nav_profile, new ProfileFragment());
-
         // Load Home Fragment by default
         if (savedInstanceState == null) {
             currentFragment = fragmentMap.get(R.id.nav_home);
@@ -68,10 +58,6 @@ public class Main extends AppCompatActivity {
                     .commit();
         }
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            switchFragment(fragmentMap.get(item.getItemId()));
-            return true;
-        });
     }
 
     private void switchFragment(Fragment targetFragment) {
@@ -82,6 +68,28 @@ public class Main extends AppCompatActivity {
                     .commit();
             currentFragment = targetFragment;
         }
+    }
+
+    private void setUpClickListeners() {
+        menuIcon.setOnClickListener(v -> popupMenu.show());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.about)
+                startActivity(new Intent(this, AboutActivity.class));
+            else if(item.getItemId()==R.id.settings)
+                startActivity(new Intent(this, SettingsActivity.class));
+            else if(item.getItemId()==R.id.chatbot)
+                Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+            else if(item.getItemId()==R.id.logout) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this, Authentication.class));
+                finish();
+            }
+            return true;
+        });
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switchFragment(fragmentMap.get(item.getItemId()));
+            return true;
+        });
     }
 
     @Override

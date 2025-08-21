@@ -18,7 +18,6 @@ import com.android.nexcode.R;
 import com.android.nexcode.adapters.CourseAdapter;
 import com.android.nexcode.models.Course;
 import com.android.nexcode.repositories.firebase.CourseRepository;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class CoursesFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TabLayout tabLayout;
     private ConstraintLayout emptyStateLayout;
-    private FloatingActionButton filterFab;
     private CourseAdapter adapter;
     private List<Course> allCourses = new ArrayList<>();
     private List<Course> favoriteCourses = new ArrayList<>();
@@ -49,7 +47,6 @@ public class CoursesFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         tabLayout = view.findViewById(R.id.tabLayout);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
-        filterFab = view.findViewById(R.id.filterFab);
         Button exploreButton = view.findViewById(R.id.emptyStateButton);
 
         // Setup RecyclerView
@@ -72,8 +69,6 @@ public class CoursesFragment extends Fragment {
         // Setup TabLayout
         setupTabLayout();
 
-        // Setup FloatingActionButton
-        setupFilterFab();
 
         // Setup EmptyState button
         exploreButton.setOnClickListener(v -> {
@@ -92,6 +87,7 @@ public class CoursesFragment extends Fragment {
             @Override
             public void onSuccess(List<Course> courses) {
                 allCourses = courses;
+                adapter.updateData(allCourses);
             }
 
             @Override
@@ -159,21 +155,6 @@ public class CoursesFragment extends Fragment {
         });
     }
 
-    private void setupFilterFab() {
-        filterFab.setOnClickListener(v -> {
-            // Show filter dialog
-            showFilterDialog();
-        });
-    }
-
-    private void showFilterDialog() {
-        // Implement filter dialog logic here
-        // This can be a BottomSheetDialog with options like:
-        // - Sort by (newest, oldest, duration, members)
-        // - Filter by category (Programming, Design, Data Science, etc.)
-        // - Filter by public/private status
-        // - Filter by duration range
-    }
 
     private void filterCoursesWithCurrentSettings() {
         List<Course> filteredList = new ArrayList<>();

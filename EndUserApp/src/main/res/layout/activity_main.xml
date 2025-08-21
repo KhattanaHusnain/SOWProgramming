@@ -55,13 +55,6 @@
                 android:clickable="true"
                 android:focusable="true"
                 />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/menu_icon"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"/>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 

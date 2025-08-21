@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NexCode</string>
+    <string name="app_name">SOWP ADMIN</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -149,9 +149,5 @@
     <string name="payment_methods">Payment Methods</string>
     <string name="subscription_details">Subscription Details</string>
     <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
-    <string name="admin_app_name">NexCode Admin</string>
-    <string name="admin_tagline">Content Management System</string>
-    <string name="admin_app_version">Admin v1.0</string>
-    <string name="admin_access">ADMIN ACCESS</string>
-    <string name="admin_icon_description">Admin Shield Icon</string>
+
 </resources>
