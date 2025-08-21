@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +57,7 @@ public class SignUp extends AppCompatActivity {
     private TextView loginLink;
     private CardView profilePictureCard;
     private ImageView profilePicture;
-
+    private ProgressBar progressSign;
     // Data arrays
     private String[] genderOptions = {"Male", "Female"};
     private String[] degreeOptions = {
@@ -142,6 +145,7 @@ public class SignUp extends AppCompatActivity {
         loginLink = findViewById(R.id.login_link);
         profilePictureCard = findViewById(R.id.profile_picture_card);
         profilePicture = findViewById(R.id.profile_picture);
+        progressSign = findViewById(R.id.progressSign);
     }
 
     private void setupDropdowns() {
@@ -164,7 +168,13 @@ public class SignUp extends AppCompatActivity {
     private void setupClickListeners() {
         backButton.setOnClickListener(v -> finish());
         dobInput.setOnClickListener(v -> showDatePicker());
-        signupButton.setOnClickListener(v -> validateAndCreateAccount());
+        signupButton.setOnClickListener(view -> {
+            signupButton.setEnabled(false);
+            signupButton.setText(null);
+            progressSign.setVisibility(View.VISIBLE);
+            validateAndCreateAccount();
+
+        });
 
         // Profile picture click listener
         profilePictureCard.setOnClickListener(v -> checkPermissionAndOpenGallery());
@@ -283,7 +293,7 @@ public class SignUp extends AppCompatActivity {
         String confirmPassword = Objects.requireNonNull(confirmPasswordInput.getText()).toString().trim();
         boolean notifications = notificationsSwitch.isChecked();
 
-        if (!userRepository.validateInputs(fullName, email, phone, gender, dob, degree, semester, password, confirmPassword)) {
+        if (!validateInputs(fullName, email, phone, gender, dob, degree, semester, password, confirmPassword)) {
             return;
         }
 
@@ -291,10 +301,6 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(this, "Please agree to the Terms and Privacy Policy", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Disable signup button during process
-        signupButton.setEnabled(false);
-        signupButton.setText("Creating Account...");
 
         userAuthenticationUtils.register(email, password, new UserAuthenticationUtils.Callback() {
 
@@ -334,12 +340,54 @@ public class SignUp extends AppCompatActivity {
 
     private void resetSignupButton() {
         signupButton.setEnabled(true);
-        signupButton.setText("Create Account");
+        signupButton.setText("Creat Account");
+        progressSign.setVisibility(View.GONE);
     }
 
     private void navigateToMain() {
         Intent intent = new Intent(SignUp.this, Main.class);
         startActivity(intent);
         finish();
+    }
+
+    public boolean validateInputs(String fullName, String email, String phone, String gender,
+                                  String dob, String degree, String semester, String password, String confirmPassword)
+    {
+        if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || gender.isEmpty() ||
+                dob.isEmpty() || degree.isEmpty() || semester.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            nameInput.setError("Name is Required");
+            emailInput.setError("Email is Required");
+            phoneInput.setError("Phone is Required");
+            genderInput.setError("Gender is Required");
+            dobInput.setError("Date of birth is Required");
+            degreeInput.setError("Degree is Required");
+            semesterInput.setError("Semester is Required");
+            passwordInput.setError("Password is Required");
+            confirmPasswordInput.setError("Confirm Password Field Required");
+
+            return false;
+        }
+        if (fullName.split("\\s+").length < 2) {
+            Toast.makeText(this, "Please enter your full name (first and last name)", Toast.LENGTH_SHORT).show();
+            nameInput.setError("First and Last both names are required");
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            emailInput.setError("Enter Valid Email Address");
+            return false;
+        }
+        if (phone.length() < 10 || !phone.matches("\\d+")) {
+            Toast.makeText(this, "Please enter a valid phone number (at least 10 digits)", Toast.LENGTH_SHORT).show();
+            phoneInput.setError("Enter Valid Phone Number");
+            return false;
+        }
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            confirmPasswordInput.setError("Password do not matched");
+            return false;
+        }
+        return true;
     }
 }

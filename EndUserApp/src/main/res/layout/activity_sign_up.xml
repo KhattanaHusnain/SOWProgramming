@@ -158,6 +158,7 @@
                     app:startIconTint="#002B5B"
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -181,6 +182,7 @@
                     app:startIconTint="#002B5B"
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -204,6 +206,7 @@
                     app:startIconTint="#002B5B"
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -228,6 +231,7 @@
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"
                     app:endIconMode="dropdown_menu"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                     <AutoCompleteTextView
@@ -254,6 +258,7 @@
                     app:endIconMode="custom"
                     app:endIconDrawable="@drawable/ic_calendar"
                     app:endIconTint="#002B5B"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -288,6 +293,7 @@
                     app:startIconTint="#002B5B"
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"
+                    app:errorEnabled="false"
                     app:endIconMode="dropdown_menu"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
@@ -313,6 +319,7 @@
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"
                     app:endIconMode="dropdown_menu"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                     <AutoCompleteTextView
@@ -355,6 +362,7 @@
                     app:hintTextColor="#002B5B"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="#707070"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -380,6 +388,7 @@
                     app:hintTextColor="#002B5B"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="#707070"
+                    app:errorEnabled="false"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -463,19 +472,33 @@
                     android:textColor="#757575"
                     android:textSize="14sp" />
 
-                <!-- Sign Up Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/signup_button"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Create Account"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/poppins_bold"
-                    app:cornerRadius="10dp"
-                    app:backgroundTint="#002B5B" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp">
+
+                    <!-- Sign Up Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/signup_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="Create Account"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/poppins_bold"
+                        app:cornerRadius="10dp"
+                        app:backgroundTint="#002B5B" />
+                    <ProgressBar
+                        android:id="@+id/progressSign"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        android:indeterminateTint="@color/white"/>
+                </FrameLayout>
+
+
 
                 <!-- Social Login Section -->
                 <TextView

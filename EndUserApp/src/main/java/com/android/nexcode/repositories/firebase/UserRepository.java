@@ -233,32 +233,6 @@ public class UserRepository {
                 });
     }
 
-    public boolean validateInputs(String fullName, String email, String phone, String gender,
-                                  String dob, String degree, String semester, String password, String confirmPassword) {
-        if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || gender.isEmpty() ||
-                dob.isEmpty() || degree.isEmpty() || semester.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (fullName.split("\\s+").length < 2) {
-            Toast.makeText(context, "Please enter your full name (first and last name)", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(context, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (phone.length() < 10 || !phone.matches("\\d+")) {
-            Toast.makeText(context, "Please enter a valid phone number (at least 10 digits)", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-
     public void enrollUserInCourse(int courseId, UserCallback callback) {
         firestore.collection("User")
                 .document(userAuthenticationUtils.getCurrentUserEmail())
