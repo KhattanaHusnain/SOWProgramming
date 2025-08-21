@@ -11,8 +11,10 @@ import com.android.nexcode.models.Course;
 import com.android.nexcode.repositories.roomdb.CourseDao;
 import com.android.nexcode.models.Topic;
 import com.android.nexcode.repositories.roomdb.TopicDao;
-import com.android.nexcode.models.UserProgress;
 import com.android.nexcode.utils.Converters;
+import com.android.nexcode.utils.DatabaseUtils;
+
+import net.sqlcipher.database.SupportFactory;
 
 @Database(entities = {Course.class, Topic.class}, version = 14, exportSchema = false)
 @TypeConverters({Converters.class})
@@ -29,16 +31,20 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                                    context.getApplicationContext(),
-                                    AppDatabase.class,
-                                    "app_database"
-                            ).fallbackToDestructiveMigration() // Handle migrations (optional)
-                            .build();
+                    try {
+                        SupportFactory factory = DatabaseUtils.getEncryptedFactory(context);
+
+                        INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                                        AppDatabase.class, "nexcode.db")
+                                .openHelperFactory(factory)
+                                .fallbackToDestructiveMigration()
+                                .build();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error initializing encrypted DB", e);
+                    }
                 }
             }
         }
         return INSTANCE;
     }
-
 }
