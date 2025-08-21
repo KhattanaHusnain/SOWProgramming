@@ -114,7 +114,7 @@ public class Login extends AppCompatActivity {
 
         // Login button
         loginButton.setOnClickListener(v -> {
-                validateAndLogin();
+            validateAndLogin();
         });
 
         // Forgot password
@@ -142,7 +142,7 @@ public class Login extends AppCompatActivity {
         // Google Sign-In button
         googleCard.setOnClickListener(v -> {
 
-                signInWithGoogle();
+            signInWithGoogle();
         });
     }
 
@@ -205,8 +205,14 @@ public class Login extends AppCompatActivity {
 
     }
 
+
     private void signInWithGoogle() {
-        setGoogleLoading(true);
+
+        loginButton.setEnabled(false);
+        emailInput.setEnabled(false);
+        passwordInput.setEnabled(false);
+        googleIcon.setVisibility(View.GONE);
+        googleProgress.setVisibility(View.VISIBLE);
 
         userRepository.signInWithGoogle(new UserRepository.GoogleSignInCallback() {
             @Override
@@ -225,6 +231,11 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 // Google Sign-In failed
+                loginButton.setEnabled(true);
+                emailInput.setEnabled(true);
+                passwordInput.setEnabled(true);
+                googleIcon.setVisibility(View.VISIBLE);
+                googleProgress.setVisibility(View.GONE);
 
                 Log.e(TAG, "Google Sign-In failed: " + message);
                 Toast.makeText(Login.this, "Google Sign-In failed: " + message, Toast.LENGTH_LONG).show();
@@ -251,26 +262,5 @@ public class Login extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-
-    private void setGoogleLoading(boolean loading) {
-        if (googleProgress != null && googleIcon != null) {
-            if (loading) {
-                loginButton.setEnabled(false);
-                emailInput.setEnabled(false);
-                passwordInput.setEnabled(false);
-                googleIcon.setVisibility(View.GONE);
-                googleProgress.setVisibility(View.VISIBLE);
-                googleCard.setEnabled(false);
-            } else {
-                loginButton.setEnabled(true);
-                emailInput.setEnabled(true);
-                passwordInput.setEnabled(true);
-                googleIcon.setVisibility(View.VISIBLE);
-                googleProgress.setVisibility(View.GONE);
-                googleCard.setEnabled(true);
-            }
-        }
     }
 }
