@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- User Profile Image -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_default_avatar"
+             />
+
+        <!-- User Info Container -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- User Name and Verification Status -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_full_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="User Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#2C3E50"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <!-- Verification Badge -->
+                <ImageView
+                    android:id="@+id/iv_verification_status"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_verified"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- User Email -->
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="user@example.com"
+                android:textSize="14sp"
+                android:textColor="#7F8C8D"
+                android:layout_marginTop="4dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- User Details Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <!-- Role -->
+                <TextView
+                    android:id="@+id/tv_role"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User"
+                    android:textSize="12sp"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/badge_role"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp" />
+
+                <!-- Gender -->
+                <TextView
+                    android:id="@+id/tv_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male"
+                    android:textSize="12sp"
+                    android:textColor="#34495E"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+
+                <!-- Degree -->
+                <TextView
+                    android:id="@+id/tv_degree"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Computer Science"
+                    android:textSize="12sp"
+                    android:textColor="#34495E"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Semester -->
+            <TextView
+                android:id="@+id/tv_semester"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Semester 8"
+                android:textSize="12sp"
+                android:textColor="#27AE60"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Chevron Right Icon -->
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_chevron_right"
+            android:layout_marginStart="8dp"
+            app:tint="#BDC3C7" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

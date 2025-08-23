@@ -77,4 +77,47 @@
     <color name="notification_red">#F44336</color>
     <color name="nav_selected">#1976D2</color>
     <color name="nav_unselected">#757575</color>
+    <color name="secondary_dark">#27AE60</color>
+    <color name="secondary_light">#58D68D</color>
+
+    <!-- Accent Colors -->
+    <color name="accent_dark">#C0392B</color>
+    <color name="accent_light">#EC7063</color>
+
+    <color name="card_background">#FFFFFF</color>
+
+    <!-- Text Colors -->
+    <color name="text_tertiary">#BDC3C7</color>
+    <color name="text_white">#FFFFFF</color>
+
+    <!-- Role Colors -->
+    <color name="role_admin">#E74C3C</color>
+    <color name="role_instructor">#F39C12</color>
+    <color name="role_user">#3498DB</color>
+
+    <!-- Status Colors -->
+    <color name="success_color">#27AE60</color>
+    <color name="warning_color">#F39C12</color>
+    <color name="info_color">#3498DB</color>
+
+    <!-- Verification Colors -->
+    <color name="verified_color">#27AE60</color>
+    <color name="unverified_color">#95A5A6</color>
+
+    <!-- Border and Divider Colors -->
+    <color name="border_color">#E0E0E0</color>
+
+    <!-- Button Colors -->
+    <color name="button_primary">#3498DB</color>
+    <color name="button_secondary">#95A5A6</color>
+    <color name="button_danger">#E74C3C</color>
+    <color name="button_success">#27AE60</color>
+
+    <!-- Overlay Colors -->
+    <color name="overlay_light">#80FFFFFF</color>
+    <color name="overlay_dark">#80000000</color>
+
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#3498DB</color>
+    <color name="gradient_end">#2980B9</color>
 </resources>

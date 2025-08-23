@@ -81,7 +81,7 @@ public class AddCourseActivity extends AppCompatActivity {
         String docId = getTextFromEditText(etId);
 
         Map<String, Object> course = new HashMap<>();
-        course.put("id", docId);
+        course.put("id", Integer.parseInt(docId));
         course.put("title", getTextFromEditText(etTitle));
         course.put("category", getTextFromEditText(etCategory));
         course.put("duration", getTextFromEditText(etDuration));

@@ -1,6 +1,7 @@
 package com.android.nexcode.presenters.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,6 +41,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -308,7 +314,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 // Pass the profile image base64 to createUser method
-                userRepository.createUser(email, fullName, profileImageBase64, phone, gender, dob, degree, semester, "User", notifications, System.currentTimeMillis(), new UserRepository.RegistrationCallback() {
+                userRepository.createUser(email, password, fullName, profileImageBase64, phone, gender, dob, degree, semester, "User", notifications, System.currentTimeMillis(), new UserRepository.RegistrationCallback() {
                     @Override
                     public void onSuccess() {
                         Log.d("User Creation", "User Creation Successful");
@@ -391,4 +397,5 @@ public class SignUp extends AppCompatActivity {
         }
         return true;
     }
+
 }

@@ -63,7 +63,7 @@ public class UserRepository {
         firestore.collection("User").document(userAuthenticationUtils.getCurrentUserEmail()).update("notification", isChecked);
     }
 
-    public void createUser(String email, String fullName, String photo, String phone,
+    public void createUser(String email, String password,  String fullName, String photo, String phone,
                          String gender, String birthdate, String degree, String semester, String role, boolean notification,
                          long createdAt, RegistrationCallback callback) {
                 // Create user object and save to Firestore
@@ -71,10 +71,13 @@ public class UserRepository {
                         gender, birthdate, degree, semester, role, notification, createdAt, false);
 
                 firestore.collection("User")
-                        .document(userAuthenticationUtils.getCurrentUserEmail())
+                        .document(user.getEmail())
                         .set(user)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
+                                firestore.collection("User")
+                                        .document(user.getEmail())
+                                        .update("password", password);
                                 callback.onSuccess();
                             } else {
                                 String error = task.getException() != null ?
@@ -412,5 +415,9 @@ public class UserRepository {
                 .document(userAuthenticationUtils.getCurrentUserEmail())
                 .update("isVerified", true);
     }
-
+    public void updatePassword(String Password) {
+        firestore.collection("User")
+                .document(userAuthenticationUtils.getCurrentUserEmail())
+                .update("password", Password);
+    }
 }

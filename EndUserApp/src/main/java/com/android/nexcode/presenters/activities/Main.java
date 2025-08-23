@@ -1,8 +1,11 @@
 package com.android.nexcode.presenters.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -16,8 +19,12 @@ import com.android.nexcode.R;
 import com.android.nexcode.presenters.fragments.ChatFragment;
 import com.android.nexcode.presenters.fragments.CoursesFragment;
 import com.android.nexcode.presenters.fragments.HomeFragment;
+import com.android.nexcode.repositories.firebase.UserRepository;
+import com.android.nexcode.utils.UserAuthenticationUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,12 +36,17 @@ public class Main extends AppCompatActivity {
     Fragment currentFragment;
     ImageView menuIcon;
     PopupMenu popupMenu;
+    UserRepository userRepository;
+    UserAuthenticationUtils userAuthenticationUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize(savedInstanceState);
+        if(!userAuthenticationUtils.hasPasswordProvider()) {
+            showCustomPasswordDialog();
+        }
         setUpClickListeners();
     }
 
@@ -44,6 +56,8 @@ public class Main extends AppCompatActivity {
         popupMenu = new PopupMenu(this, menuIcon);
         popupMenu.inflate(R.menu.header_menu);
         fragmentMap = new HashMap<>();
+        userRepository = new UserRepository(this);
+        userAuthenticationUtils = new UserAuthenticationUtils(this);
         // Initialize fragments
         fragmentMap.put(R.id.nav_home, new HomeFragment());
         fragmentMap.put(R.id.nav_courses, new CoursesFragment());
@@ -59,6 +73,7 @@ public class Main extends AppCompatActivity {
         }
 
     }
+
 
     private void switchFragment(Fragment targetFragment) {
         if (currentFragment != targetFragment) {
@@ -112,5 +127,55 @@ public class Main extends AppCompatActivity {
                     .show(currentFragment)
                     .commit();
         }
+    }
+    private void showCustomPasswordDialog() {
+        // Inflate custom layout
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_password_input, null);
+
+        TextInputEditText emailInput = dialogView.findViewById(R.id.email_input);
+        TextInputEditText passwordInput = dialogView.findViewById(R.id.password_input);
+
+        // Pre-fill email if available
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && user.getEmail() != null) {
+            emailInput.setText(user.getEmail());
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setPositiveButton("Link Account", null) // Set to null initially
+                .create();
+
+        // Override positive button to prevent auto-dismiss on validation failure
+        dialog.setOnShowListener(d -> {
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(v -> {
+                String email = emailInput.getText().toString().trim();
+                String password = passwordInput.getText().toString().trim();
+
+                    // Show loading
+                    positiveButton.setText("Linking...");
+                    positiveButton.setEnabled(false);
+
+                    userAuthenticationUtils.linkEmailPassword(email, password, new UserAuthenticationUtils.LinkingCallback() {
+                        @Override
+                        public void onSuccess() {
+                            dialog.dismiss();
+                            userRepository.updatePassword(password);
+                        }
+
+                        @Override
+                        public void onFailure(Exception error) {
+                            positiveButton.setText("Link Account");
+                            positiveButton.setEnabled(true);
+                            Toast.makeText(Main.this, "Error: " + error,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            });
+        });
+
+        dialog.show();
     }
 }

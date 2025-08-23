@@ -53,9 +53,8 @@ public class MainActivity extends AppCompatActivity {
         btnUserManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, UserManagementActivity.class);
-//                startActivity(intent);
-                showToast("Opening User Management");
+                Intent intent = new Intent(MainActivity.this, UserManagementActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -23,9 +23,12 @@ import com.android.nexcode.repositories.firebase.UserRepository;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 
 import java.util.concurrent.Executors;
 
@@ -275,5 +278,85 @@ public class UserAuthenticationUtils {
                             callback.onFailure(error);
                     }
                 });
+    }
+
+    public void linkEmailPassword(String email, String password, LinkingCallback callback) {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user == null) {
+            callback.onFailure(new Exception("No user is currently signed in"));
+            return;
+        }
+
+        // Check if user signed in with Google
+        if (!isGoogleUser()) {
+            callback.onFailure(new Exception("User must be signed in with Google"));
+            return;
+        }
+
+        // Check if email/password already linked
+        if (hasPasswordProvider()) {
+            callback.onFailure(new Exception("Email/password already linked"));
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        user.linkWithCredential(credential)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        handleLinkingError(task.getException(), callback);
+                    }
+                });
+    }
+
+    private boolean isGoogleUser() {
+        for (UserInfo profile : mAuth.getCurrentUser().getProviderData()) {
+            if ("google.com".equals(profile.getProviderId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasPasswordProvider() {
+        for (UserInfo profile : mAuth.getCurrentUser().getProviderData()) {
+            if ("password".equals(profile.getProviderId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void handleLinkingError(Exception exception, LinkingCallback callback) {
+        String errorCode = ((FirebaseAuthException) exception).getErrorCode();
+        String message;
+
+        switch (errorCode) {
+            case "ERROR_PROVIDER_ALREADY_LINKED":
+                message = "Email/password is already linked to this account";
+                break;
+            case "ERROR_CREDENTIAL_ALREADY_IN_USE":
+                message = "This email is already used by another account";
+                break;
+            case "ERROR_EMAIL_ALREADY_IN_USE":
+                message = "Email is already registered with another account";
+                break;
+            case "ERROR_INVALID_CREDENTIAL":
+                message = "Invalid email or password format";
+                break;
+            default:
+                message = exception.getMessage();
+        }
+
+        callback.onFailure(new Exception(message));
+    }
+
+    // Callback interface
+    public interface LinkingCallback {
+        void onSuccess();
+        void onFailure(Exception error);
     }
 }
