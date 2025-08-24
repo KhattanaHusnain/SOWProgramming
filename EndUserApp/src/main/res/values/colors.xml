@@ -1,31 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <!-- Brand colors -->
     <color name="primary">#002B5B</color>
     <color name="primary_variant">#001F42</color>
     <color name="secondary">#00A6A6</color>
     <color name="secondary_variant">#008585</color>
-
-    <!-- Status Colors -->
     <color name="status_submitted">#4CAF50</color>
     <color name="status_in_progress">#FF9800</color>
     <color name="status_not_started">#757575</color>
     <color name="status_overdue">#F44336</color>
     <color name="status_text_color">#1976D2</color>
-
-    <!-- Text and background colors -->
     <color name="text_primary">@color/black</color>
     <color name="text_secondary">#FF757575</color>
     <color name="text_light">#FFF5F5F5</color>
     <color name="background_light">#FFF5F5F5</color>
     <color name="background_dark">@color/primary</color>
     <color name="accent">#2196F3</color>
-
-    <!-- Status and action colors -->
     <color name="status_bar">@color/primary_variant</color>
     <color name="navigation_bar">@color/primary</color>
     <color name="colorPrimary">#4285F4</color>
@@ -37,20 +28,12 @@
     <color name="text_color_primary">#212121</color>
     <color name="text_color_secondary">#757575</color>
     <color name="progress_color">#4CAF50</color>
-
-    <!-- Base app colors -->
     <color name="primary_dark">#0D47A1</color>
     <color name="primary_light">#42A5F5</color>
-
-    <!-- Text colors -->
     <color name="text_light_secondary">#B3FFFFFF</color> <!-- White with 70% opacity -->
-
-    <!-- Other UI elements -->
     <color name="divider">#BDBDBD</color>
     <color name="ripple">#33000000</color>
     <color name="text_dark">#333333</color>
-
-    <!-- Material 3 Dynamic Colors (fallback values) -->
     <color name="md_primary">#006781</color>
     <color name="md_primary_variant">#00485A</color>
     <color name="md_on_primary">#FFFFFF</color>
@@ -80,5 +63,18 @@
     <color name="card_background">#FFFFFF</color>
     <color name="link_color">#1976D2</color>
     <color name="bullet_color">#2196F3</color>
-
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
+    <color name="orange">#FF9800</color>
+    <color name="blue">#2196F3</color>
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
 </resources>

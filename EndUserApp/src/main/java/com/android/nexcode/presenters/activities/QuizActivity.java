@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.Question;
+import com.android.nexcode.models.Quiz;
 import com.android.nexcode.models.User;
 import com.android.nexcode.repositories.firebase.UserRepository;
 import com.android.nexcode.utils.UserAuthenticationUtils;
@@ -44,9 +45,12 @@ public class QuizActivity extends AppCompatActivity {
     private String quizId;
     private String quizTitle;
     private int totalQuestions = 0;
+    private double passingScore = 60.0; // Default passing score
     private FirebaseFirestore db;
-    private FirebaseAuth auth;
     private Map<String, String> userAnswers = new HashMap<>();
+    private Map<String, Boolean> answerCorrectness = new HashMap<>(); // Track correctness of each answer
+    private long quizStartTime;
+    private long quizEndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,9 @@ public class QuizActivity extends AppCompatActivity {
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+
+        // Record quiz start time
+        quizStartTime = System.currentTimeMillis();
 
         // Get quiz ID from intent
         quizId = getIntent().getStringExtra("QUIZ_ID");
@@ -91,6 +97,12 @@ public class QuizActivity extends AppCompatActivity {
                         timeLimit = documentSnapshot.getLong("timeLimit").intValue();
                         quizTitle = documentSnapshot.getString("title");
                         totalQuestions = documentSnapshot.getLong("totalQuestions").intValue();
+
+                        // Get passing score
+                        Double passScore = documentSnapshot.getDouble("passingScore");
+                        if (passScore != null) {
+                            passingScore = passScore;
+                        }
 
                         // Set title in ActionBar
                         if (getSupportActionBar() != null) {
@@ -205,17 +217,26 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void saveCurrentAnswer() {
+        Question currentQuestion = questions.get(currentQuestionIndex);
+        String questionId = currentQuestion.getId();
+
         int selectedId = optionsGroup.getCheckedRadioButtonId();
         if (selectedId != -1) {
             RadioButton selectedButton = findViewById(selectedId);
             String answer = selectedButton.getText().toString();
-            String questionId = questions.get(currentQuestionIndex).getId();
             userAnswers.put(questionId, answer);
 
-            // Check if answer is correct
-            if (answer.equals(questions.get(currentQuestionIndex).getCorrectAnswer())) {
+            // Check if answer is correct and store correctness
+            boolean isCorrect = answer.equals(currentQuestion.getCorrectAnswer());
+            answerCorrectness.put(questionId, isCorrect);
+
+            if (isCorrect) {
                 correctAnswers++;
             }
+        } else {
+            // No answer selected - mark as incorrect and empty answer
+            userAnswers.put(questionId, "");
+            answerCorrectness.put(questionId, false);
         }
     }
 
@@ -223,43 +244,94 @@ public class QuizActivity extends AppCompatActivity {
         // Save answer for the last question if user hasn't moved past it
         saveCurrentAnswer();
 
+        // Record quiz end time
+        quizEndTime = System.currentTimeMillis();
+        long timeTaken = quizEndTime - quizStartTime;
+
         // Calculate score percentage
         int totalQuestions = questions.size();
         int score = (totalQuestions > 0) ? (correctAnswers * 100) / totalQuestions : 0;
+
+        // Check if user passed the quiz
+        boolean passed = score >= passingScore;
 
         // Cancel timer
         if (timer != null) {
             timer.cancel();
         }
 
-        // Update user progress in Firestore
-        userRepository.updateQuizProgress(quizId, score, new UserRepository.UserCallback() {
+        // Create detailed quiz attempt data
+        Map<String, Object> quizAttempt = createQuizAttemptData(score, passed, timeTaken);
+
+        // Update user progress in Firestore with detailed information
+        userRepository.updateQuizProgressDetailed(quizId, quizAttempt, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
-                // nothing
-                Toast.makeText(QuizActivity.this, "Progress Updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(QuizActivity.this, "Quiz completed! Score: " + score + "%" +
+                        (passed ? " - PASSED" : " - FAILED"), Toast.LENGTH_LONG).show();
+
                 userRepository.updateQuizAvg(new UserRepository.UserCallback() {
                     @Override
                     public void onSuccess(User user) {
-                        // nothing
+                        // Quiz average updated successfully
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        Toast.makeText(QuizActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QuizActivity.this, "Failed to update average: " + message,
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(QuizActivity.this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(QuizActivity.this, "Failed to submit quiz: " + message,
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Show score and finish
-        Toast.makeText(this, "Quiz submitted! Score: " + score + "%", Toast.LENGTH_LONG).show();
         finish();
+    }
+
+    private Map<String, Object> createQuizAttemptData(int score, boolean passed, long timeTaken) {
+        Map<String, Object> attemptData = new HashMap<>();
+
+        // Basic quiz information
+        attemptData.put("quizId", quizId);
+        attemptData.put("quizTitle", quizTitle);
+        attemptData.put("score", score);
+        attemptData.put("correctAnswers", correctAnswers);
+        attemptData.put("totalQuestions", questions.size());
+        attemptData.put("passed", passed);
+        attemptData.put("passingScore", passingScore);
+        attemptData.put("completed", true);
+        attemptData.put("completedAt", System.currentTimeMillis());
+        attemptData.put("timeTaken", timeTaken);
+        attemptData.put("startTime", quizStartTime);
+        attemptData.put("endTime", quizEndTime);
+
+        // Detailed answers for each question
+        List<Map<String, Object>> detailedAnswers = new ArrayList<>();
+        for (int i = 0; i < questions.size(); i++) {
+            Question question = questions.get(i);
+            String questionId = question.getId();
+
+            Map<String, Object> answerDetail = new HashMap<>();
+            answerDetail.put("questionId", questionId);
+            answerDetail.put("questionText", question.getText());
+            answerDetail.put("questionNumber", i + 1);
+            answerDetail.put("userAnswer", userAnswers.getOrDefault(questionId, ""));
+            answerDetail.put("correctAnswer", question.getCorrectAnswer());
+            answerDetail.put("isCorrect", answerCorrectness.getOrDefault(questionId, false));
+            answerDetail.put("options", question.getOptions());
+
+            detailedAnswers.add(answerDetail);
+        }
+
+        attemptData.put("answers", detailedAnswers);
+
+        return attemptData;
     }
 
     @Override

@@ -11,7 +11,7 @@ public class Quiz implements Parcelable {
     private boolean active;
     private int course;
     private int totalQuestions;
-    private int timeLimit; // in minutes
+    private int timeLimit;
     private double passingScore;
 
     // Empty constructor needed for Firestore

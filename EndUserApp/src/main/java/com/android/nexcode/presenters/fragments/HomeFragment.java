@@ -1,5 +1,6 @@
 package com.android.nexcode.presenters.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.android.nexcode.models.Course;
 import com.android.nexcode.models.User;
 
 import com.android.nexcode.presenters.activities.Main;
+import com.android.nexcode.presenters.activities.QuizHistoryActivity;
 import com.android.nexcode.repositories.firebase.AssignmentRepository;
 import com.android.nexcode.repositories.firebase.CourseRepository;
 import com.android.nexcode.repositories.firebase.QuizRepository;
@@ -404,6 +406,8 @@ public class HomeFragment extends Fragment {
 
     private void navigateToQuizHistory() {
         // Navigate to quiz history screen
+        Intent intent = new Intent(getContext(), QuizHistoryActivity.class);
+        startActivity(intent);
     }
 
     private void navigateToAssignmentHistory() {
