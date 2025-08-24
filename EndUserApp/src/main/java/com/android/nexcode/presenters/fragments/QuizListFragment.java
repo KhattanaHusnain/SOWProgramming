@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,13 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.Quiz;
 import com.android.nexcode.models.User;
 import com.android.nexcode.presenters.activities.QuizActivity;
+import com.android.nexcode.repositories.firebase.QuizRepository;
 import com.android.nexcode.repositories.firebase.UserRepository;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +34,24 @@ public class QuizListFragment extends Fragment {
     private List<Quiz> quizList = new ArrayList<>();
     private RecyclerView recyclerView;
     private TextView emptyView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadMoreProgressBar;
+
+    private QuizAdapter adapter;
+    private AssessmentFragment parentFragment;
+    private boolean isLoading = false;
+    private boolean hasMoreData = false;
 
     public QuizListFragment() {
         // Required empty constructor
     }
 
-    public static QuizListFragment newInstance(List<Quiz> quizList) {
+    public static QuizListFragment newInstance(List<Quiz> quizList, AssessmentFragment parentFragment) {
         QuizListFragment fragment = new QuizListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_QUIZ_LIST, new ArrayList<>(quizList));
         fragment.setArguments(args);
+        fragment.parentFragment = parentFragment;
         return fragment;
     }
 
@@ -54,26 +66,112 @@ public class QuizListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_quiz_list, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         emptyView = view.findViewById(R.id.emptyView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        loadMoreProgressBar = view.findViewById(R.id.loadMoreProgressBar);
 
+        setupSwipeRefresh();
         setupRecyclerView();
 
         return view;
     }
 
+    private void setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (parentFragment != null) {
+                parentFragment.refreshQuizzes(new QuizRepository.PaginatedCallback() {
+                    @Override
+                    public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
+                        quizList.clear();
+                        quizList.addAll(quizzes);
+                        hasMoreData = hasMore;
+                        adapter.notifyDataSetChanged();
+                        updateEmptyView();
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(getContext(), "Quizzes refreshed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(getContext(), "Failed to refresh: " + message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        QuizAdapter adapter = new QuizAdapter(quizList, getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new QuizAdapter(quizList, getContext());
         recyclerView.setAdapter(adapter);
 
-        // Show empty view if list is empty
+        // Add scroll listener for pagination
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null && !isLoading && hasMoreData) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0) {
+                        loadMoreQuizzes();
+                    }
+                }
+            }
+        });
+
+        updateEmptyView();
+    }
+
+    private void loadMoreQuizzes() {
+        if (parentFragment == null || isLoading) return;
+
+        isLoading = true;
+        loadMoreProgressBar.setVisibility(View.VISIBLE);
+
+        parentFragment.loadMoreQuizzes(new QuizRepository.PaginatedCallback() {
+            @Override
+            public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
+                isLoading = false;
+                loadMoreProgressBar.setVisibility(View.GONE);
+                hasMoreData = hasMore;
+
+                if (!quizzes.isEmpty()) {
+                    int startPosition = quizList.size();
+                    quizList.addAll(quizzes);
+                    adapter.notifyItemRangeInserted(startPosition, quizzes.size());
+                }
+
+                updateEmptyView();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                isLoading = false;
+                loadMoreProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "Failed to load more: " + message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateEmptyView() {
         if (quizList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
-            emptyView.setText("No data available");
+            emptyView.setText("No quizzes available");
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);

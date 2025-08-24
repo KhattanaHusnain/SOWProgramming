@@ -453,415 +453,422 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <!-- SwipeRefreshLayout wrapping the NestedScrollView -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
-            <!-- Popular Courses Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="8dp">
+                android:padding="16dp">
 
+                <!-- Popular Courses Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Popular Courses"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#212121"/>
-
-                    <TextView
-                        android:id="@+id/see_all_popular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See All"
-                        android:textColor="#1E88E5"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-
-                <!-- Courses Shimmer Loading -->
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/courses_shimmer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:shimmer_duration="1000"
-                    app:shimmer_auto_start="true"
-                    android:visibility="visible">
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                        <com.google.android.material.card.MaterialCardView
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_height="160dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                            android:text="Popular Courses"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#212121"/>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="12dp">
+                        <TextView
+                            android:id="@+id/see_all_popular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See All"
+                            android:textColor="#1E88E5"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
 
-                                <View
+                    <!-- Courses Shimmer Loading -->
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/courses_shimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:shimmer_duration="1000"
+                        app:shimmer_auto_start="true"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="0dp"
+                                android:layout_height="160dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#E0E0E0">
+
+                                <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="80dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
 
-                                <View
-                                    android:layout_width="120dp"
-                                    android:layout_height="16dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="4dp"/>
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="80dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                                <View
-                                    android:layout_width="100dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"/>
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                    <View
+                                        android:layout_width="120dp"
+                                        android:layout_height="16dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="4dp"/>
 
-                        <com.google.android.material.card.MaterialCardView
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="0dp"
+                                android:layout_height="160dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="8dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#E0E0E0">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="12dp">
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="80dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
+
+                                    <View
+                                        android:layout_width="120dp"
+                                        android:layout_height="16dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="4dp"/>
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <!-- Actual Courses RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/popular_courses_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:clipToPadding="false"
+                        tools:itemCount="2"
+                        android:nestedScrollingEnabled="false"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="2"
+                        tools:listitem="@layout/home_item"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <!-- Quizzes Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_height="160dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                            android:text="Recent Quizzes"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#212121"/>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="12dp">
+                        <TextView
+                            android:id="@+id/see_all_quizzes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See All"
+                            android:textColor="#1E88E5"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
 
-                                <View
+                    <!-- Quizzes Shimmer Loading -->
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/quizzes_shimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:shimmer_duration="1000"
+                        app:shimmer_auto_start="true"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="200dp"
+                                android:layout_height="120dp"
+                                android:layout_marginEnd="12dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#E0E0E0">
+
+                                <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="80dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="16dp">
 
-                                <View
-                                    android:layout_width="120dp"
-                                    android:layout_height="16dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="4dp"/>
+                                    <View
+                                        android:layout_width="150dp"
+                                        android:layout_height="16dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                                <View
-                                    android:layout_width="100dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"/>
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-                    </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                <!-- Actual Courses RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/popular_courses_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:clipToPadding="false"
-                    tools:itemCount="2"
-                    android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2"
-                    tools:listitem="@layout/home_item"
-                    android:visibility="gone"/>
-            </LinearLayout>
+                                    <View
+                                        android:layout_width="80dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Quizzes Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="24dp">
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="200dp"
+                                android:layout_height="120dp"
+                                android:layout_marginEnd="12dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#E0E0E0">
 
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="16dp">
+
+                                    <View
+                                        android:layout_width="150dp"
+                                        android:layout_height="16dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
+
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
+
+                                    <View
+                                        android:layout_width="80dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <!-- Actual Quizzes RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/quizzes_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_quiz"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <!-- Assignments Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Recent Quizzes"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#212121"/>
-
-                    <TextView
-                        android:id="@+id/see_all_quizzes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See All"
-                        android:textColor="#1E88E5"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-
-                <!-- Quizzes Shimmer Loading -->
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/quizzes_shimmer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:shimmer_duration="1000"
-                    app:shimmer_auto_start="true"
-                    android:visibility="visible">
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="200dp"
-                            android:layout_height="120dp"
-                            android:layout_marginEnd="12dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Recent Assignments"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#212121"/>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <View
-                                    android:layout_width="150dp"
-                                    android:layout_height="16dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
-
-                                <View
-                                    android:layout_width="100dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
-
-                                <View
-                                    android:layout_width="80dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"/>
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="200dp"
-                            android:layout_height="120dp"
-                            android:layout_marginEnd="12dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#E0E0E0">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="16dp">
-
-                                <View
-                                    android:layout_width="150dp"
-                                    android:layout_height="16dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
-
-                                <View
-                                    android:layout_width="100dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
-
-                                <View
-                                    android:layout_width="80dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"/>
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:id="@+id/see_all_assignments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See All"
+                            android:textColor="#1E88E5"
+                            android:textSize="14sp"/>
                     </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
 
-                <!-- Actual Quizzes RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/quizzes_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_quiz"
-                    android:visibility="gone"/>
-            </LinearLayout>
-
-            <!-- Assignments Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="24dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Recent Assignments"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#212121"/>
-
-                    <TextView
-                        android:id="@+id/see_all_assignments"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See All"
-                        android:textColor="#1E88E5"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-
-                <!-- Assignments Shimmer Loading -->
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/assignments_shimmer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:shimmer_duration="1000"
-                    app:shimmer_auto_start="true"
-                    android:visibility="visible">
-
-                    <LinearLayout
+                    <!-- Assignments Shimmer Loading -->
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/assignments_shimmer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="12dp"
+                        app:shimmer_duration="1000"
+                        app:shimmer_auto_start="true"
+                        android:visibility="visible">
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="220dp"
-                            android:layout_height="140dp"
-                            android:layout_marginEnd="12dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="16dp">
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="220dp"
+                                android:layout_height="140dp"
+                                android:layout_marginEnd="12dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#E0E0E0">
 
-                                <View
-                                    android:layout_width="160dp"
-                                    android:layout_height="16dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="16dp">
 
-                                <View
-                                    android:layout_width="120dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
+                                    <View
+                                        android:layout_width="160dp"
+                                        android:layout_height="16dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                                <View
-                                    android:layout_width="90dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="16dp"/>
+                                    <View
+                                        android:layout_width="120dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                                <View
-                                    android:layout_width="100dp"
-                                    android:layout_height="14dp"
-                                    android:background="#CCCCCC"/>
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                    <View
+                                        android:layout_width="90dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="16dp"/>
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="220dp"
-                            android:layout_height="140dp"
-                            android:layout_marginEnd="12dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="14dp"
+                                        android:background="#CCCCCC"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="16dp">
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="220dp"
+                                android:layout_height="140dp"
+                                android:layout_marginEnd="12dp"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="4dp"
+                                app:cardBackgroundColor="#E0E0E0">
 
-                                <View
-                                    android:layout_width="160dp"
-                                    android:layout_height="16dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:padding="16dp">
 
-                                <View
-                                    android:layout_width="120dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="8dp"/>
+                                    <View
+                                        android:layout_width="160dp"
+                                        android:layout_height="16dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                                <View
-                                    android:layout_width="90dp"
-                                    android:layout_height="12dp"
-                                    android:background="#CCCCCC"
-                                    android:layout_marginBottom="16dp"/>
+                                    <View
+                                        android:layout_width="120dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="8dp"/>
 
-                                <View
-                                    android:layout_width="100dp"
-                                    android:layout_height="14dp"
-                                    android:background="#CCCCCC"/>
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-                    </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
+                                    <View
+                                        android:layout_width="90dp"
+                                        android:layout_height="12dp"
+                                        android:background="#CCCCCC"
+                                        android:layout_marginBottom="16dp"/>
 
-                <!-- Actual Assignments RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/assignments_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_assignment"
-                    android:visibility="gone"/>
+                                    <View
+                                        android:layout_width="100dp"
+                                        android:layout_height="14dp"
+                                        android:background="#CCCCCC"/>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <!-- Actual Assignments RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/assignments_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_assignment"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
             </LinearLayout>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

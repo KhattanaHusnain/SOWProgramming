@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.User;
@@ -55,6 +56,9 @@ public class ProfileFragment extends Fragment {
     private View skeletonCertificates;
     private View actualContent;
 
+    // SwipeRefreshLayout
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     // Firebase
     UserRepository userRepository;
     UserAuthenticationUtils userAuthenticationUtils;
@@ -69,6 +73,9 @@ public class ProfileFragment extends Fragment {
         // Initialize UI components
         initialize(view);
 
+        // Setup SwipeRefreshLayout
+        setupSwipeRefresh();
+
         // Show skeleton loading initially
         showSkeletonLoading(true);
 
@@ -78,6 +85,7 @@ public class ProfileFragment extends Fragment {
         } else {
             // Handle not logged in state
             showSkeletonLoading(false);
+            swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(getContext(), "No user is logged in", Toast.LENGTH_SHORT).show();
         }
 
@@ -90,6 +98,9 @@ public class ProfileFragment extends Fragment {
     private void initialize(View view) {
         userRepository = new UserRepository(getContext());
         userAuthenticationUtils = new UserAuthenticationUtils(getContext());
+
+        // Initialize SwipeRefreshLayout
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
 
         // Find skeleton and actual content views
         skeletonPersonalInfo = view.findViewById(R.id.skeleton_personal_info);
@@ -122,6 +133,41 @@ public class ProfileFragment extends Fragment {
         // Settings
         switchNotifications = view.findViewById(R.id.switch_notifications);
         layoutLogout = view.findViewById(R.id.layout_logout);
+    }
+
+    private void setupSwipeRefresh() {
+        // Configure SwipeRefreshLayout
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorAccent,
+                R.color.progress_color
+        );
+
+        // Set refresh listener
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshUserData();
+            }
+        });
+
+        // Optional: Configure the refresh trigger distance
+        swipeRefreshLayout.setDistanceToTriggerSync(300);
+
+        // Optional: Set the size of the refresh indicator
+        swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+    }
+
+    private void refreshUserData() {
+        Log.d(TAG, "Refreshing user data...");
+
+        if (userAuthenticationUtils.isUserLoggedIn()) {
+            // Don't show skeleton loading during refresh, just use the refresh indicator
+            loadUserData();
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(getContext(), "No user is logged in", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showSkeletonLoading(boolean show) {
@@ -215,51 +261,73 @@ public class ProfileFragment extends Fragment {
                 user = userData;
                 Log.d(TAG, "User data loaded successfully: " + user.toString());
 
+                // Stop refresh indicator
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
                 // Hide skeleton loading and show actual content
                 showSkeletonLoading(false);
 
-                // Set profile image from Base64 string
-                if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
-                    try {
-                        byte[] decodedString = Base64.decode(user.getPhoto(), Base64.DEFAULT);
-                        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                        profileImageView.setImageBitmap(decodedBitmap);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error decoding profile image", e);
-                        profileImageView.setImageResource(R.drawable.ic_profile);
-                    }
-                } else {
-                    profileImageView.setImageResource(R.drawable.ic_profile);
+                // Update UI with user data
+                updateUIWithUserData();
+
+                // Show success message for manual refresh
+                if (swipeRefreshLayout != null) {
+                    Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
                 }
-
-                txtFullName.setText(user.getFullName() != null ? user.getFullName() : "Not specified");
-                txtEmail.setText(user.getEmail() != null ? user.getEmail() : "Not specified");
-                txtPhone.setText(user.getPhone() != null ? user.getPhone() : "Not specified");
-                txtDateOfBirth.setText(user.getBirthdate() != null ? user.getBirthdate() : "Not specified");
-                txtGender.setText(user.getGender() != null ? user.getGender() : "Not specified");
-                txtDegree.setText(user.getDegree() != null ? user.getDegree() : "Not specified");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = new Date(user.getCreatedAt());
-                String accountCreated = dateFormat.format(date);
-                txtAccountCreated.setText(accountCreated);
-
-                // Update progress UI
-                txtEnrolledCourses.setText( user.getEnrolledCourses() != null ? user.getEnrolledCourses().size() + "" : "0");
-                txtCompletedCourses.setText("0");
-                txtFavouriteCourses.setText(user.getFavorites() != null ? user.getFavorites().size() + "" : "0");
-                txtAssignmentsTaken.setText(user.getAssignments() != null ? user.getAssignments().size() + "" : "0");
-                txtAssignmentsScore.setText(user.getAssignmentAvg() + "%");
-                txtQuizzesTaken.setText(user.getQuizzes() != null ? user.getQuizzes().size() + "" : "0");
-                txtQuizzesScore.setText(user.getQuizzesAvg() + "%");
-                txtCertificatesCount.setText("0");
             }
 
             @Override
             public void onFailure(String message) {
+                // Stop refresh indicator
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
                 // Hide skeleton loading even on failure
                 showSkeletonLoading(false);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateUIWithUserData() {
+        // Set profile image from Base64 string
+        if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
+            try {
+                byte[] decodedString = Base64.decode(user.getPhoto(), Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                profileImageView.setImageBitmap(decodedBitmap);
+            } catch (Exception e) {
+                Log.e(TAG, "Error decoding profile image", e);
+                profileImageView.setImageResource(R.drawable.ic_profile);
+            }
+        } else {
+            profileImageView.setImageResource(R.drawable.ic_profile);
+        }
+
+        // Update personal information
+        txtFullName.setText(user.getFullName() != null ? user.getFullName() : "Not specified");
+        txtEmail.setText(user.getEmail() != null ? user.getEmail() : "Not specified");
+        txtPhone.setText(user.getPhone() != null ? user.getPhone() : "Not specified");
+        txtDateOfBirth.setText(user.getBirthdate() != null ? user.getBirthdate() : "Not specified");
+        txtGender.setText(user.getGender() != null ? user.getGender() : "Not specified");
+        txtDegree.setText(user.getDegree() != null ? user.getDegree() : "Not specified");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date(user.getCreatedAt());
+        String accountCreated = dateFormat.format(date);
+        txtAccountCreated.setText(accountCreated);
+
+        // Update progress UI
+        txtEnrolledCourses.setText(user.getEnrolledCourses() != null ? user.getEnrolledCourses().size() + "" : "0");
+        txtCompletedCourses.setText("0");
+        txtFavouriteCourses.setText(user.getFavorites() != null ? user.getFavorites().size() + "" : "0");
+        txtAssignmentsTaken.setText(user.getAssignments() != null ? user.getAssignments().size() + "" : "0");
+        txtAssignmentsScore.setText(user.getAssignmentAvg() + "%");
+        txtQuizzesTaken.setText(user.getQuizzes() != null ? user.getQuizzes().size() + "" : "0");
+        txtQuizzesScore.setText(user.getQuizzesAvg() + "%");
+        txtCertificatesCount.setText("0");
     }
 }
