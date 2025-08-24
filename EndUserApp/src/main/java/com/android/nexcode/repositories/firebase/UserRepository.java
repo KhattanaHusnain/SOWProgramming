@@ -183,7 +183,7 @@ public class UserRepository {
                 "User", // role - empty, user can update later
                 true, // notification - default true
                 System.currentTimeMillis(), // createdAt - current timestamp
-                false
+                true
         );
 
         // Save to Firestore

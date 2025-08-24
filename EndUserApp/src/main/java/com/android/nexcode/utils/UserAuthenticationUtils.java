@@ -141,6 +141,7 @@ public class UserAuthenticationUtils {
                         } else {
                             UserRepository userRepository = new UserRepository(context);
                             userRepository.setIsVerifiedTrue();
+                            userRepository.updatePassword(password);
                             callback.onSuccess();
                         }
                     } else {
