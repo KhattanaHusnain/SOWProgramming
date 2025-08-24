@@ -63,7 +63,6 @@ dependencies {
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
     implementation libs.room.common
-    // SQLCipher + SupportFactory for Room
     implementation libs.android.database.sqlcipher
     implementation libs.androidx.sqlite
     implementation libs.androidx.sqlite.framework

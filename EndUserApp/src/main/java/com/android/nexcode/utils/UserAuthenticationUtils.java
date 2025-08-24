@@ -39,6 +39,7 @@ public class UserAuthenticationUtils {
     FirebaseAuth mAuth;
     Context context;
     private CredentialManager credentialManager;
+    CancellationSignal cancellationSignal;
 
     public interface Callback {
         void onSuccess();
@@ -180,6 +181,8 @@ public class UserAuthenticationUtils {
     }
 
     public void signInWithGoogle(GoogleSignInCallback callback) {
+        cancellationSignal = new CancellationSignal();
+
         // Create Google ID option
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
@@ -195,17 +198,23 @@ public class UserAuthenticationUtils {
         credentialManager.getCredentialAsync(
                 context,
                 request,
-                new CancellationSignal(),
+                cancellationSignal,
                 Executors.newSingleThreadExecutor(),
                 new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
 
                     @Override
                     public void onResult(GetCredentialResponse result) {
+                        if( cancellationSignal.isCanceled() ) {
+                            return;
+                        }
                         handleGoogleSignIn(result.getCredential(), callback);
                     }
 
                     @Override
                     public void onError(@NonNull GetCredentialException e) {
+                        if( cancellationSignal.isCanceled() ) {
+                            return;
+                        }
                         Log.e(TAG, "Google Sign-In failed: " + e.getLocalizedMessage());
                         if (callback != null) {
                             callback.onFailure("Google Sign-In failed: " + e.getLocalizedMessage());
@@ -216,10 +225,15 @@ public class UserAuthenticationUtils {
     }
 
     private void handleGoogleSignIn(Credential credential, GoogleSignInCallback callback) {
+        if( cancellationSignal.isCanceled() ) {
+            return;
+        }
         // Check if credential is of type Google ID
         if (credential instanceof CustomCredential customCredential
                 && credential.getType().equals(TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
-
+            if( cancellationSignal.isCanceled() ) {
+                return;
+            }
             // Create Google ID Token
             Bundle credentialData = customCredential.getData();
             GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
@@ -227,6 +241,9 @@ public class UserAuthenticationUtils {
             // Sign in to Firebase with the token
             firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken(), callback);
         } else {
+            if( cancellationSignal.isCanceled() ) {
+                return;
+            }
             Log.w(TAG, "Credential is not of type Google ID!");
             if (callback != null) {
                 callback.onFailure("Invalid credential type");
@@ -235,6 +252,9 @@ public class UserAuthenticationUtils {
     }
 
     private void firebaseAuthWithGoogle(String idToken, GoogleSignInCallback callback) {
+        if( cancellationSignal.isCanceled() ) {
+            return;
+        }
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
 
         mAuth.signInWithCredential(credential)
