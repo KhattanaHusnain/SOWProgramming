@@ -19,11 +19,11 @@
 
         <!-- User Profile Image -->
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_person"
+            android:id="@+id/iv_prpfile"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_default_avatar"
+            android:src="@drawable/ic_person"
              />
 
         <!-- User Info Container -->
