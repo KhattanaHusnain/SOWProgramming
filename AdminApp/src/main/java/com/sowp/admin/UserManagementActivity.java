@@ -22,6 +22,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,7 +38,7 @@ public class UserManagementActivity extends AppCompatActivity {
     private UserAdapter userAdapter;
     private ProgressBar progressLoading;
     private TextView tvUserCount, tvPageInfo;
-    private Button btnPrevious, btnNext;
+    private MaterialButton btnPrevious, btnNext;
     private Spinner spinnerVerification, spinnerSortBy;
     private EditText etSearch;
     private LinearLayout paginationLayout;
