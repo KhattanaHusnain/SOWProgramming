@@ -25,13 +25,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.Assignment;
-import com.android.nexcode.repositories.firebase.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AssignmentActivity extends AppCompatActivity {
 
@@ -58,8 +62,9 @@ public class AssignmentActivity extends AppCompatActivity {
     private List<Uri> selectedImageUris = new ArrayList<>();
     private SelectedImagesAdapter selectedImagesAdapter;
 
-    // Repository
-    private UserRepository userRepository;
+    // Firebase
+    private FirebaseFirestore firestore;
+    private FirebaseAuth firebaseAuth;
 
     public static Intent createIntent(android.content.Context context, Assignment assignment) {
         Intent intent = new Intent(context, AssignmentActivity.class);
@@ -72,16 +77,16 @@ public class AssignmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment);
 
-        initializeRepository();
+        initializeFirebase();
         initializeViews();
         getAssignmentFromIntent();
         setupUI();
         setupClickListeners();
-        checkAssignmentStatus();
     }
 
-    private void initializeRepository() {
-        userRepository = new UserRepository(this);
+    private void initializeFirebase() {
+        firestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     private void initializeViews() {
@@ -118,6 +123,7 @@ public class AssignmentActivity extends AppCompatActivity {
         titleTextView.setText(assignment.getTitle());
         descriptionTextView.setText(assignment.getDescription());
         dueDateTextView.setText("Due: " + assignment.getDueDate());
+        statusTextView.setText("Status: " + assignment.getStatus());
         maxScoreTextView.setText("Max Score: " + assignment.getMaxScore());
 
         // Load assignment image from base64 if available
@@ -132,48 +138,14 @@ public class AssignmentActivity extends AppCompatActivity {
         selectedImagesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         selectedImagesRecyclerView.setAdapter(selectedImagesAdapter);
 
-        // Set initial submit button state
-        updateSubmitButtonState();
-    }
+        // Hide submit section if assignment is already submitted
+        if ("Submitted".equals(assignment.getStatus())) {
 
-    private void checkAssignmentStatus() {
-        if (assignment == null) return;
-
-        userRepository.checkAssignmentStatus(assignment.getId(), new UserRepository.AssignmentStatusCallback() {
-            @Override
-            public void onSuccess(String status, Double score) {
-                assignment.setStatus(status);
-                if (score != null) {
-                    assignment.setEarnedScore(score);
-                }
-
-                runOnUiThread(() -> {
-                    statusTextView.setText("Status: " + status);
-
-                    if ("Submitted".equals(status)) {
-                        selectImagesButton.setVisibility(View.GONE);
-                        submitButton.setVisibility(View.GONE);
-                        selectedImagesContainer.setVisibility(View.GONE);
-
-                        if (score != null) {
-                            submissionTitleTextView.setText("Score: " + score);
-                        } else {
-                            submissionTitleTextView.setText("Submitted - Awaiting Grade");
-                        }
-                    } else {
-                        submissionTitleTextView.setText("Submit Your Work");
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(String message) {
-                runOnUiThread(() -> {
-                    statusTextView.setText("Status: Not Started");
-                    submissionTitleTextView.setText("Submit Your Work");
-                });
-            }
-        });
+            selectImagesButton.setVisibility(View.GONE);
+            submitButton.setVisibility(View.GONE);
+            selectedImagesContainer.setVisibility(View.GONE);
+            submissionTitleTextView.setText("Score: "+assignment.getEarnedScore());
+        }
     }
 
     private void loadImageFromBase64(String base64String) {
@@ -242,6 +214,11 @@ public class AssignmentActivity extends AppCompatActivity {
             return;
         }
 
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
         submitButton.setEnabled(false);
         selectImagesButton.setEnabled(false);
@@ -250,40 +227,7 @@ public class AssignmentActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 List<String> base64Images = convertImagesToBase64();
-
-                userRepository.submitAssignment(
-                        assignment.getId(),
-                        assignment.getTitle(),
-                        base64Images,
-                        assignment.getMaxScore(),
-                        new UserRepository.AssignmentSubmissionCallback() {
-                            @Override
-                            public void onSuccess() {
-                                runOnUiThread(() -> {
-                                    hideProgressBar();
-                                    Toast.makeText(AssignmentActivity.this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show();
-
-                                    // Update UI
-                                    assignment.setStatus("Submitted");
-                                    statusTextView.setText("Status: Submitted");
-
-                                    // Hide submission UI
-                                    selectImagesButton.setVisibility(View.GONE);
-                                    submitButton.setVisibility(View.GONE);
-                                    selectedImagesContainer.setVisibility(View.GONE);
-                                    submissionTitleTextView.setText("Submitted - Awaiting Grade");
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                runOnUiThread(() -> {
-                                    hideProgressBar();
-                                    Toast.makeText(AssignmentActivity.this, "Failed to submit: " + message, Toast.LENGTH_SHORT).show();
-                                });
-                            }
-                        }
-                );
+                submitToFirestore(base64Images);
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     Log.e(TAG, "Error converting images", e);
@@ -331,6 +275,55 @@ public class AssignmentActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(original, newWidth, newHeight, true);
     }
 
+    private void submitToFirestore(List<String> base64Images) {
+        String email = firebaseAuth.getCurrentUser().getEmail();
+
+        Map<String, Object> submissionData = new HashMap<>();
+        submissionData.put("assignmentId", assignment.getId());
+        submissionData.put("submittedImages", base64Images);
+        submissionData.put("submissionTimestamp", System.currentTimeMillis());
+        submissionData.put("score", 0);
+        submissionData.put("maxScore", assignment.getMaxScore());
+        submissionData.put("checked", false);
+        submissionData.put("status", "Submitted");
+
+        firestore.collection("User")
+                .document(email)
+                .update("assignments", FieldValue.arrayUnion(assignment.getId()))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FIRESTORE", "Assignment added to user successfully.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIRESTORE", "Error adding assignment: ", e);
+                });
+
+        firestore.collection("User/"+email+"/AssignmentProgress")
+                .document(assignment.getId())
+                .set(submissionData)
+                .addOnSuccessListener(aVoid -> {
+                    runOnUiThread(() -> {
+                        hideProgressBar();
+                        Toast.makeText(AssignmentActivity.this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show();
+
+                        // Update assignment status
+                        assignment.setStatus("Submitted");
+                        statusTextView.setText("Status: Submitted");
+
+                        // Hide submission UI
+                        selectImagesButton.setVisibility(View.GONE);
+                        submitButton.setVisibility(View.GONE);
+                        selectedImagesContainer.setVisibility(View.GONE);
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    runOnUiThread(() -> {
+                        Log.e(TAG, "Error submitting assignment", e);
+                        Toast.makeText(AssignmentActivity.this, "Failed to submit assignment", Toast.LENGTH_SHORT).show();
+                        hideProgressBar();
+                    });
+                });
+    }
+
     private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
         submitButton.setEnabled(true);
@@ -351,6 +344,7 @@ public class AssignmentActivity extends AppCompatActivity {
             View view = getLayoutInflater().inflate(R.layout.item_selected_image, parent, false);
             return new ImageViewHolder(view);
         }
+
 
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
