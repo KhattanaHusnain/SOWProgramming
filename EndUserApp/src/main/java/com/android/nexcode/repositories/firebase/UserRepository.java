@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.nexcode.models.AssignmentAttempt;
 import com.android.nexcode.models.QuizAttempt;
 import com.android.nexcode.models.User;
 import com.android.nexcode.utils.UserAuthenticationUtils;
@@ -62,6 +63,26 @@ public class UserRepository {
         void onFailure(String message);
     }
 
+    public interface AssignmentAttemptsCallback {
+        void onSuccess(List<AssignmentAttempt> attempts);
+        void onFailure(String message);
+    }
+
+    public interface AssignmentAttemptCallback {
+        void onSuccess(AssignmentAttempt attempt);
+        void onFailure(String message);
+    }
+
+    public interface AssignmentSubmissionCallback {
+        void onSuccess();
+        void onFailure(String message);
+    }
+
+    public interface AssignmentStatusCallback {
+        void onSuccess(String status, Double score);
+        void onFailure(String message);
+    }
+
     public UserRepository(Context context) {
         this.userAuthenticationUtils = new UserAuthenticationUtils(context);
         this.firestore = FirebaseFirestore.getInstance();
@@ -72,7 +93,7 @@ public class UserRepository {
         firestore.collection("User").document(userAuthenticationUtils.getCurrentUserEmail()).update("notification", isChecked);
     }
 
-    public void createUser(String email, String password,  String fullName, String photo, String phone,
+    public void createUser(String email, String password, String fullName, String photo, String phone,
                            String gender, String birthdate, String degree, String semester, String role, boolean notification,
                            long createdAt, RegistrationCallback callback) {
         // Create user object and save to Firestore
@@ -188,7 +209,7 @@ public class UserRepository {
                 "", // birthdate - empty, user can update later
                 "", // degree - empty, user can update later
                 "", // semester - empty, user can update later
-                "User", // role - empty, user can update later
+                "User", // role - default User
                 true, // notification - default true
                 System.currentTimeMillis(), // createdAt - current timestamp
                 true
@@ -286,7 +307,7 @@ public class UserRepository {
                     callback.onSuccess(null);
                 })
                 .addOnFailureListener(e -> {
-                    callback.onFailure("Failed to create user document: " + e.getMessage());
+                    callback.onFailure("Failed to remove from favorites: " + e.getMessage());
                 });
     }
 
@@ -624,6 +645,7 @@ public class UserRepository {
                     callback.onFailure("Failed to get quiz attempts count: " + e.getMessage());
                 });
     }
+
     public void setIsVerifiedTrue() {
         firestore.collection("User")
                 .document(userAuthenticationUtils.getCurrentUserEmail())
@@ -634,5 +656,278 @@ public class UserRepository {
         firestore.collection("User")
                 .document(userAuthenticationUtils.getCurrentUserEmail())
                 .update("password", Password);
+    }
+
+    public void checkAssignmentStatus(String assignmentId, AssignmentStatusCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        firestore.collection("User")
+                .document(email)
+                .collection("AssignmentProgress")
+                .whereEqualTo("assignmentId", assignmentId)
+                .orderBy("submissionTimestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                        try {
+                            String status = doc.getString("status");
+                            Double score = doc.getDouble("score");
+
+                            // Default to "Submitted" if status is null but document exists
+                            if (status == null) {
+                                status = "Submitted";
+                            }
+
+                            callback.onSuccess(status, score);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing assignment status: " + e.getMessage());
+                            callback.onFailure("Error parsing assignment data");
+                        }
+                    } else {
+                        // No submission found
+                        callback.onSuccess("Not Started", null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to check assignment status", e);
+                    callback.onFailure("Failed to check assignment status: " + e.getMessage());
+                });
+    }
+
+    /**
+     * Method to submit an assignment
+     */
+    public void submitAssignment(String assignmentId, String assignmentTitle, List<String> submittedImages,
+                                 double maxScore, AssignmentSubmissionCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        // Create assignment attempt object
+        Map<String, Object> assignmentAttempt = new HashMap<>();
+        assignmentAttempt.put("assignmentId", assignmentId);
+        assignmentAttempt.put("assignmentTitle", assignmentTitle);
+        assignmentAttempt.put("submittedImages", submittedImages);
+        assignmentAttempt.put("submissionTimestamp", System.currentTimeMillis());
+        assignmentAttempt.put("score", 0.0); // Initially 0, will be updated when graded
+        assignmentAttempt.put("maxScore", maxScore);
+        assignmentAttempt.put("checked", false); // Not checked by instructor yet
+        assignmentAttempt.put("status", "Submitted");
+        assignmentAttempt.put("feedback", "");
+
+        firestore.collection("User")
+                .document(email)
+                .collection("AssignmentProgress")
+                .document(assignmentId)
+                .set(assignmentAttempt)
+                .addOnSuccessListener(documentReference -> {
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to submit assignment", e);
+                    callback.onFailure("Failed to submit assignment: " + e.getMessage());
+                });
+    }
+
+    /**
+     * Method to get all assignment attempts for the current user
+     */
+    public void getAllAssignmentAttempts(AssignmentAttemptsCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        firestore.collection("User")
+                .document(email)
+                .collection("AssignmentProgress")
+                .orderBy("submissionTimestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<AssignmentAttempt> attempts = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        try {
+                            AssignmentAttempt attempt = doc.toObject(AssignmentAttempt.class);
+                            if (attempt != null) {
+                                attempt.setAttemptId(doc.getId());
+                                attempts.add(attempt);
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing assignment attempt: " + e.getMessage());
+                        }
+                    }
+
+                    callback.onSuccess(attempts);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to retrieve assignment attempts", e);
+                    callback.onFailure("Failed to retrieve assignment history: " + e.getMessage());
+                });
+    }
+
+    /**
+     * Method to get specific assignment attempt details
+     */
+    public void getAssignmentAttemptDetails(String attemptId, AssignmentAttemptCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        firestore.collection("User")
+                .document(email)
+                .collection("AssignmentProgress")
+                .document(attemptId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        try {
+                            AssignmentAttempt attempt = documentSnapshot.toObject(AssignmentAttempt.class);
+                            if (attempt != null) {
+                                attempt.setAttemptId(documentSnapshot.getId());
+                                callback.onSuccess(attempt);
+                            } else {
+                                callback.onFailure("Failed to parse assignment attempt data");
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing assignment attempt details: " + e.getMessage());
+                            callback.onFailure("Error parsing assignment data: " + e.getMessage());
+                        }
+                    } else {
+                        callback.onFailure("Assignment attempt not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to retrieve assignment attempt details", e);
+                    callback.onFailure("Failed to retrieve assignment details: " + e.getMessage());
+                });
+    }
+
+    /**
+     * Method to get assignment attempts for a specific assignment
+     */
+    public void getAssignmentAttemptsByAssignmentId(String assignmentId, AssignmentAttemptsCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        firestore.collection("User")
+                .document(email)
+                .collection("AssignmentProgress")
+                .whereEqualTo("assignmentId", assignmentId)
+                .orderBy("submissionTimestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<AssignmentAttempt> attempts = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        try {
+                            AssignmentAttempt attempt = doc.toObject(AssignmentAttempt.class);
+                            if (attempt != null) {
+                                attempt.setAttemptId(doc.getId());
+                                attempts.add(attempt);
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing assignment attempt: " + e.getMessage());
+                        }
+                    }
+
+                    callback.onSuccess(attempts);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to retrieve assignment attempts for assignment: " + assignmentId, e);
+                    callback.onFailure("Failed to retrieve assignment attempts: " + e.getMessage());
+                });
+    }
+
+    /**
+     * Method to update assignment average score
+     */
+    public void updateAssignmentAvg(UserCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        CollectionReference progressRef = firestore
+                .collection("User")
+                .document(email)
+                .collection("AssignmentProgress");
+
+        progressRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                        if (docs.isEmpty()) {
+                            callback.onFailure("No assignment attempts found.");
+                            return;
+                        }
+
+                        double totalScore = 0;
+                        int validAttempts = 0;
+
+                        // Calculate average considering only the best attempt per assignment
+                        Map<String, Double> bestScores = new HashMap<>();
+
+                        for (DocumentSnapshot doc : docs) {
+                            String assignmentId = doc.getString("assignmentId");
+                            Double score = doc.getDouble("score");
+                            Boolean checked = doc.getBoolean("checked");
+
+                            // Only count assignments that have been checked/graded
+                            if (assignmentId != null && score != null &&
+                                    checked != null && checked) {
+
+                                double currentScore = score;
+
+                                // Keep only the best score for each assignment
+                                if (!bestScores.containsKey(assignmentId) ||
+                                        bestScores.get(assignmentId) < currentScore) {
+                                    bestScores.put(assignmentId, currentScore);
+                                }
+                            }
+                        }
+
+                        // Calculate average from best scores
+                        for (double score : bestScores.values()) {
+                            totalScore += score;
+                            validAttempts++;
+                        }
+
+                        if (validAttempts > 0) {
+                            float avg = (float) (totalScore / validAttempts);
+
+                            firestore.collection("User")
+                                    .document(email)
+                                    .update("assignmentsAvg", avg)
+                                    .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                                    .addOnFailureListener(e -> callback.onFailure(
+                                            e.getMessage() != null ? e.getMessage() : "Failed to update average"
+                                    ));
+                        } else {
+                            callback.onFailure("No graded assignment scores found.");
+                        }
+
+                    } else {
+                        callback.onFailure(
+                                task.getException() != null ?
+                                        task.getException().getMessage() : "Failed to fetch assignment progress"
+                        );
+                    }
+                });
     }
 }

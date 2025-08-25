@@ -17,12 +17,12 @@ import com.android.nexcode.models.Assignment;
 import com.android.nexcode.models.Quiz;
 import com.android.nexcode.repositories.firebase.QuizRepository;
 import com.android.nexcode.repositories.firebase.AssignmentRepository;
+import com.android.nexcode.repositories.firebase.UserRepository;
 import com.android.nexcode.utils.UserAuthenticationUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +47,7 @@ public class AssessmentFragment extends Fragment {
     private UserAuthenticationUtils userAuthenticationUtils;
     private QuizRepository quizRepository;
     private AssignmentRepository assignmentRepository;
+    private UserRepository userRepository;
     private PagerAdapter pagerAdapter;
 
     @Override
@@ -58,12 +59,13 @@ public class AssessmentFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPager);
         tabLayout = view.findViewById(R.id.tabLayout);
         progressBar = view.findViewById(R.id.progressBar);
-        userAuthenticationUtils = new UserAuthenticationUtils(getContext());
 
-        // Initialize Firestore and Repository
+        // Initialize utilities and repositories
+        userAuthenticationUtils = new UserAuthenticationUtils(getContext());
         db = FirebaseFirestore.getInstance();
         quizRepository = new QuizRepository(getContext());
         assignmentRepository = new AssignmentRepository(getContext());
+        userRepository = new UserRepository(getContext());
 
         // Load data from Firestore
         loadData();
@@ -72,27 +74,45 @@ public class AssessmentFragment extends Fragment {
     }
 
     private void loadData() {
+        if (!isAdded() || getContext() == null) return;
+
         progressBar.setVisibility(View.VISIBLE);
-        db.collection("User").document(userAuthenticationUtils.getCurrentUserEmail()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+
+        String currentUserEmail = userAuthenticationUtils.getCurrentUserEmail();
+        if (currentUserEmail == null) {
+            Toast.makeText(getContext(), "Please log in to view assessments", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        db.collection("User").document(currentUserEmail).get().addOnCompleteListener(task -> {
+            if (!isAdded() || getContext() == null) return;
+
+            if (task.isSuccessful() && task.getResult() != null) {
                 courses = (List<Integer>) task.getResult().get("enrolledCourses");
                 if (courses == null) {
-                    Toast.makeText(getContext(),"Join a course to view it's quizzes", Toast.LENGTH_SHORT).show();
+                    courses = new ArrayList<>();
+                    Toast.makeText(getContext(), "Join a course to view its quizzes", Toast.LENGTH_SHORT).show();
                     loadAssignmentsFirstPage(); // Still load assignments
                 } else {
                     loadQuizzesFirstPage();
                 }
             } else {
                 Log.e(TAG, "Error loading user courses", task.getException());
+                Toast.makeText(getContext(), "Error loading user data", Toast.LENGTH_SHORT).show();
                 loadAssignmentsFirstPage(); // Still try to load assignments
             }
         });
     }
 
     private void loadQuizzesFirstPage() {
+        if (!isAdded() || getContext() == null) return;
+
         quizRepository.loadFirstPageQuizzes(courses, new QuizRepository.PaginatedCallback() {
             @Override
             public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
+                if (!isAdded() || getContext() == null) return;
+
                 quizList.clear();
                 quizList.addAll(quizzes);
                 lastQuizDocument = lastDocument;
@@ -103,6 +123,8 @@ public class AssessmentFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                if (!isAdded() || getContext() == null) return;
+
                 Log.e(TAG, "Error loading quizzes: " + message);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 loadAssignmentsFirstPage(); // Still try to load assignments
@@ -138,6 +160,11 @@ public class AssessmentFragment extends Fragment {
         // Reset pagination state
         lastQuizDocument = null;
         hasMoreQuizzes = false;
+
+        if (courses == null || courses.isEmpty()) {
+            callback.onSuccess(new ArrayList<>(), null, false);
+            return;
+        }
 
         quizRepository.loadFirstPageQuizzes(courses, new QuizRepository.PaginatedCallback() {
             @Override
@@ -190,6 +217,11 @@ public class AssessmentFragment extends Fragment {
         assignmentRepository.loadFirstPageAssignments(new AssignmentRepository.PaginatedCallback() {
             @Override
             public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
+                if (!isAdded() || getContext() == null) {
+                    callback.onFailure("Fragment not attached");
+                    return;
+                }
+
                 assignmentList.clear();
                 assignmentList.addAll(assignments);
                 lastAssignmentDocument = lastDocument;
@@ -209,9 +241,13 @@ public class AssessmentFragment extends Fragment {
     }
 
     private void loadAssignmentsFirstPage() {
+        if (!isAdded() || getContext() == null) return;
+
         assignmentRepository.loadFirstPageAssignments(new AssignmentRepository.PaginatedCallback() {
             @Override
             public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
+                if (!isAdded() || getContext() == null) return;
+
                 assignmentList.clear();
                 assignmentList.addAll(assignments);
                 lastAssignmentDocument = lastDocument;
@@ -224,6 +260,8 @@ public class AssessmentFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                if (!isAdded() || getContext() == null) return;
+
                 Log.e(TAG, "Error loading assignments: " + message);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 checkDataLoaded(); // Still setup UI even if assignments fail
@@ -232,6 +270,13 @@ public class AssessmentFragment extends Fragment {
     }
 
     private void loadAssignmentProgress(AssignmentRepository.PaginatedCallback callback, List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
+        if (!isAdded() || getContext() == null) {
+            if (callback != null) {
+                callback.onFailure("Fragment not attached");
+            }
+            return;
+        }
+
         if (assignments.isEmpty()) {
             checkDataLoaded();
             if (callback != null) {
@@ -243,41 +288,56 @@ public class AssessmentFragment extends Fragment {
         int[] completedCount = {0}; // Array to allow modification in lambda
 
         for (Assignment assignment : assignments) {
-            db.collection("User/" + userAuthenticationUtils.getCurrentUserEmail() + "/AssignmentProgress")
-                    .whereEqualTo("assignmentId", assignment.getId())
-                    .get().addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            if (!task1.getResult().isEmpty()) {
-                                assignment.setStatus("Submitted");
-                                assignment.setEarnedScore(task1.getResult().getDocuments().get(0).getDouble("score"));
-                            } else {
-                                assignment.setStatus("Not Started");
-                            }
-                        } else {
-                            assignment.setStatus("Not Started");
-                        }
+            userRepository.checkAssignmentStatus(assignment.getId(), new UserRepository.AssignmentStatusCallback() {
+                @Override
+                public void onSuccess(String status, Double score) {
+                    if (!isAdded() || getContext() == null) return;
 
-                        completedCount[0]++;
-                        if (completedCount[0] == assignments.size()) {
-                            // All assignment progress loaded
-                            checkDataLoaded();
-                            if (callback != null) {
-                                callback.onSuccess(assignments, lastDocument, hasMore);
-                            }
+                    assignment.setStatus(status);
+                    if (score != null) {
+                        assignment.setEarnedScore(score);
+                    }
+
+                    completedCount[0]++;
+                    if (completedCount[0] == assignments.size()) {
+                        // All assignment progress loaded
+                        checkDataLoaded();
+                        if (callback != null) {
+                            callback.onSuccess(assignments, lastDocument, hasMore);
                         }
-                    });
+                    }
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    if (!isAdded() || getContext() == null) return;
+
+                    assignment.setStatus("Not Started");
+
+                    completedCount[0]++;
+                    if (completedCount[0] == assignments.size()) {
+                        // All assignment progress loaded
+                        checkDataLoaded();
+                        if (callback != null) {
+                            callback.onSuccess(assignments, lastDocument, hasMore);
+                        }
+                    }
+                }
+            });
         }
     }
 
     private void checkDataLoaded() {
+        if (!isAdded() || getContext() == null) return;
+
         // If both quizzes and assignments are loaded, set up the ViewPager
-        if (quizList.size() >= 0 && assignmentList.size() >= 0) {
-            setupViewPager();
-            progressBar.setVisibility(View.GONE);
-        }
+        setupViewPager();
+        progressBar.setVisibility(View.GONE);
     }
 
     private void setupViewPager() {
+        if (!isAdded() || getContext() == null) return;
+
         pagerAdapter = new PagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
 

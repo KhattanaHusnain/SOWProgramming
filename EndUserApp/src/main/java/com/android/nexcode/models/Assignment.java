@@ -8,25 +8,18 @@ public class Assignment implements Parcelable {
     private String title;
     private String description;
     private String dueDate;
-    private String status; // "Not Started", "In Progress", "Submitted", "Graded"
     private double maxScore;
-    private double earnedScore;
-    private String fileUrl;
 
     // Empty constructor needed for Firestore
     public Assignment() {
     }
 
-    public Assignment(String id, String title, String description, String dueDate,
-                      String status, double maxScore, double earnedScore, String fileUrl) {
+    public Assignment(String id, String title, String description, String dueDate, double maxScore) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
-        this.status = status;
         this.maxScore = maxScore;
-        this.earnedScore = earnedScore;
-        this.fileUrl = fileUrl;
     }
 
     protected Assignment(Parcel in) {
@@ -34,10 +27,7 @@ public class Assignment implements Parcelable {
         title = in.readString();
         description = in.readString();
         dueDate = in.readString();
-        status = in.readString();
         maxScore = in.readDouble();
-        earnedScore = in.readDouble();
-        fileUrl = in.readString();
     }
 
     public static final Creator<Assignment> CREATOR = new Creator<Assignment>() {
@@ -85,13 +75,6 @@ public class Assignment implements Parcelable {
         this.dueDate = dueDate;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public double getMaxScore() {
         return maxScore;
@@ -99,22 +82,6 @@ public class Assignment implements Parcelable {
 
     public void setMaxScore(double maxScore) {
         this.maxScore = maxScore;
-    }
-
-    public double getEarnedScore() {
-        return earnedScore;
-    }
-
-    public void setEarnedScore(double earnedScore) {
-        this.earnedScore = earnedScore;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
     }
 
     @Override
@@ -128,9 +95,6 @@ public class Assignment implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeString(dueDate);
-        dest.writeString(status);
         dest.writeDouble(maxScore);
-        dest.writeDouble(earnedScore);
-        dest.writeString(fileUrl);
     }
 }

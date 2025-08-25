@@ -2,6 +2,7 @@ package com.android.nexcode.presenters.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.nexcode.models.Assignment;
 import com.android.nexcode.presenters.activities.AssignmentActivity;
 import com.android.nexcode.repositories.firebase.AssignmentRepository;
+import com.android.nexcode.repositories.firebase.UserRepository;
 import com.android.nexcode.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -26,7 +28,9 @@ import java.util.List;
 
 public class AssignmentListFragment extends Fragment {
 
+    private static final String TAG = "AssignmentListFragment";
     private static final String ARG_ASSIGNMENT_LIST = "assignment_list";
+
     private List<Assignment> assignmentList = new ArrayList<>();
     private RecyclerView recyclerView;
     private TextView emptyView;
@@ -35,6 +39,7 @@ public class AssignmentListFragment extends Fragment {
 
     private AssignmentAdapter adapter;
     private AssessmentFragment parentFragment;
+    private UserRepository userRepository;
     private boolean isLoading = false;
     private boolean hasMoreData = false;
 
@@ -64,7 +69,11 @@ public class AssignmentListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             assignmentList = getArguments().getParcelableArrayList(ARG_ASSIGNMENT_LIST);
+            if (assignmentList == null) {
+                assignmentList = new ArrayList<>();
+            }
         }
+        userRepository = new UserRepository(getContext());
     }
 
     @Override
@@ -79,6 +88,7 @@ public class AssignmentListFragment extends Fragment {
 
         setupSwipeRefresh();
         setupRecyclerView();
+        loadAssignmentStatuses();
 
         return view;
     }
@@ -89,19 +99,30 @@ public class AssignmentListFragment extends Fragment {
                 parentFragment.refreshAssignments(new AssignmentRepository.PaginatedCallback() {
                     @Override
                     public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
-                        assignmentList.clear();
-                        assignmentList.addAll(assignments);
-                        hasMoreData = hasMore;
-                        adapter.notifyDataSetChanged();
-                        updateEmptyView();
-                        swipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(getContext(), "Assignments refreshed", Toast.LENGTH_SHORT).show();
+                        if (isAdded() && getContext() != null) {
+                            assignmentList.clear();
+                            assignmentList.addAll(assignments);
+                            hasMoreData = hasMore;
+
+                            if (adapter != null) {
+                                adapter.notifyDataSetChanged();
+                            }
+                            updateEmptyView();
+                            swipeRefreshLayout.setRefreshing(false);
+
+                            // Reload assignment statuses after refresh
+                            loadAssignmentStatuses();
+
+                            Toast.makeText(getContext(), "Assignments refreshed", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(getContext(), "Failed to refresh: " + message, Toast.LENGTH_SHORT).show();
+                        if (isAdded() && getContext() != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(), "Failed to refresh: " + message, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             } else {
@@ -149,26 +170,76 @@ public class AssignmentListFragment extends Fragment {
         parentFragment.loadMoreAssignments(new AssignmentRepository.PaginatedCallback() {
             @Override
             public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
-                isLoading = false;
-                loadMoreProgressBar.setVisibility(View.GONE);
-                hasMoreData = hasMore;
+                if (isAdded() && getContext() != null) {
+                    isLoading = false;
+                    loadMoreProgressBar.setVisibility(View.GONE);
+                    hasMoreData = hasMore;
 
-                if (!assignments.isEmpty()) {
-                    int startPosition = assignmentList.size();
-                    assignmentList.addAll(assignments);
-                    adapter.notifyItemRangeInserted(startPosition, assignments.size());
+                    if (!assignments.isEmpty()) {
+                        int startPosition = assignmentList.size();
+                        assignmentList.addAll(assignments);
+
+                        if (adapter != null) {
+                            adapter.notifyItemRangeInserted(startPosition, assignments.size());
+                        }
+
+                        // Load statuses for new assignments
+                        loadAssignmentStatusesForRange(startPosition, assignments.size());
+                    }
+
+                    updateEmptyView();
                 }
-
-                updateEmptyView();
             }
 
             @Override
             public void onFailure(String message) {
-                isLoading = false;
-                loadMoreProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Failed to load more: " + message, Toast.LENGTH_SHORT).show();
+                if (isAdded() && getContext() != null) {
+                    isLoading = false;
+                    loadMoreProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Failed to load more: " + message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void loadAssignmentStatuses() {
+        if (assignmentList.isEmpty()) return;
+
+        loadAssignmentStatusesForRange(0, assignmentList.size());
+    }
+
+    private void loadAssignmentStatusesForRange(int startIndex, int count) {
+        for (int i = startIndex; i < Math.min(startIndex + count, assignmentList.size()); i++) {
+            Assignment assignment = assignmentList.get(i);
+            final int position = i;
+
+            userRepository.checkAssignmentStatus(assignment.getId(), new UserRepository.AssignmentStatusCallback() {
+                @Override
+                public void onSuccess(String status, Double score) {
+                    if (isAdded() && getContext() != null && position < assignmentList.size()) {
+                        assignmentList.get(position).setStatus(status);
+                        if (score != null) {
+                            assignmentList.get(position).setEarnedScore(score);
+                        }
+
+                        if (adapter != null) {
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    if (isAdded() && getContext() != null && position < assignmentList.size()) {
+                        assignmentList.get(position).setStatus("Not Started");
+
+                        if (adapter != null) {
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private void updateEmptyView() {
@@ -201,19 +272,25 @@ public class AssignmentListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
+            if (position >= assignmentList.size()) return;
+
             Assignment assignment = assignmentList.get(position);
             holder.titleTextView.setText(assignment.getTitle());
             holder.descriptionTextView.setText(assignment.getDescription());
             holder.dueDateTextView.setText("Due: " + assignment.getDueDate());
-            holder.statusTextView.setText(assignment.getStatus());
+
+            String status = assignment.getStatus() != null ? assignment.getStatus() : "Not Started";
+            holder.statusTextView.setText(status);
 
             // Set status color based on assignment status
-            setStatusColor(holder.statusTextView, assignment.getStatus());
+            setStatusColor(holder.statusTextView, status);
 
             holder.itemView.setOnClickListener(v -> {
-                // Navigate to AssignmentActivity
-                Intent intent = AssignmentActivity.createIntent(getContext(), assignment);
-                startActivity(intent);
+                if (getContext() != null) {
+                    // Navigate to AssignmentActivity
+                    Intent intent = AssignmentActivity.createIntent(getContext(), assignment);
+                    startActivity(intent);
+                }
             });
         }
 
@@ -227,7 +304,10 @@ public class AssignmentListFragment extends Fragment {
                     colorResId = R.color.status_not_started;
                     break;
             }
-            statusTextView.setTextColor(getResources().getColor(colorResId));
+
+            if (getContext() != null) {
+                statusTextView.setTextColor(getResources().getColor(colorResId));
+            }
         }
 
         @Override
