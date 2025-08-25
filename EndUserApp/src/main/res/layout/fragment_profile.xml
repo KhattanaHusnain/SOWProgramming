@@ -444,7 +444,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_email" />
+                                        android:src="@drawable/ic_email"
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -480,7 +481,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_phone"
-                                        app:tint="#388E3C"/>
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -516,7 +517,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_cake"
-                                        app:tint="#F57C00"/>
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -552,7 +553,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_gender"
-                                        app:tint="#00796B"/>
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -588,7 +589,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_degree"
-                                        app:tint="#D32F2F"/>
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -623,7 +624,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_calendar"
-                                        app:tint="#7B1FA2"/>
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -937,7 +938,8 @@
                                 android:layout_height="24dp"
                                 android:layout_marginEnd="16dp"
                                 android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_notifications" />
+                                android:src="@drawable/ic_notifications"
+                                app:tint="#1565C0"/>
 
                             <LinearLayout
                                 android:layout_width="0dp"
