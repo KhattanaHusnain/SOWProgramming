@@ -152,7 +152,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     if (bitmap != null) {
                         ivProfile.setImageBitmap(bitmap);
                     } else {
-                        ivProfile.setImageResource(R.drawable.ic_default_avatar);
+                        ivProfile.setImageResource(R.drawable.ic_person);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
