@@ -22,7 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,11 +167,14 @@ public class AssessmentFragment extends Fragment {
         assignmentRepository.loadAssignmentsWithPagination(lastAssignmentDocument, new AssignmentRepository.PaginatedCallback() {
             @Override
             public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
-                assignmentList.addAll(assignments);
-                lastAssignmentDocument = lastDocument;
-                hasMoreAssignments = hasMore;
-                Log.d(TAG, "Loaded " + assignments.size() + " more assignments. Total: " + assignmentList.size());
-                callback.onSuccess(assignments, lastDocument, hasMore);
+                // Load progress first, then filter
+                loadAssignmentProgressAndFilter(assignments, (filteredAssignments) -> {
+                    assignmentList.addAll(filteredAssignments);
+                    lastAssignmentDocument = lastDocument;
+                    hasMoreAssignments = hasMore;
+                    Log.d(TAG, "Loaded " + filteredAssignments.size() + " more assignments (filtered). Total: " + assignmentList.size());
+                    callback.onSuccess(filteredAssignments, lastDocument, hasMore);
+                });
             }
 
             @Override
@@ -191,19 +194,26 @@ public class AssessmentFragment extends Fragment {
             @Override
             public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
                 assignmentList.clear();
-                assignmentList.addAll(assignments);
-                lastAssignmentDocument = lastDocument;
-                hasMoreAssignments = hasMore;
-                Log.d(TAG, "Refreshed assignments. Loaded: " + assignmentList.size());
 
-                // Load assignment progress for each assignment
-                loadAssignmentProgress(callback, assignments, lastDocument, hasMore);
+                // Load assignment progress and filter out submitted assignments
+                loadAssignmentProgressAndFilter(assignments, (filteredAssignments) -> {
+                    assignmentList.addAll(filteredAssignments);
+                    lastAssignmentDocument = lastDocument;
+                    hasMoreAssignments = hasMore;
+                    Log.d(TAG, "Refreshed assignments. Loaded: " + filteredAssignments.size() + " (filtered out submitted)");
+
+                    if (callback != null) {
+                        callback.onSuccess(filteredAssignments, lastDocument, hasMore);
+                    }
+                });
             }
 
             @Override
             public void onFailure(String message) {
                 Log.e(TAG, "Error refreshing assignments: " + message);
-                callback.onFailure(message);
+                if (callback != null) {
+                    callback.onFailure(message);
+                }
             }
         });
     }
@@ -213,13 +223,15 @@ public class AssessmentFragment extends Fragment {
             @Override
             public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
                 assignmentList.clear();
-                assignmentList.addAll(assignments);
-                lastAssignmentDocument = lastDocument;
-                hasMoreAssignments = hasMore;
-                Log.d(TAG, "Loaded " + assignmentList.size() + " assignments (first page)");
 
-                // Load assignment progress for each assignment
-                loadAssignmentProgress(null, assignments, lastDocument, hasMore);
+                // Load assignment progress and filter out submitted assignments
+                loadAssignmentProgressAndFilter(assignments, (filteredAssignments) -> {
+                    assignmentList.addAll(filteredAssignments);
+                    lastAssignmentDocument = lastDocument;
+                    hasMoreAssignments = hasMore;
+                    Log.d(TAG, "Loaded " + filteredAssignments.size() + " assignments (first page, filtered out submitted)");
+                    checkDataLoaded();
+                });
             }
 
             @Override
@@ -231,16 +243,14 @@ public class AssessmentFragment extends Fragment {
         });
     }
 
-    private void loadAssignmentProgress(AssignmentRepository.PaginatedCallback callback, List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
+    private void loadAssignmentProgressAndFilter(List<Assignment> assignments, FilterCallback callback) {
         if (assignments.isEmpty()) {
-            checkDataLoaded();
-            if (callback != null) {
-                callback.onSuccess(assignments, lastDocument, hasMore);
-            }
+            callback.onFiltered(new ArrayList<>());
             return;
         }
 
         int[] completedCount = {0}; // Array to allow modification in lambda
+        List<Assignment> filteredAssignments = new ArrayList<>();
 
         for (Assignment assignment : assignments) {
             db.collection("User/" + userAuthenticationUtils.getCurrentUserEmail() + "/AssignmentProgress")
@@ -250,23 +260,28 @@ public class AssessmentFragment extends Fragment {
                             if (!task1.getResult().isEmpty()) {
                                 assignment.setStatus("Submitted");
                                 assignment.setEarnedScore(task1.getResult().getDocuments().get(0).getDouble("score"));
+                                // Don't add submitted assignments to filtered list
                             } else {
                                 assignment.setStatus("Not Started");
+                                filteredAssignments.add(assignment); // Only add non-submitted assignments
                             }
                         } else {
                             assignment.setStatus("Not Started");
+                            filteredAssignments.add(assignment); // Add if status check failed (assume not submitted)
                         }
 
                         completedCount[0]++;
                         if (completedCount[0] == assignments.size()) {
-                            // All assignment progress loaded
-                            checkDataLoaded();
-                            if (callback != null) {
-                                callback.onSuccess(assignments, lastDocument, hasMore);
-                            }
+                            // All assignment progress checked, return filtered list
+                            callback.onFiltered(filteredAssignments);
                         }
                     });
         }
+    }
+
+    // Interface for filtering callback
+    private interface FilterCallback {
+        void onFiltered(List<Assignment> filteredAssignments);
     }
 
     private void checkDataLoaded() {
