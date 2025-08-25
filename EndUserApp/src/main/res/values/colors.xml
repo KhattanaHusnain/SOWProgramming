@@ -207,5 +207,25 @@
     <color name="semi_transparent_white">#80FFFFFF</color>
     <color name="overlay_light">#33FFFFFF</color>
     <color name="overlay_dark">#33000000</color>
+    <color name="status_submitted_bg">#E8F5E8</color>
+    <color name="status_submitted_text">#2E7D32</color>
+
+    <color name="status_graded_bg">#E8F5E8</color>
+    <color name="status_graded_text">#388E3C</color>
+
+    <color name="status_pending_bg">#FFF3E0</color>
+    <color name="status_pending_text">#F57C00</color>
+
+    <color name="status_late_bg">#FFEBEE</color>
+    <color name="status_late_text">#D32F2F</color>
+
+    <color name="status_default_bg">#F5F5F5</color>
+    <color name="status_default_text">#616161</color>
+    <color name="light_gray">#EEEEEE</color>
+    <color name="border_color">#E0E0E0</color>
+
+    <color name="success_bg">#E8F5E8</color>
+    <color name="warning_bg">#FFF3E0</color>
+    <color name="error_bg">#FFEBEE</color>
 
 </resources>

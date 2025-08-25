@@ -30,6 +30,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".presenters.activities.AssignmentDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".presenters.activities.QuizDetailActivity"
             android:exported="false" />
         <activity

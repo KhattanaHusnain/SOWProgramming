@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Assignment ID -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Assignment"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsAssignmentId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assignment 1"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color" />
+
+    </LinearLayout>
+
+    <!-- Score -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Score"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="85 / 100"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color" />
+
+    </LinearLayout>
+
+    <!-- Percentage -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Percentage"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsPercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="85.0%"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/success_color" />
+
+    </LinearLayout>
+
+    <!-- Status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Status"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submitted"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color" />
+
+    </LinearLayout>
+
+    <!-- Submission Date -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Submitted On"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsSubmissionDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Monday, January 15, 2024"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+    <!-- Image Count -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Images Submitted"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsImageCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color" />
+
+    </LinearLayout>
+
+    <!-- Grading Status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Grading Status"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color" />
+
+        <TextView
+            android:id="@+id/tvStatsGradingStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Checked by instructor"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+</LinearLayout>

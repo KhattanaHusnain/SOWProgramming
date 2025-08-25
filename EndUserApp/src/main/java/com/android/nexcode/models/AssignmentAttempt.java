@@ -1,118 +1,136 @@
 package com.android.nexcode.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.List;
 
-public class AssignmentAttempt implements Parcelable {
+/**
+ * Model class representing an assignment attempt/submission
+ */
+public class AssignmentAttempt {
     private String attemptId;
     private String assignmentId;
-    private String assignmentTitle;
-    private List<String> submittedImages;
-    private long submissionTimestamp;
-    private double score;
-    private double maxScore;
     private boolean checked;
+    private int maxScore;
+    private int score;
     private String status;
-    private String feedback;
+    private long submissionTimestamp;
+    private List<String> submittedImages;
 
-    public AssignmentAttempt() {
-        // Required empty constructor for Firestore
-    }
+    // Default constructor required for Firestore
+    public AssignmentAttempt() {}
 
-    public AssignmentAttempt(String attemptId, String assignmentId, String assignmentTitle,
-                             List<String> submittedImages, long submissionTimestamp,
-                             double score, double maxScore, boolean checked, String status, String feedback) {
+    public AssignmentAttempt(String attemptId, String assignmentId, boolean checked,
+                             int maxScore, int score, String status,
+                             long submissionTimestamp, List<String> submittedImages) {
         this.attemptId = attemptId;
         this.assignmentId = assignmentId;
-        this.assignmentTitle = assignmentTitle;
-        this.submittedImages = submittedImages;
-        this.submissionTimestamp = submissionTimestamp;
-        this.score = score;
-        this.maxScore = maxScore;
         this.checked = checked;
+        this.maxScore = maxScore;
+        this.score = score;
         this.status = status;
-        this.feedback = feedback;
+        this.submissionTimestamp = submissionTimestamp;
+        this.submittedImages = submittedImages;
     }
 
-    protected AssignmentAttempt(Parcel in) {
-        attemptId = in.readString();
-        assignmentId = in.readString();
-        assignmentTitle = in.readString();
-        submittedImages = in.createStringArrayList();
-        submissionTimestamp = in.readLong();
-        score = in.readDouble();
-        maxScore = in.readDouble();
-        checked = in.readByte() != 0;
-        status = in.readString();
-        feedback = in.readString();
+    // Getters
+    public String getAttemptId() {
+        return attemptId;
     }
 
-    public static final Creator<AssignmentAttempt> CREATOR = new Creator<AssignmentAttempt>() {
-        @Override
-        public AssignmentAttempt createFromParcel(Parcel in) {
-            return new AssignmentAttempt(in);
-        }
-
-        @Override
-        public AssignmentAttempt[] newArray(int size) {
-            return new AssignmentAttempt[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getAssignmentId() {
+        return assignmentId;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(attemptId);
-        dest.writeString(assignmentId);
-        dest.writeString(assignmentTitle);
-        dest.writeStringList(submittedImages);
-        dest.writeLong(submissionTimestamp);
-        dest.writeDouble(score);
-        dest.writeDouble(maxScore);
-        dest.writeByte((byte) (checked ? 1 : 0));
-        dest.writeString(status);
-        dest.writeString(feedback);
+    public boolean isChecked() {
+        return checked;
     }
 
-    // Getters and Setters
-    public String getAttemptId() { return attemptId; }
-    public void setAttemptId(String attemptId) { this.attemptId = attemptId; }
+    public int getMaxScore() {
+        return maxScore;
+    }
 
-    public String getAssignmentId() { return assignmentId; }
-    public void setAssignmentId(String assignmentId) { this.assignmentId = assignmentId; }
+    public int getScore() {
+        return score;
+    }
 
-    public String getAssignmentTitle() { return assignmentTitle; }
-    public void setAssignmentTitle(String assignmentTitle) { this.assignmentTitle = assignmentTitle; }
+    public String getStatus() {
+        return status;
+    }
 
-    public List<String> getSubmittedImages() { return submittedImages; }
-    public void setSubmittedImages(List<String> submittedImages) { this.submittedImages = submittedImages; }
+    public long getSubmissionTimestamp() {
+        return submissionTimestamp;
+    }
 
-    public long getSubmissionTimestamp() { return submissionTimestamp; }
-    public void setSubmissionTimestamp(long submissionTimestamp) { this.submissionTimestamp = submissionTimestamp; }
+    public List<String> getSubmittedImages() {
+        return submittedImages;
+    }
 
-    public double getScore() { return score; }
-    public void setScore(double score) { this.score = score; }
+    // Setters
+    public void setAttemptId(String attemptId) {
+        this.attemptId = attemptId;
+    }
 
-    public double getMaxScore() { return maxScore; }
-    public void setMaxScore(double maxScore) { this.maxScore = maxScore; }
+    public void setAssignmentId(String assignmentId) {
+        this.assignmentId = assignmentId;
+    }
 
-    public boolean isChecked() { return checked; }
-    public void setChecked(boolean checked) { this.checked = checked; }
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
+    }
 
-    public String getFeedback() { return feedback; }
-    public void setFeedback(String feedback) { this.feedback = feedback; }
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-    public double getPercentage() {
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setSubmissionTimestamp(long submissionTimestamp) {
+        this.submissionTimestamp = submissionTimestamp;
+    }
+
+    public void setSubmittedImages(List<String> submittedImages) {
+        this.submittedImages = submittedImages;
+    }
+
+    /**
+     * Helper method to get formatted submission date
+     */
+    public String getFormattedSubmissionDate() {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault());
+        return sdf.format(new java.util.Date(submissionTimestamp));
+    }
+
+    /**
+     * Helper method to get percentage score
+     */
+    public double getPercentageScore() {
         if (maxScore == 0) return 0;
-        return (score / maxScore) * 100;
+        return (double) score / maxScore * 100;
+    }
+
+    /**
+     * Helper method to get formatted percentage
+     */
+    public String getFormattedPercentage() {
+        return String.format("%.1f%%", getPercentageScore());
+    }
+
+    /**
+     * Helper method to check if assignment has images
+     */
+    public boolean hasSubmittedImages() {
+        return submittedImages != null && !submittedImages.isEmpty();
+    }
+
+    /**
+     * Helper method to get number of submitted images
+     */
+    public int getSubmittedImagesCount() {
+        return submittedImages != null ? submittedImages.size() : 0;
     }
 }

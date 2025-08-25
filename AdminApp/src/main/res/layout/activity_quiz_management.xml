@@ -24,8 +24,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             android:contentDescription="Back"
-            android:layout_gravity="center_vertical"
-            app:tint="#FFFFFF" />
+            android:layout_gravity="center_vertical" />
 
         <TextView
             android:layout_width="0dp"
@@ -63,7 +62,7 @@
                 android:textColor="#7f8c8d"
                 android:gravity="center"
                 android:layout_marginBottom="32dp"
-                android:fontFamily="sans-serif-light" />
+                android:fontFamily="@font/poppins_bold" />
 
             <!-- Quiz Options Container -->
             <LinearLayout
@@ -214,15 +213,17 @@
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:layout_weight="1"
+                    app:cardCornerRadius="4dp"
                     android:layout_marginEnd="8dp"
-                    >
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:background="#ecf0f1">
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/txtTotalQuizzes"
@@ -248,15 +249,17 @@
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    >
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:background="#ecf0f1">
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/txtActiveQuizzes"
