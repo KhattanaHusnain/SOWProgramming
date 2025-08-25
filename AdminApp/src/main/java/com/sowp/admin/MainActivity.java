@@ -15,8 +15,6 @@ public class MainActivity extends AppCompatActivity {
     private CardView cardUserManagement;
     private CardView cardQuizManagement;
     private CardView cardAssignmentManagement;
-    private CardView cardChatManagement;
-    private CardView cardNotificationManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         cardUserManagement = findViewById(R.id.cardUserManagement);
         cardQuizManagement = findViewById(R.id.cardQuizManagement);
         cardAssignmentManagement = findViewById(R.id.cardAssignmentManagement);
-        cardChatManagement = findViewById(R.id.cardChatManagement);
-        cardNotificationManagement = findViewById(R.id.cardNotificationManagement);
     }
 
     private void setClickListeners() {
@@ -76,26 +72,6 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(MainActivity.this, AssignmentManagementActivity.class);
 //                startActivity(intent);
                 showToast("Opening Assignment Management");
-            }
-        });
-
-        // Chat Management Click Listener
-        cardChatManagement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, ChatManagementActivity.class);
-//                startActivity(intent);
-                showToast("Opening Chat Management");
-            }
-        });
-
-        // Notification Management Click Listener
-        cardNotificationManagement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, NotificationManagementActivity.class);
-//                startActivity(intent);
-                showToast("Opening Notification Management");
             }
         });
     }

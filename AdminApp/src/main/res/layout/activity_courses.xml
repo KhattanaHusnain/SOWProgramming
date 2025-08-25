@@ -27,7 +27,8 @@
                 android:layout_height="32dp"
                 android:src="@drawable/ic_school"
                 android:layout_marginEnd="12dp"
-                android:contentDescription="Course Management Icon" />
+                android:contentDescription="Course Management Icon"
+                app:tint="@color/black" />
 
             <TextView
                 android:layout_width="0dp"
@@ -167,7 +168,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_view_list"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="View Courses" />
+                    android:contentDescription="View Courses"
+                    app:tint="#4CAF50" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -196,7 +198,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -225,7 +228,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_add_circle"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Add Course" />
+                    android:contentDescription="Add Course"
+                    app:tint="#FF9800" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -254,7 +258,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -283,7 +288,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_edit"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Edit Courses" />
+                    android:contentDescription="Edit Courses"
+                    app:tint="#9C27B0" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -312,7 +318,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -352,7 +359,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_topic_add"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Add Topic" />
+                    android:contentDescription="Add Topic"
+                    app:tint="#4CAF50" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -381,7 +389,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -410,7 +419,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_topic_edit"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Edit Topic" />
+                    android:contentDescription="Edit Topic"
+                    app:tint="#FF9800" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -439,7 +449,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -468,7 +479,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_topic_list"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="View Topics" />
+                    android:contentDescription="View Topics"
+                    app:tint="#9C27B0" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -497,7 +509,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -537,7 +550,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_category"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Manage Categories" />
+                    android:contentDescription="Manage Categories"
+                    app:tint="#4CAF50" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -566,7 +580,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -595,7 +610,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_analytics"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Course Analytics" />
+                    android:contentDescription="Course Analytics"
+                    app:tint="#FF9800" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -624,7 +640,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -653,7 +670,8 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_settings"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="Course Settings" />
+                    android:contentDescription="Course Settings"
+                    app:tint="#9C27B0" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -682,7 +700,8 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate" />
+                    android:contentDescription="Navigate"
+                    app:tint="@color/text_secondary" />
 
             </LinearLayout>
 

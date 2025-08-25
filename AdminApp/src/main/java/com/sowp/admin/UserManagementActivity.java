@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class UserManagementActivity extends AppCompatActivity {
     private Button btnPrevious, btnNext;
     private Spinner spinnerVerification, spinnerSortBy;
     private EditText etSearch;
+    private LinearLayout paginationLayout;
 
     // Firebase
     private FirebaseFirestore firestore;
@@ -63,6 +65,7 @@ public class UserManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_management);
 
         initializeViews();
+        setupWindowInsets();
         setupFirebase();
         setupSpinners();
         setupRecyclerView();
@@ -81,8 +84,32 @@ public class UserManagementActivity extends AppCompatActivity {
         spinnerSortBy = findViewById(R.id.spinner_sort_by);
         etSearch = findViewById(R.id.et_search);
 
+        // Find the pagination layout
+        paginationLayout = (LinearLayout) btnPrevious.getParent();
+
         userList = new ArrayList<>();
         filteredUserList = new ArrayList<>();
+    }
+
+    private void setupWindowInsets() {
+        // Apply window insets to handle system bars properly
+        View rootView = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+
+            // Apply bottom padding to pagination layout for navigation bar
+            if (paginationLayout != null) {
+                paginationLayout.setPadding(
+                        paginationLayout.getPaddingLeft(),
+                        paginationLayout.getPaddingTop(),
+                        paginationLayout.getPaddingRight(),
+                        paginationLayout.getPaddingBottom() + navigationBars.bottom
+                );
+            }
+
+            return insets;
+        });
     }
 
     private void setupFirebase() {
@@ -214,8 +241,8 @@ public class UserManagementActivity extends AppCompatActivity {
                     user.getEmail().toLowerCase().contains(currentSearchQuery);
 
             boolean matchesVerification = currentVerificationFilter.equals("All") ||
-                    (currentVerificationFilter.equals("Verified") && !user.isEmailVerified()) ||
-                    (currentVerificationFilter.equals("Unverified") && user.isEmailVerified());
+                    (currentVerificationFilter.equals("Verified") && user.isEmailVerified()) ||
+                    (currentVerificationFilter.equals("Unverified") && !user.isEmailVerified());
 
             if (matchesSearch && matchesVerification) {
                 filteredUserList.add(user);
