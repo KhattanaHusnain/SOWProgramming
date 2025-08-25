@@ -407,7 +407,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_person" />
+                                        android:src="@drawable/ic_person"
+                                        app:tint="#1565C0"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -478,7 +479,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_phone" />
+                                        android:src="@drawable/ic_phone"
+                                        app:tint="#388E3C"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -513,7 +515,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_cake" />
+                                        android:src="@drawable/ic_cake"
+                                        app:tint="#F57C00"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -548,7 +551,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_gender" />
+                                        android:src="@drawable/ic_gender"
+                                        app:tint="#00796B"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -583,7 +587,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_degree" />
+                                        android:src="@drawable/ic_degree"
+                                        app:tint="#D32F2F"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -617,7 +622,8 @@
                                         android:layout_height="20dp"
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/ic_calendar" />
+                                        android:src="@drawable/ic_calendar"
+                                        app:tint="#7B1FA2"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -780,28 +786,28 @@
                                         android:layout_marginTop="4dp" />
                                 </LinearLayout>
 
-                                <LinearLayout
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/assignmentHistory"
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="48dp"
                                     android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_marginHorizontal="4dp"
+                                    android:text="History"
+                                    android:textAllCaps="false"
+                                    android:textSize="14sp"
+                                    android:textColor="#2196F3"
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Assignment Score"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                    app:cornerRadius="8dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="#2196F3"
+                                    app:backgroundTint="#FFFFFF"
+                                    app:rippleColor="#E3F2FD"
 
-                                    <TextView
-                                        android:id="@+id/txt_assignments_score"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="87%"
-                                        android:textSize="16sp"
-                                        android:textColor="@color/progress_color"
-                                        android:layout_marginTop="4dp" />
-                                </LinearLayout>
+                                    android:drawableEnd="@drawable/ic_arrow_forward"
+                                    android:elevation="2dp">
+
+                                </com.google.android.material.button.MaterialButton>
+
                             </LinearLayout>
 
                             <!-- Quiz Progress -->
@@ -832,28 +838,27 @@
                                         android:layout_marginTop="4dp" />
                                 </LinearLayout>
 
-                                <LinearLayout
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/quizeHistory"
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="48dp"
                                     android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_marginHorizontal="4dp"
+                                    android:text="History"
+                                    android:textAllCaps="false"
+                                    android:textSize="14sp"
+                                    android:textColor="#2196F3"
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Quiz Score"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                    app:cornerRadius="8dp"
+                                    app:strokeWidth="1dp"
+                                    app:strokeColor="#2196F3"
+                                    app:backgroundTint="#FFFFFF"
+                                    app:rippleColor="#E3F2FD"
 
-                                    <TextView
-                                        android:id="@+id/txt_quizzes_score"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="92%"
-                                        android:textSize="16sp"
-                                        android:textColor="@color/progress_color"
-                                        android:layout_marginTop="4dp" />
-                                </LinearLayout>
+                                    android:drawableEnd="@drawable/ic_arrow_forward"
+                                    android:elevation="2dp">
+
+                                </com.google.android.material.button.MaterialButton>
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

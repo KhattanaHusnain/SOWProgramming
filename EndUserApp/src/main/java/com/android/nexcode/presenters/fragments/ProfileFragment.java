@@ -19,9 +19,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.nexcode.R;
 import com.android.nexcode.models.User;
+import com.android.nexcode.presenters.activities.AssignmentHistoryActivity;
 import com.android.nexcode.presenters.activities.Login;
+import com.android.nexcode.presenters.activities.QuizHistoryActivity;
 import com.android.nexcode.repositories.firebase.UserRepository;
 import com.android.nexcode.utils.UserAuthenticationUtils;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,8 +43,9 @@ public class ProfileFragment extends Fragment {
 
     // UI Components - Learning Progress
     private TextView txtEnrolledCourses, txtCompletedCourses, txtFavouriteCourses;
-    private TextView txtAssignmentsTaken, txtAssignmentsScore;
-    private TextView txtQuizzesTaken, txtQuizzesScore;
+    private TextView txtAssignmentsTaken;
+    private TextView txtQuizzesTaken;
+    private MaterialButton assignmentHistory, quizeHistory;
 
     // UI Components - Certificates
     private TextView txtCertificatesCount;
@@ -123,9 +127,9 @@ public class ProfileFragment extends Fragment {
         txtCompletedCourses = view.findViewById(R.id.txt_completed_courses);
         txtFavouriteCourses = view.findViewById(R.id.txt_favourite_courses);
         txtAssignmentsTaken = view.findViewById(R.id.txt_assignments_taken);
-        txtAssignmentsScore = view.findViewById(R.id.txt_assignments_score);
         txtQuizzesTaken = view.findViewById(R.id.txt_quizzes_taken);
-        txtQuizzesScore = view.findViewById(R.id.txt_quizzes_score);
+        assignmentHistory = view.findViewById(R.id.assignmentHistory);
+        quizeHistory = view.findViewById(R.id.quizeHistory);
 
         // Certificates
         txtCertificatesCount = view.findViewById(R.id.txt_certificates_count);
@@ -232,6 +236,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupClickListeners() {
+
+        assignmentHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), AssignmentHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        quizeHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), QuizHistoryActivity.class);
+            startActivity(intent);
+        });
         // Notification switch listener
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Handle notification toggle
@@ -325,9 +339,7 @@ public class ProfileFragment extends Fragment {
         txtCompletedCourses.setText("0");
         txtFavouriteCourses.setText(user.getFavorites() != null ? user.getFavorites().size() + "" : "0");
         txtAssignmentsTaken.setText(user.getAssignments() != null ? user.getAssignments().size() + "" : "0");
-        txtAssignmentsScore.setText(user.getAssignmentAvg() + "%");
         txtQuizzesTaken.setText(user.getQuizzes() != null ? user.getQuizzes().size() + "" : "0");
-        txtQuizzesScore.setText(user.getQuizzesAvg() + "%");
         txtCertificatesCount.setText("0");
     }
 }
