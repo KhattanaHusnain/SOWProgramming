@@ -156,10 +156,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ivProfile.setImageResource(R.drawable.ic_default_avatar);
+                    ivProfile.setImageResource(R.drawable.ic_person);
                 }
             } else {
-                ivProfile.setImageResource(R.drawable.ic_default_avatar);
+                ivProfile.setImageResource(R.drawable.ic_person);
             }
         }
     }

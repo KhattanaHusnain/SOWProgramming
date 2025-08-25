@@ -205,14 +205,14 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (bitmap != null) {
                     ivProfileLarge.setImageBitmap(bitmap);
                 } else {
-                    ivProfileLarge.setImageResource(R.drawable.ic_default_avatar);
+                    ivProfileLarge.setImageResource(R.drawable.ic_person);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ivProfileLarge.setImageResource(R.drawable.ic_default_avatar);
+                ivProfileLarge.setImageResource(R.drawable.ic_person);
             }
         } else {
-            ivProfileLarge.setImageResource(R.drawable.ic_default_avatar);
+            ivProfileLarge.setImageResource(R.drawable.ic_person);
         }
     }
 
