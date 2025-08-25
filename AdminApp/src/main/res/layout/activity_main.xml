@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="#f5f5f5"
@@ -13,8 +14,8 @@
         android:layout_height="wrap_content"
         android:text="SOWP ADMIN SYSTEM"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#2c3e50"
+        android:fontFamily="@font/poppins_bold"
+        android:textColor="@color/primary"
         android:gravity="center"
         android:layout_marginBottom="32dp"
         android:padding="16dp" />
@@ -28,89 +29,238 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnCourseManagement"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCourseManagement"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="1. Course Management"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:background="@drawable/button_style"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:drawableLeft="@drawable/ic_courses"
-                android:drawablePadding="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp" />
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?attr/selectableItemBackground">
 
-            <Button
-                android:id="@+id/btnUserManagement"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="2. User Management"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:background="@drawable/button_style"
-                android:layout_marginBottom="12dp"
-                android:drawableLeft="@drawable/ic_user"
-                android:drawablePadding="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/btnQuizManagement"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="3. Quiz Management"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:background="@drawable/button_style"
-                android:layout_marginBottom="12dp"
-                android:drawableLeft="@drawable/ic_quizzes"
-                android:drawablePadding="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp" />
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_courses"
+                        android:layout_marginEnd="16dp"
+                        app:tint="#1565C0" />
 
-            <Button
-                android:id="@+id/btnAssignmentManagement"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="4. Assignment Management"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:background="@drawable/button_style"
-                android:layout_marginBottom="12dp"
-                android:drawableLeft="@drawable/ic_assignments"
-                android:drawablePadding="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="1. Course Management"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_medium" />
 
-            <Button
-                android:id="@+id/btnChatManagement"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="5. Chat Management"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:background="@drawable/button_style"
-                android:layout_marginBottom="12dp"
-                android:drawableLeft="@drawable/ic_chat"
-                android:drawablePadding="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <Button
-                android:id="@+id/btnNotificationManagement"
+            <!-- User Management Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardUserManagement"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="6. Notification Management"
-                android:textSize="16sp"
-                android:textColor="#ffffff"
-                android:background="@drawable/button_style"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:drawableLeft="@drawable/ic_notification"
-                android:drawablePadding="12dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp" />
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_users"
+                        android:layout_marginEnd="16dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="2. User Management"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_medium" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quiz Management Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardQuizManagement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_quizzes"
+                        android:layout_marginEnd="16dp"
+                        app:tint="#388E3C" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="3. Quiz Management"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_medium" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Assignment Management Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAssignmentManagement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_assignments"
+                        android:layout_marginEnd="16dp"
+                        app:tint="#F57C00" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="4. Assignment Management"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_medium" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Chat Management Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardChatManagement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_chat"
+                        android:layout_marginEnd="16dp"
+                        app:tint="#00796B" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="5. Chat Management"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_medium" />
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Notification Management Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNotificationManagement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_notification"
+                        android:layout_marginEnd="16dp"
+                        app:tint="#D32F2F" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="6. Notification Management"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_medium" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>

@@ -7,22 +7,23 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnCourseManagement;
-    private Button btnUserManagement;
-    private Button btnQuizManagement;
-    private Button btnAssignmentManagement;
-    private Button btnChatManagement;
-    private Button btnNotificationManagement;
+    private CardView cardCourseManagement;
+    private CardView cardUserManagement;
+    private CardView cardQuizManagement;
+    private CardView cardAssignmentManagement;
+    private CardView cardChatManagement;
+    private CardView cardNotificationManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize buttons
+        // Initialize cards
         initializeViews();
 
         // Set click listeners
@@ -30,18 +31,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        btnCourseManagement = findViewById(R.id.btnCourseManagement);
-        btnUserManagement = findViewById(R.id.btnUserManagement);
-        btnQuizManagement = findViewById(R.id.btnQuizManagement);
-        btnAssignmentManagement = findViewById(R.id.btnAssignmentManagement);
-        btnChatManagement = findViewById(R.id.btnChatManagement);
-        btnNotificationManagement = findViewById(R.id.btnNotificationManagement);
+        cardCourseManagement = findViewById(R.id.cardCourseManagement);
+        cardUserManagement = findViewById(R.id.cardUserManagement);
+        cardQuizManagement = findViewById(R.id.cardQuizManagement);
+        cardAssignmentManagement = findViewById(R.id.cardAssignmentManagement);
+        cardChatManagement = findViewById(R.id.cardChatManagement);
+        cardNotificationManagement = findViewById(R.id.cardNotificationManagement);
     }
 
     private void setClickListeners() {
 
         // Course Management Click Listener
-        btnCourseManagement.setOnClickListener(new View.OnClickListener() {
+        cardCourseManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoursesManagementActivity.class);
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // User Management Click Listener
-        btnUserManagement.setOnClickListener(new View.OnClickListener() {
+        cardUserManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, UserManagementActivity.class);
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Quiz Management Click Listener
-        btnQuizManagement.setOnClickListener(new View.OnClickListener() {
+        cardQuizManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, QuizManagementActivity.class);
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Assignment Management Click Listener
-        btnAssignmentManagement.setOnClickListener(new View.OnClickListener() {
+        cardAssignmentManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(MainActivity.this, AssignmentManagementActivity.class);
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Chat Management Click Listener
-        btnChatManagement.setOnClickListener(new View.OnClickListener() {
+        cardChatManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(MainActivity.this, ChatManagementActivity.class);
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Notification Management Click Listener
-        btnNotificationManagement.setOnClickListener(new View.OnClickListener() {
+        cardNotificationManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(MainActivity.this, NotificationManagementActivity.class);
