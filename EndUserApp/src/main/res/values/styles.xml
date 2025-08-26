@@ -176,4 +176,6 @@
         <item name="contentPadding">0dp</item>
         <item name="cardBackgroundColor">@android:color/white</item>
     </style>
+
+
 </resources>

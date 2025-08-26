@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:hint="Email"
-                    app:startIconDrawable="@drawable/ic_email"
+                    app:startIconDrawable="@drawable/ic_emails"
                     app:startIconTint="#002B5B"
                     app:boxStrokeColor="#002B5B"
                     app:hintTextColor="#002B5B"

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Checked state (ON) - Primary color for thumb/circle -->
+    <item android:color="@color/primary" android:state_checked="true" />
+
+    <!-- Unchecked state (OFF) - Black color for thumb/circle -->
+    <item android:color="#000000" />
+</selector>
+

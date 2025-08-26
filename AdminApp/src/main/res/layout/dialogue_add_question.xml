@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
     <LinearLayout
@@ -15,6 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:hint="Question Text"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -43,6 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:hint="Option 1"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -60,6 +65,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:hint="Option 2"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -77,6 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:hint="Option 3"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -94,6 +103,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:hint="Option 4"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -130,6 +141,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:hint="Correct Answer"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText

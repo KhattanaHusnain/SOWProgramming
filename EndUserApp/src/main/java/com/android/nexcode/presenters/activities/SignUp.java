@@ -283,7 +283,11 @@ public class SignUp extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    // Updated validateAndCreateAccount method for SignUp activity
+
+    private String getTextFromEditText(TextInputEditText editText) {
+        return editText.getText() != null ? editText.getText().toString().trim() : "";
+    }
+
     private void validateAndCreateAccount() {
         String fullName = Objects.requireNonNull(nameInput.getText()).toString().trim();
         String email = Objects.requireNonNull(emailInput.getText()).toString().trim();
@@ -296,7 +300,7 @@ public class SignUp extends AppCompatActivity {
         String confirmPassword = Objects.requireNonNull(confirmPasswordInput.getText()).toString().trim();
         boolean notifications = notificationsSwitch.isChecked();
 
-        if (!validateInputs(fullName, email, phone, gender, dob, degree, semester, password, confirmPassword)) {
+        if (!validateInputs()) {
             return;
         }
 
@@ -357,40 +361,62 @@ public class SignUp extends AppCompatActivity {
         finish();
     }
 
-    public boolean validateInputs(String fullName, String email, String phone, String gender,
-                                  String dob, String degree, String semester, String password, String confirmPassword)
+    public boolean validateInputs()
     {
-        if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || gender.isEmpty() ||
-                dob.isEmpty() || degree.isEmpty() || semester.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            nameInput.setError("Name is Required");
-            emailInput.setError("Email is Required");
-            phoneInput.setError("Phone is Required");
-            genderInput.setError("Gender is Required");
-            dobInput.setError("Date of birth is Required");
-            degreeInput.setError("Degree is Required");
-            semesterInput.setError("Semester is Required");
-            passwordInput.setError("Password is Required");
-            confirmPasswordInput.setError("Confirm Password Field Required");
 
+        if (TextUtils.isEmpty(getTextFromEditText(nameInput))) {
+            nameInput.setError("Name is required");
+            nameInput.requestFocus();
             return false;
         }
-        if (fullName.split("\\s+").length < 2) {
+        if (nameInput.getText().toString().split("\\s+").length < 2) {
             Toast.makeText(this, "Please enter your full name (first and last name)", Toast.LENGTH_SHORT).show();
             nameInput.setError("First and Last both names are required");
             return false;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+        if (TextUtils.isEmpty(getTextFromEditText(emailInput))) {
+            emailInput.setError("Email is required");
+            emailInput.requestFocus();
+            return false;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailInput.getText().toString()).matches()) {
             Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
             emailInput.setError("Enter Valid Email Address");
             return false;
         }
-        if (phone.length() < 10 || !phone.matches("\\d+")) {
+
+        if (TextUtils.isEmpty(getTextFromEditText(phoneInput))) {
+            phoneInput.setError("Phone Number is required");
+            phoneInput.requestFocus();
+            return false;
+        }
+
+        if ((phoneInput.getText()).toString().length() < 10 || !phoneInput.getText().toString().matches("\\d+")) {
             Toast.makeText(this, "Please enter a valid phone number (at least 10 digits)", Toast.LENGTH_SHORT).show();
             phoneInput.setError("Enter Valid Phone Number");
             return false;
         }
-        if (!password.equals(confirmPassword)) {
+
+        if (TextUtils.isEmpty(getTextFromEditText(dobInput))) {
+            dobInput.setError("Date Of Birth is required");
+            dobInput.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(getTextFromEditText(passwordInput))) {
+            passwordInput.setError("Password is required");
+            passwordInput.requestFocus();
+            return false;
+        }
+        if (TextUtils.isEmpty(getTextFromEditText(confirmPasswordInput))) {
+            confirmPasswordInput.setError("Confirm Password is required");
+            confirmPasswordInput.requestFocus();
+            return false;
+        }
+
+        if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             confirmPasswordInput.setError("Password do not matched");
             return false;

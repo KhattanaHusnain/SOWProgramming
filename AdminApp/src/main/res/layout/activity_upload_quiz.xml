@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#27ae60"
         android:padding="16dp"
         android:elevation="4dp">
 
@@ -32,8 +31,8 @@
             android:layout_weight="1"
             android:text="Upload New Quiz"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/black"
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
@@ -82,6 +81,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="Quiz ID"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -99,6 +100,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="Course ID"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -116,6 +119,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="Quiz Title"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -133,6 +138,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="Description"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -151,16 +158,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="Due Date"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDueDate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
                             android:focusable="false"
                             android:clickable="true"
                             android:drawableEnd="@drawable/ic_calendar"
+                            app:endIconTint="@color/primary"
                             android:maxLines="1" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -180,6 +189,8 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="12dp"
                             android:hint="Passing Score"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -199,6 +210,8 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginBottom="12dp"
                             android:hint="Time Limit (min)"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -218,6 +231,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:hint="Total Questions"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
