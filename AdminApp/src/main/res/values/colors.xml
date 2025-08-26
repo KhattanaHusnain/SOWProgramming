@@ -93,7 +93,7 @@
     <!-- Role Colors -->
     <color name="role_admin">#E74C3C</color>
     <color name="role_instructor">#F39C12</color>
-    <color name="role_user">#3498DB</color>
+    <color name="role_user">#1565C0</color>
 
     <!-- Status Colors -->
     <color name="success_color">#27AE60</color>

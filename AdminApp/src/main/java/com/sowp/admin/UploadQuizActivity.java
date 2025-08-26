@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,7 +33,7 @@ public class UploadQuizActivity extends AppCompatActivity {
     // UI Components
     private ImageButton btnBack;
     private TextInputEditText etCourseId, etQuizId, etQuizTitle, etDescription, etDueDate, etPassingScore, etTimeLimit, etTotalQuestions;
-    private Button btnAddQuestion, btnSaveDraft, btnUploadQuiz;
+    private MaterialButton btnAddQuestion, btnSaveDraft, btnUploadQuiz;
     private LinearLayout questionsContainer;
 
     // Data structures

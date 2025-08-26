@@ -24,8 +24,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             android:contentDescription="Back"
-            android:layout_gravity="center_vertical"
-            app:tint="#FFFFFF" />
+            android:layout_gravity="center_vertical" />
 
         <TextView
             android:layout_width="0dp"
@@ -263,16 +262,17 @@
                             android:textStyle="bold"
                             android:textColor="#2c3e50" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnAddQuestion"
                             android:layout_width="wrap_content"
-                            android:layout_height="36dp"
+                            android:layout_height="42dp"
                             android:text="Add Question"
                             android:textSize="12sp"
-                            android:background="@drawable/button_style"
+                            app:cornerRadius="8dp"
                             android:textColor="#FFFFFF"
-                            android:paddingStart="12dp"
                             android:paddingEnd="12dp"
+                            android:paddingStart="12dp"
+                            app:backgroundTint="@color/primary"
                             android:drawableStart="@drawable/ic_add"
                             android:drawablePadding="4dp" />
 
@@ -316,26 +316,27 @@
         android:elevation="8dp"
         android:weightSum="2">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveDraft"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            app:cornerRadius="8dp"
             android:layout_marginEnd="8dp"
             android:text="Save Draft"
-            android:textColor="#3498db"
-            android:drawablePadding="8dp" />
+            app:backgroundTint="#AB1B0B"
+            android:textColor="@color/white"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUploadQuiz"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            app:cornerRadius="8dp"
             android:layout_marginStart="8dp"
             android:text="Upload Quiz"
-            android:textColor="#FFFFFF"
-            android:drawableStart="@drawable/ic_upload"
-            android:drawablePadding="8dp" />
+            app:backgroundTint="@color/primary"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
