@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">NexCode</string>
+    <string name="app_name">SOWProgramming</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="app_logo_description">NexCode Logo</string>
+    <string name="app_logo_description">SOWProgramming Logo</string>
     <string name="app_tagline">Empowering Learning, Anywhere</string>
     <string name="course_image_description">Course Image</string>
     <string name="open_course_button_description">Open Course Button</string>
@@ -34,7 +34,7 @@
     <string name="notification_settings">Notification Settings</string>
     <string name="help_support">Help &amp; Support</string>
     <string name="logout">Logout</string>
-    <string name="app_version">Version 1.0.0</string>
+    <string name="app_version">Version 1.1</string>
     <!-- Profile Screen -->
     <string name="profile_title">Edit Profile</string>
     <string name="profile_photo_description">Profile photo</string>
