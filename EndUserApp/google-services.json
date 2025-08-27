@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:92775972072:android:32c95dcd4732c4c2395d5d",
+        "mobilesdk_app_id": "1:92775972072:android:3bc666b200959ce6395d5d",
         "android_client_info": {
-          "package_name": "com.android.SOWProgramming"
+          "package_name": "com.sowp.admin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "92775972072-8hf0qr5vdtc7iljad6bepkv645cpjp12.apps.googleusercontent.com",
+          "client_id": "92775972072-chfu2hic51stka839s6fg00jj00fprvs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.android.SOWProgramming",
+            "package_name": "com.sowp.admin",
             "certificate_hash": "5006efdff0b06f4cb29d6637e1b9465faed1e659"
           }
         },
@@ -45,17 +45,17 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:92775972072:android:3bc666b200959ce6395d5d",
+        "mobilesdk_app_id": "1:92775972072:android:24c5f6f68b86dde2395d5d",
         "android_client_info": {
-          "package_name": "com.sowp.admin"
+          "package_name": "com.sowp.user"
         }
       },
       "oauth_client": [
         {
-          "client_id": "92775972072-chfu2hic51stka839s6fg00jj00fprvs.apps.googleusercontent.com",
+          "client_id": "92775972072-59arr637bj15fcblb6vka9dgm4c7lvdc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.sowp.admin",
+            "package_name": "com.sowp.user",
             "certificate_hash": "5006efdff0b06f4cb29d6637e1b9465faed1e659"
           }
         },

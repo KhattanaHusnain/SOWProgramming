@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.android.SOWProgramming'
+    namespace 'com.sowp.user'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.android.nexcode"
+        applicationId "com.sowp.user"
         minSdk 24
         targetSdk 34
         versionCode 1
