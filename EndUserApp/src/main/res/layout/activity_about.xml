@@ -76,7 +76,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NexCode"
+                android:text="@string/app_name"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary_text_color"
@@ -86,7 +86,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Version: v1.0.0"
+                android:text="@string/app_version"
                 android:textSize="16sp"
                 android:textColor="@color/secondary_text_color" />
 
@@ -113,7 +113,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="NexCode is an innovative learning platform designed to enhance your programming journey with AI-powered assistance, offline access, and comprehensive progress tracking."
+                android:text="SOWProgramming is an innovative learning platform designed to enhance your programming journey with AI-powered assistance, offline access, and comprehensive progress tracking."
                 android:textSize="14sp"
                 android:textColor="@color/secondary_text_color"
                 android:lineSpacingMultiplier="1.2" />
@@ -413,7 +413,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="mujahid.husnain.56@gmail.com"
+                    android:text="SOWProgramming@gmail.com"
                     android:textSize="14sp"
                     android:textColor="@color/link_color"
                     android:autoLink="email" />
