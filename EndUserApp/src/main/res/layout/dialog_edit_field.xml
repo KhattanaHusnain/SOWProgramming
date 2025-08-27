@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="24dp"
     android:background="@android:color/white">
@@ -40,22 +41,26 @@
         android:orientation="horizontal"
         android:gravity="end">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
             android:textColor="@android:color/black"
-            android:background="@android:color/transparent"
+            android:backgroundTint="@color/white"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/primary"
+            app:strokeWidth="1dp"
             android:layout_marginEnd="8dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
+            app:cornerRadius="8dp"
             android:textColor="@android:color/white"
-            android:background="@drawable/button_background" />
+            android:backgroundTint="@color/primary"/>
 
     </LinearLayout>
 

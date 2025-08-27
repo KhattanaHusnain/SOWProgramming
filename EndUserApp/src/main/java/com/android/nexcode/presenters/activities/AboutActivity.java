@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.android.nexcode.R;
 
 public class AboutActivity extends AppCompatActivity {
 
+    private ImageView backButton;
     private TextView whatsappLink;
     private TextView linkedinLink;
     private TextView emailLink;
@@ -32,6 +34,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
+        backButton = findViewById(R.id.btn_back);
         whatsappLink = findViewById(R.id.whatsappLink);
         linkedinLink = findViewById(R.id.linkedinLink);
         emailLink = findViewById(R.id.emailLink);
@@ -39,6 +42,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
+        backButton.setOnClickListener(v -> finish());
         // WhatsApp Channel Link
         whatsappLink.setOnClickListener(new View.OnClickListener() {
             @Override
