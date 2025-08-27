@@ -131,7 +131,7 @@ public class Login extends AppCompatActivity {
 
         // Contact us
         contactUs.setOnClickListener(v -> {
-            Toast.makeText(this, "Contact support at support@nexcode.com", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Contact support at support@SOWProgramming.com", Toast.LENGTH_LONG).show();
         });
 
         // Close banner button
