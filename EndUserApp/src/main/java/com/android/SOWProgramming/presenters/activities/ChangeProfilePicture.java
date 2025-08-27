@@ -15,6 +15,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.android.SOWProgramming.R;
 import com.google.android.material.button.MaterialButton;
@@ -48,11 +52,13 @@ public class ChangeProfilePicture extends AppCompatActivity {
     private static final int MAX_IMAGE_SIZE = 400;
 
     // UI Components
+
+    private ImageView backButton;
     private CircleImageView profileImage;
     private FloatingActionButton btnChangePhoto;
     private MaterialButton btnTakePhoto, btnChooseGallery, btnSave, btnCancel;
     private MaterialTextView statusText;
-    private CircularProgressIndicator progressIndicator;
+    private ContentLoadingProgressBar progressBar;
     private View actionButtonsContainer;
 
     // Data
@@ -89,6 +95,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void initializeViews() {
+        backButton = findViewById(R.id.btn_back);
         profileImage = findViewById(R.id.profile_image);
         btnChangePhoto = findViewById(R.id.btn_change_photo);
         btnTakePhoto = findViewById(R.id.btn_take_photo);
@@ -96,7 +103,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.btn_cancel);
         statusText = findViewById(R.id.status_text);
-        progressIndicator = findViewById(R.id.progress_indicator);
+        progressBar = findViewById(R.id.progress_bar);
         actionButtonsContainer = findViewById(R.id.action_buttons_container);
     }
 
@@ -149,6 +156,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
+        backButton.setOnClickListener(v -> finish());
         btnChangePhoto.setOnClickListener(v -> checkPermissionsAndShowDialog());
         btnTakePhoto.setOnClickListener(v -> openCamera());
         btnChooseGallery.setOnClickListener(v -> openImagePicker());
@@ -409,7 +417,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void showLoading(boolean show) {
-        progressIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         setButtonsEnabled(!show);
     }
 
@@ -418,6 +426,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
         btnTakePhoto.setEnabled(enabled);
         btnChooseGallery.setEnabled(enabled);
         btnSave.setEnabled(enabled);
+        btnCancel.setEnabled(enabled);
     }
 
     private void showError(String message) {
