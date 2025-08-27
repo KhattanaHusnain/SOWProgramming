@@ -6,13 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F5F5F5"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
-    <!-- Header with title and filter controls -->
+    <!-- Header Card with all controls -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
@@ -32,14 +33,12 @@
                 android:gravity="center"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Filter Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <!-- Verification Status Filter -->
                 <Spinner
                     android:id="@+id/spinner_verification"
                     android:layout_width="0dp"
@@ -48,8 +47,6 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/spinner_background"
                     android:padding="8dp" />
-
-                <!-- Sort By Filter -->
                 <Spinner
                     android:id="@+id/spinner_sort_by"
                     android:layout_width="0dp"
@@ -61,7 +58,6 @@
 
             </LinearLayout>
 
-            <!-- Search Bar -->
             <EditText
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
@@ -106,32 +102,44 @@
 
     </LinearLayout>
 
-    <!-- Users RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_users"
+    <!-- Scrollable Content Area -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingHorizontal="8dp"
-        android:paddingBottom="16dp"
-        android:clipToPadding="false" />
+        android:layout_marginHorizontal="8dp">
 
-    <!-- Loading Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_users"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false" />
 
-    <!-- Pagination Controls with proper bottom padding -->
+        <ProgressBar
+            android:id="@+id/progress_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <!-- Fixed Bottom Pagination -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:paddingBottom="32dp"
-        android:gravity="center">
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:elevation="4dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_previous"
@@ -139,11 +147,10 @@
             android:layout_height="56dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            app:cornerRadius="4dp"
+            app:cornerRadius="8dp"
             android:text="Previous"
             app:backgroundTint="#95A5A6"
-            android:textColor="@color/primary"
-            android:enabled="false" />
+            android:textColor="@color/primary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"

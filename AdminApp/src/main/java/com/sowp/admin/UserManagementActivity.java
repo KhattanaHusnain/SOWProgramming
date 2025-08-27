@@ -41,7 +41,7 @@ public class UserManagementActivity extends AppCompatActivity {
     private MaterialButton btnPrevious, btnNext;
     private Spinner spinnerVerification, spinnerSortBy;
     private EditText etSearch;
-    private LinearLayout paginationLayout;
+    private LinearLayout mainLayout;
 
     // Firebase
     private FirebaseFirestore firestore;
@@ -85,30 +85,24 @@ public class UserManagementActivity extends AppCompatActivity {
         spinnerVerification = findViewById(R.id.spinner_verification);
         spinnerSortBy = findViewById(R.id.spinner_sort_by);
         etSearch = findViewById(R.id.et_search);
-
-        // Find the pagination layout
-        paginationLayout = (LinearLayout) btnPrevious.getParent();
+        mainLayout = findViewById(R.id.main_layout);
 
         userList = new ArrayList<>();
         filteredUserList = new ArrayList<>();
     }
 
     private void setupWindowInsets() {
-        // Apply window insets to handle system bars properly
-        View rootView = findViewById(android.R.id.content);
-        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             Insets navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
 
-            // Apply bottom padding to pagination layout for navigation bar
-            if (paginationLayout != null) {
-                paginationLayout.setPadding(
-                        paginationLayout.getPaddingLeft(),
-                        paginationLayout.getPaddingTop(),
-                        paginationLayout.getPaddingRight(),
-                        paginationLayout.getPaddingBottom() + navigationBars.bottom
-                );
-            }
+            // Apply padding to the main layout
+            v.setPadding(
+                    v.getPaddingLeft(),
+                    systemBars.top, // Top padding for status bar
+                    v.getPaddingRight(),
+                    navigationBars.bottom // Bottom padding for navigation bar
+            );
 
             return insets;
         });
