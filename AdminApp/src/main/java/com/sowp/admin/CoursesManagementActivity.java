@@ -97,6 +97,13 @@ public class CoursesManagementActivity extends AppCompatActivity {
                 Toast.makeText(CoursesManagementActivity.this, "Courses analytics", Toast.LENGTH_SHORT).show();
             }
         });
+        cardSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(CoursesManagementActivity.this, "Setting", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 
