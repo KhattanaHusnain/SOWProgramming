@@ -58,7 +58,12 @@ public class Authentication extends AppCompatActivity {
 
                 @Override
                 public void onFailure(String message) {
-                    Toast.makeText(Authentication.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Authentication.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         });
