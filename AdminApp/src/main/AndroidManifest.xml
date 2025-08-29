@@ -26,7 +26,7 @@
             android:name=".AddTopicActivity"
             android:exported="false" />
         <activity
-            android:name=".EditCoursesActivity"
+            android:name=".EditCourseActivity"
             android:exported="false" />
         <activity
             android:name=".AddCourseActivity"

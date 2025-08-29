@@ -6,12 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,91 +16,136 @@ public class CoursesManagementActivity extends AppCompatActivity {
     TextView tvTotalCourses;
     TextView tvActiveCourses;
     TextView tvTotalTopics;
-    CardView cardViewCourses,cardAddViewCourse,cardrEditCourses;
-    CardView cardAddTopics,cardEditTopics,cardViewTopics;
-    CardView cardManage,cardAnalytics,cardSetting;
-
+    CardView cardViewCourses, cardAddCourse;
+    CardView cardAddTopics, cardEditTopics, cardViewTopics;
+    CardView cardManage, cardAnalytics, cardSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_courses);
-        tvTotalCourses= findViewById(R.id.tvTotalCourses);
-        tvActiveCourses= findViewById(R.id.tvActiveCourses);
-        tvTotalTopics= findViewById(R.id.tvTotalCourses);
-        cardViewCourses= findViewById(R.id.cardViewCourses);
-        cardAddViewCourse= findViewById(R.id.cardViewCourses);
-        cardrEditCourses= findViewById(R.id.cardEditCourses);
-        cardAddTopics= findViewById(R.id.cardAddTopic);
-        cardEditTopics= findViewById(R.id.cardEditTopic);
-        cardViewTopics= findViewById(R.id.cardViewTopics);
-        cardManage= findViewById(R.id.cardManageCategories);
-        cardAnalytics= findViewById(R.id.cardManageCategories);
-        cardSetting= findViewById(R.id.cardCourseSettings);
+        setContentView(R.layout.activity_courses_management);
 
-        cardViewCourses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CoursesManagementActivity.this, "view all courses", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-        cardAddViewCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(CoursesManagementActivity.this, AddCourseActivity.class);
-                startActivity(intent);
-            }
-        });
-        cardEditTopics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(CoursesManagementActivity.this, EditCoursesActivity.class);
-                startActivity(intent);
-            }
-        });
-        cardAddTopics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(CoursesManagementActivity.this, AddTopicActivity.class);
-                startActivity(intent);
-            }
-        });
-        cardEditTopics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(CoursesManagementActivity.this, EditTopicActivity.class);
-                startActivity(intent);
-            }
-        });
-        cardViewTopics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(CoursesManagementActivity.this, ViewTopicsActivity.class);
-                startActivity(intent);
-            }
-        });
-        cardManage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CoursesManagementActivity.this, "Manage curses category", Toast.LENGTH_SHORT).show();
-            }
-        });
-        cardAnalytics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CoursesManagementActivity.this, "Courses analytics", Toast.LENGTH_SHORT).show();
-            }
-        });
-        cardSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CoursesManagementActivity.this, "Setting", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+        initViews();
+        setupClickListeners();
+        loadStatistics();
     }
 
+    private void initViews() {
+        // TextViews - Fixed incorrect ID assignments
+        tvTotalCourses = findViewById(R.id.tvTotalCourses);
+        tvActiveCourses = findViewById(R.id.tvActiveCourses);
+        tvTotalTopics = findViewById(R.id.tvTotalTopics); // Fixed: was using tvTotalCourses ID
+
+        // Course CardViews - Fixed duplicate ID assignments
+        cardViewCourses = findViewById(R.id.cardViewCourses);
+        cardAddCourse = findViewById(R.id.cardAddCourse); // Fixed: was using cardViewCourses ID
+
+        // Topic CardViews
+        cardAddTopics = findViewById(R.id.cardAddTopic);
+        cardEditTopics = findViewById(R.id.cardEditTopic);
+        cardViewTopics = findViewById(R.id.cardViewTopics);
+
+        // Management CardViews - Fixed duplicate ID assignments
+        cardManage = findViewById(R.id.cardManageCategories);
+        cardAnalytics = findViewById(R.id.cardCourseAnalytics); // Fixed: was using cardManageCategories ID
+        cardSetting = findViewById(R.id.cardCourseSettings);
+    }
+
+    private void setupClickListeners() {
+        cardViewCourses.setOnClickListener(v -> {
+            Intent intent = new Intent(CoursesManagementActivity.this, ViewCoursesActivity.class);
+            startActivity(intent);
+        });
+
+        cardAddCourse.setOnClickListener(v -> {
+            Intent intent = new Intent(CoursesManagementActivity.this, AddCourseActivity.class);
+            startActivity(intent);
+        });
+
+        cardAddTopics.setOnClickListener(v -> {
+            Intent intent = new Intent(CoursesManagementActivity.this, AddTopicActivity.class);
+            startActivity(intent);
+        });
+
+        cardEditTopics.setOnClickListener(v -> {
+            Intent intent = new Intent(CoursesManagementActivity.this, EditTopicActivity.class);
+            startActivity(intent);
+        });
+
+        cardViewTopics.setOnClickListener(v -> {
+            Intent intent = new Intent(CoursesManagementActivity.this, ViewTopicsActivity.class);
+            startActivity(intent);
+        });
+
+        cardManage.setOnClickListener(v -> {
+            Toast.makeText(CoursesManagementActivity.this, "Manage courses category", Toast.LENGTH_SHORT).show();
+            // TODO: Implement category management activity
+        });
+
+        cardAnalytics.setOnClickListener(v -> {
+            Toast.makeText(CoursesManagementActivity.this, "Courses analytics", Toast.LENGTH_SHORT).show();
+            // TODO: Implement analytics activity
+        });
+
+        cardSetting.setOnClickListener(v -> {
+            Toast.makeText(CoursesManagementActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+            // TODO: Implement settings activity
+        });
+    }
+
+    private void loadStatistics() {
+        loadTotalCourses();
+        loadActiveCourses();
+        loadTotalTopics();
+    }
+
+    private void loadTotalCourses() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Course")
+                .count()
+                .get(AggregateSource.SERVER)
+                .addOnSuccessListener(aggregateQuerySnapshot -> {
+                    tvTotalCourses.setText(String.valueOf(aggregateQuerySnapshot.getCount()));
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error loading total courses: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    tvTotalCourses.setText("0");
+                });
+    }
+
+    private void loadActiveCourses() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Course")
+                .whereEqualTo("isPublic", true)
+                .count()
+                .get(AggregateSource.SERVER)
+                .addOnSuccessListener(aggregateQuerySnapshot -> {
+                    tvActiveCourses.setText(String.valueOf(aggregateQuerySnapshot.getCount()));
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error loading active courses: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    tvActiveCourses.setText("0");
+                });
+    }
+
+    private void loadTotalTopics() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Topic") // Assuming you have a Topic collection
+                .count()
+                .get(AggregateSource.SERVER)
+                .addOnSuccessListener(aggregateQuerySnapshot -> {
+                    tvTotalTopics.setText(String.valueOf(aggregateQuerySnapshot.getCount()));
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error loading total topics: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    tvTotalTopics.setText("0");
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh statistics when returning to this activity
+        loadStatistics();
+    }
 }

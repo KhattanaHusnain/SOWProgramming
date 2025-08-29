@@ -120,4 +120,41 @@
     <!-- Gradient Colors -->
     <color name="gradient_start">#3498DB</color>
     <color name="gradient_end">#2980B9</color>
+    <color name="delete_red">#F44336</color>
+    <color name="edit_blue">#2196F3</color>
+    <color name="disabled_grey">#9E9E9E</color>
+
+    <!-- Background Colors -->
+    <color name="background_grey">#F5F5F5</color>
+    <color name="card_stroke">#E0E0E0</color>
+
+
+    <color name="text_hint">#BDBDBD</color>
+
+    <!-- Icon Colors -->
+    <color name="icon_tint">#9E9E9E</color>
+
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+
+    <!-- Chip Colors -->
+    <color name="chip_lab">#9C27B0</color>
+    <color name="chip_theory">#3F51B5</color>
+    <color name="chip_computer">#00BCD4</color>
+    <color name="chip_paid">#FF9800</color>
+    <color name="chip_free">#4CAF50</color>
+    <color name="chip_private">#795548</color>
+
+    <!-- Badge Colors -->
+    <color name="badge_background">#E3F2FD</color>
+    <color name="badge_text">#1976D2</color>
+
+    <!-- Transparent Colors -->
+    <color name="primary_10">#1A1976D2</color>
+    <color name="primary_20">#331976D2</color>
+    <color name="success_10">#1A4CAF50</color>
+    <color name="error_10">#1AF44336</color>
 </resources>

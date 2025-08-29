@@ -48,6 +48,7 @@ lifecycleViewmodelKtx = "2.6.1"
 shimmer = "0.5.0"
 sqliteFramework = "2.5.2"
 swiperefreshlayout = "1.2.0-beta01"
+swiperefreshlayoutVersion = "1.1.0"
 viewpager2 = "1.1.0"
 youtubeAndroidPlayerApi = "1.2.2"
 roomCommon = "2.6.1"
@@ -59,6 +60,7 @@ android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", v
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqliteFramework" }
 androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqliteFramework" }
 androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqliteFramework" }
+androidx-swiperefreshlayout-v110 = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayoutVersion" }
 cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 coordinatorlayout = { module = "androidx.coordinatorlayout:coordinatorlayout", version.ref = "coordinatorlayout" }
