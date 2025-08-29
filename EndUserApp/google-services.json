@@ -60,6 +60,22 @@
           }
         },
         {
+          "client_id": "92775972072-mrreku4hqe0k8o5ig26oeii0r6ug873h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sowp.user",
+            "certificate_hash": "09bf6b7669ba8cb9cf9bb40539905642495d9d9e"
+          }
+        },
+        {
+          "client_id": "92775972072-qmi4loasugsi6to0sv3ssl9l14uv0fbu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sowp.user",
+            "certificate_hash": "d70657929f6b452c5f1c9b97881b1dc77ab8f353"
+          }
+        },
+        {
           "client_id": "92775972072-dhgu6ah6aqjuabtfb51bfnf7jhrl7n82.apps.googleusercontent.com",
           "client_type": 3
         }

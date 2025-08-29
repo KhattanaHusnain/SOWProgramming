@@ -351,25 +351,34 @@ public class UserAuthenticationUtils {
     }
 
     private void handleLinkingError(Exception exception, LinkingCallback callback) {
-        String errorCode = ((FirebaseAuthException) exception).getErrorCode();
-        String message;
+        String errorCode = null;
+        String message = null;
 
-        switch (errorCode) {
-            case "ERROR_PROVIDER_ALREADY_LINKED":
-                message = "Email/password is already linked to this account";
-                break;
-            case "ERROR_CREDENTIAL_ALREADY_IN_USE":
-                message = "This email is already used by another account";
-                break;
-            case "ERROR_EMAIL_ALREADY_IN_USE":
-                message = "Email is already registered with another account";
-                break;
-            case "ERROR_INVALID_CREDENTIAL":
-                message = "Invalid email or password format";
-                break;
-            default:
-                message = exception.getMessage();
+        if (exception instanceof FirebaseAuthException) {
+            errorCode = ((FirebaseAuthException) exception).getErrorCode();
+            // Handle FirebaseAuthException
+            switch (errorCode) {
+                case "ERROR_PROVIDER_ALREADY_LINKED":
+                    message = "Email/password is already linked to this account";
+                    break;
+                case "ERROR_CREDENTIAL_ALREADY_IN_USE":
+                    message = "This email is already used by another account";
+                    break;
+                case "ERROR_EMAIL_ALREADY_IN_USE":
+                    message = "Email is already registered with another account";
+                    break;
+                case "ERROR_INVALID_CREDENTIAL":
+                    message = "Invalid email or password format";
+                    break;
+                default:
+                    message = exception.getMessage();
+            }
+        } else {
+            // Handle other types of FirebaseException
+            message = exception.getMessage();
         }
+
+
 
         callback.onFailure(new Exception(message));
     }
