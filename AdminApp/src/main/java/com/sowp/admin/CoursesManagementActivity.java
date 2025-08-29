@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -105,6 +106,21 @@ public class CoursesManagementActivity extends AppCompatActivity {
         });
 
 
+
+    }
+    public void setCourses() {
+        FirebaseFirestore fb=FirebaseFirestore.getInstance();
+        fb.collection("Course")
+                .count()
+                .get(AggregateSource.SERVER)
+                .addOnSuccessListener(AggregateQuerySnapshot->{
+
+                    tvTotalCourses.setText(String.valueOf(AggregateQuerySnapshot.getCount()));
+
+                })
+                .addOnFailureListener( e -> {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
 }
