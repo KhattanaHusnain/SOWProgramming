@@ -185,7 +185,12 @@ public class SignUp extends AppCompatActivity {
 
                 @Override
                 public void onFailure(String message) {
-                    Toast.makeText(SignUp.this, "Google Sign Up Failed", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SignUp.this, "Google Sign Up Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         });
