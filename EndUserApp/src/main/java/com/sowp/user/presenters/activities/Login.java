@@ -231,14 +231,19 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 // Google Sign-In failed
-                loginButton.setEnabled(true);
-                emailInput.setEnabled(true);
-                passwordInput.setEnabled(true);
-                googleIcon.setVisibility(View.VISIBLE);
-                googleProgress.setVisibility(View.GONE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loginButton.setEnabled(true);
+                        emailInput.setEnabled(true);
+                        passwordInput.setEnabled(true);
+                        googleIcon.setVisibility(View.VISIBLE);
+                        googleProgress.setVisibility(View.GONE);
 
-                Log.e(TAG, "Google Sign-In failed: " + message);
-                Toast.makeText(Login.this, "Google Sign-In failed: " + message, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Google Sign-In failed: " + message);
+                        Toast.makeText(Login.this, "Google Sign-In failed: " + message, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
     }
