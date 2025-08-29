@@ -9,76 +9,60 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.gms.common.SignInButton;
+
 public class MainActivity extends AppCompatActivity {
 
-    private CardView cardCourseManagement;
-    private CardView cardUserManagement;
-    private CardView cardQuizManagement;
-    private CardView cardAssignmentManagement;
+    CardView courseManagement;
+    CardView userManagement;
+    CardView quizManagement;
+    CardView assignmentManagement;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        courseManagement = findViewById(R.id.cardCourseManagement);
+        userManagement = findViewById(R.id.cardUserManagement);
+        quizManagement = findViewById(R.id.cardQuizManagement);
+        assignmentManagement = findViewById(R.id.cardAssignmentManagement);
 
-        // Initialize cards
-        initializeViews();
-
-        // Set click listeners
-        setClickListeners();
-    }
-
-    private void initializeViews() {
-        cardCourseManagement = findViewById(R.id.cardCourseManagement);
-        cardUserManagement = findViewById(R.id.cardUserManagement);
-        cardQuizManagement = findViewById(R.id.cardQuizManagement);
-        cardAssignmentManagement = findViewById(R.id.cardAssignmentManagement);
-    }
-
-    private void setClickListeners() {
-
-        // Course Management Click Listener
-        cardCourseManagement.setOnClickListener(new View.OnClickListener() {
+        courseManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoursesManagementActivity.class);
                 startActivity(intent);
             }
         });
-
-        // User Management Click Listener
-        cardUserManagement.setOnClickListener(new View.OnClickListener() {
+        userManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, UserManagementActivity.class);
                 startActivity(intent);
+
             }
         });
 
-        // Quiz Management Click Listener
-        cardQuizManagement.setOnClickListener(new View.OnClickListener() {
+        quizManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, QuizManagementActivity.class);
                 startActivity(intent);
-                showToast("Opening Quiz Management");
+
+
             }
         });
-
-        // Assignment Management Click Listener
-        cardAssignmentManagement.setOnClickListener(new View.OnClickListener() {
+        assignmentManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, AssignmentManagementActivity.class);
+
+//                Intent intent=new Intent(MainActivity.this,Assignment.class);
 //                startActivity(intent);
-                showToast("Opening Assignment Management");
+                Toast.makeText(MainActivity.this, "Assignment card clicked", Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
-    // Method to show toast messages
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 }
