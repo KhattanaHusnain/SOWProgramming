@@ -42,7 +42,7 @@ public class AddCourseActivity extends AppCompatActivity {
 
     // Text input fields matching XML IDs
     private TextInputEditText etId, etCourseCode, etTitle, etShortTitle, etInstructor,
-            etDuration, etCreditHours, etTags, etPreRequisite, etFollowUp,
+            etDuration, etCreditHours, etTags, etTopicCategories, etPreRequisite, etFollowUp,
             etDescription, etOutline, etLectures, etMembers, etNoOfQuizzes, etNoOfAssignments;
 
     // Dropdown fields
@@ -68,7 +68,7 @@ public class AddCourseActivity extends AppCompatActivity {
     // Dropdown options
     private String[] semesterOptions = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "Graduated"};
     private String[] levelOptions = {"Beginner", "Intermediate", "Advanced", "Expert"};
-    private String[] languageOptions = {"English", "Urdu", "Arabic", "Chinese", "Spanish", "French", "German"};
+    private String[] languageOptions = {"English", "Urdu"};
 
     private FirebaseFirestore db;
     private String base64Image = "";
@@ -184,6 +184,7 @@ public class AddCourseActivity extends AppCompatActivity {
         etDuration = findViewById(R.id.etDuration);
         etCreditHours = findViewById(R.id.etCreditHours);
         etTags = findViewById(R.id.etTags);
+        etTopicCategories = findViewById(R.id.etTopicCategories);
         etPreRequisite = findViewById(R.id.etPreRequisite);
         etFollowUp = findViewById(R.id.etFollowUp);
         etDescription = findViewById(R.id.etDescription);
@@ -337,6 +338,7 @@ public class AddCourseActivity extends AppCompatActivity {
         course.put("level", etLevelDropdown.getText().toString());
         course.put("language", etLanguage.getText().toString());
         course.put("tags", getListFromEditText(etTags));
+        course.put("topicCategories", getListFromEditText(etTopicCategories));
         course.put("preRequisite", getListFromEditText(etPreRequisite));
         course.put("followUp", getListFromEditText(etFollowUp));
         course.put("description", getTextFromEditText(etDescription));
@@ -345,6 +347,7 @@ public class AddCourseActivity extends AppCompatActivity {
         course.put("members", getIntegerFromEditText(etMembers));
         course.put("noOfQuizzes", getIntegerFromEditText(etNoOfQuizzes));
         course.put("noOfAssignments", getIntegerFromEditText(etNoOfAssignments));
+
 
         // Department array based on switches
         course.put("departmentArray", getSelectedDepartments());
@@ -466,6 +469,25 @@ public class AddCourseActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select a course image", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (TextUtils.isEmpty(getTextFromEditText(etShortTitle))) {
+            etShortTitle.setError("Short title is required");
+            etShortTitle.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(getTextFromEditText(etTags))) {
+            etTags.setError("Tags are required");
+            etTags.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(getTextFromEditText(etTopicCategories))) {
+            etTopicCategories.setError("Topic categories are required");
+            etTopicCategories.requestFocus();
+            return false;
+        }
+
 
         if (TextUtils.isEmpty(etSemester.getText().toString())) {
             etSemester.setError("Semester is required");
@@ -593,6 +615,7 @@ public class AddCourseActivity extends AppCompatActivity {
         etDuration.setText("");
         etCreditHours.setText("");
         etTags.setText("");
+        etTopicCategories.setText("");
         etPreRequisite.setText("");
         etFollowUp.setText("");
         etDescription.setText("");

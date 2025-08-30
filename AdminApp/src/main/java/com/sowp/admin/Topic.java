@@ -1,71 +1,26 @@
-package com.sowp.user.models;
+package com.sowp.admin;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.ColumnInfo;
-import androidx.room.Ignore;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-
-@Entity(
-        tableName = "topics",
-        foreignKeys = @ForeignKey(
-                entity = Course.class,
-                parentColumns = "id",
-                childColumns = "courseId",
-                onDelete = ForeignKey.CASCADE
-        ),
-        indices = {@Index("courseId")}
-)
 public class Topic {
 
-    @PrimaryKey
-    @ColumnInfo(name = "topicId")
-    private int topicId;   // New explicit Topic ID (not auto-generated)
-
-    @ColumnInfo(name = "courseId")
-    private int courseId;
-
-    @ColumnInfo(name = "name")
+    private int topicId;     // Explicit Topic ID
+    private int courseId;    // Foreign key reference to Course
     private String name;
-
-    @ColumnInfo(name = "description")
     private String description;
-
-    @ColumnInfo(name = "content")
     private String content;
-
-    @ColumnInfo(name = "videoID")
     private String videoID;
-
-    @ColumnInfo(name = "createdAt")
     private long createdAt;
-
-    @ColumnInfo(name = "updatedAt")
     private long updatedAt;
-
-    @ColumnInfo(name = "isPublic")
     private boolean isPublic;
-
-    @ColumnInfo(name = "tags")
-    private String tags;  // e.g., "OOP, Inheritance, Polymorphism"
-
-    @ColumnInfo(name = "categories")
+    private String tags;       // e.g., "OOP, Inheritance, Polymorphism"
     private String categories; // e.g., "Programming, Java"
+    private int views;
+    private String semester;   // e.g., "Fall 2025"
+    private int orderIndex;    // ordering inside a course
 
-    @ColumnInfo(name = "views")
-    private int views;  // how many times this topic was viewed
-
-    @ColumnInfo(name = "semester")
-    private String semester; // e.g., "Fall 2025"
-
-    @ColumnInfo(name = "orderIndex")
-    private int orderIndex; // for ordering topics inside a course
-
-    // Default constructor required by Room
+    // Default constructor (needed for Firebase/JSON parsing)
     public Topic() {}
 
-    @Ignore
+    // Full constructor
     public Topic(int topicId, int courseId, String name, String description, String content,
                  String videoID, long createdAt, long updatedAt, boolean isPublic,
                  String tags, String categories, int views, String semester, int orderIndex) {

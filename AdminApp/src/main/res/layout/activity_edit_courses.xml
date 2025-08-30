@@ -729,6 +729,8 @@
                         android:enabled="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+
+
                 <ImageView
                     android:id="@+id/ivEditTags"
                     android:layout_width="24dp"
@@ -741,6 +743,45 @@
                     app:tint="@color/primary"
                     android:visibility="gone" />
             </RelativeLayout>
+
+            <!-- Topic Categories -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilTopicCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxStrokeColor="@color/primary"
+                    app:hintTextColor="@color/primary"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTopicCategories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Topic Categories (comma separated)"
+                        android:inputType="text"
+                        android:enabled="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                <ImageView
+                    android:id="@+id/ivEditTopicCategories"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_edit"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="@color/primary"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
 
             <!-- Description -->
             <RelativeLayout

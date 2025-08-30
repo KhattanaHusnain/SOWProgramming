@@ -17,7 +17,7 @@ public class CoursesManagementActivity extends AppCompatActivity {
     TextView tvActiveCourses;
     TextView tvTotalTopics;
     CardView cardViewCourses, cardAddCourse;
-    CardView cardAddTopics, cardEditTopics, cardViewTopics;
+    CardView cardAddTopics, cardViewTopics;
     CardView cardManage, cardAnalytics, cardSetting;
 
     @Override
@@ -42,7 +42,6 @@ public class CoursesManagementActivity extends AppCompatActivity {
 
         // Topic CardViews
         cardAddTopics = findViewById(R.id.cardAddTopic);
-        cardEditTopics = findViewById(R.id.cardEditTopic);
         cardViewTopics = findViewById(R.id.cardViewTopics);
 
         // Management CardViews - Fixed duplicate ID assignments
@@ -67,13 +66,9 @@ public class CoursesManagementActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        cardEditTopics.setOnClickListener(v -> {
-            Intent intent = new Intent(CoursesManagementActivity.this, EditTopicActivity.class);
-            startActivity(intent);
-        });
-
         cardViewTopics.setOnClickListener(v -> {
-            Intent intent = new Intent(CoursesManagementActivity.this, ViewTopicsActivity.class);
+            Intent intent = new Intent(CoursesManagementActivity.this, ViewCoursesActivity.class);
+            intent.putExtra("cameForTopics",true);
             startActivity(intent);
         });
 

@@ -45,12 +45,12 @@ public class EditCourseActivity extends AppCompatActivity {
     private MaterialButton btnSaveCourse, btnDeleteCourse;
 
     // Text Input Fields
-    private TextInputLayout tilTitle, tilShortTitle, tilCourseCode, tilDuration, tilTags,
+    private TextInputLayout tilTitle, tilShortTitle, tilCourseCode, tilDuration, tilTags, tilTopicCategories,
             tilDescription, tilOutline, tilLectures, tilMembers, tilPreRequisite, tilFollowUp,
             tilCreditHours, tilInstructor, tilLanguage, tilNoOfQuizzes, tilNoOfAssignments,
             tilLevel, tilSemester;
 
-    private TextInputEditText etId, etTitle, etShortTitle, etCourseCode, etDuration, etTags,
+    private TextInputEditText etId, etTitle, etShortTitle, etCourseCode, etDuration, etTags, etTopicCategories,
             etDescription, etOutline, etLectures, etMembers, etPreRequisite, etFollowUp,
             etCreditHours, etInstructor, etNoOfQuizzes, etNoOfAssignments;
 
@@ -66,12 +66,6 @@ public class EditCourseActivity extends AppCompatActivity {
             switchCatMajor, switchCatMinor, switchCatTheoretical, switchCatMathematical,
             switchCatOthers;
 
-    // Edit Icons
-    private ImageView ivEditTitle, ivEditShortTitle, ivEditCourseCode, ivEditDuration,
-            ivEditTags, ivEditDescription, ivEditOutline, ivEditLectures, ivEditMembers,
-            ivEditPreRequisite, ivEditFollowUp, ivEditCreditHours, ivEditInstructor,
-            ivEditLanguage, ivEditNoOfQuizzes, ivEditNoOfAssignments, ivEditLevel,
-            ivEditSemester;
 
     // Data
     private FirebaseFirestore db;
@@ -156,6 +150,7 @@ public class EditCourseActivity extends AppCompatActivity {
         tilCourseCode = findViewById(R.id.tilCourseCode);
         tilDuration = findViewById(R.id.tilDuration);
         tilTags = findViewById(R.id.tilTags);
+        tilTopicCategories = findViewById(R.id.tilTopicCategories);
         tilDescription = findViewById(R.id.tilDescription);
         tilOutline = findViewById(R.id.tilOutline);
         tilLectures = findViewById(R.id.tilLectures);
@@ -177,6 +172,7 @@ public class EditCourseActivity extends AppCompatActivity {
         etCourseCode = findViewById(R.id.etCourseCode);
         etDuration = findViewById(R.id.etDuration);
         etTags = findViewById(R.id.etTags);
+        etTopicCategories = findViewById(R.id.etTopicCategories);
         etDescription = findViewById(R.id.etDescription);
         etOutline = findViewById(R.id.etOutline);
         etLectures = findViewById(R.id.etLectures);
@@ -216,26 +212,6 @@ public class EditCourseActivity extends AppCompatActivity {
         switchCatMathematical = findViewById(R.id.switchCatMathematical);
         switchCatOthers = findViewById(R.id.switchCatOthers);
 
-        // Edit Icons
-        ivEditTitle = findViewById(R.id.ivEditTitle);
-        ivEditShortTitle = findViewById(R.id.ivEditShortTitle);
-        ivEditCourseCode = findViewById(R.id.ivEditCourseCode);
-        ivEditDuration = findViewById(R.id.ivEditDuration);
-        ivEditTags = findViewById(R.id.ivEditTags);
-        ivEditDescription = findViewById(R.id.ivEditDescription);
-        ivEditOutline = findViewById(R.id.ivEditOutline);
-        ivEditLectures = findViewById(R.id.ivEditLectures);
-        ivEditMembers = findViewById(R.id.ivEditMembers);
-        ivEditPreRequisite = findViewById(R.id.ivEditPreRequisite);
-        ivEditFollowUp = findViewById(R.id.ivEditFollowUp);
-        ivEditCreditHours = findViewById(R.id.ivEditCreditHours);
-        ivEditInstructor = findViewById(R.id.ivEditInstructor);
-        ivEditLanguage = findViewById(R.id.ivEditLanguage);
-        ivEditNoOfQuizzes = findViewById(R.id.ivEditNoOfQuizzes);
-        ivEditNoOfAssignments = findViewById(R.id.ivEditNoOfAssignments);
-        ivEditLevel = findViewById(R.id.ivEditLevel);
-        ivEditSemester = findViewById(R.id.ivEditSemester);
-
         // Setup dropdowns
         setupDropdowns();
     }
@@ -274,43 +250,6 @@ public class EditCourseActivity extends AppCompatActivity {
         });
 
         // Setup edit icon click listeners
-        setupEditIconListeners();
-    }
-
-    private void setupEditIconListeners() {
-        ivEditTitle.setOnClickListener(v -> toggleFieldEdit(tilTitle, etTitle));
-        ivEditShortTitle.setOnClickListener(v -> toggleFieldEdit(tilShortTitle, etShortTitle));
-        ivEditCourseCode.setOnClickListener(v -> toggleFieldEdit(tilCourseCode, etCourseCode));
-        ivEditDuration.setOnClickListener(v -> toggleFieldEdit(tilDuration, etDuration));
-        ivEditTags.setOnClickListener(v -> toggleFieldEdit(tilTags, etTags));
-        ivEditDescription.setOnClickListener(v -> toggleFieldEdit(tilDescription, etDescription));
-        ivEditOutline.setOnClickListener(v -> toggleFieldEdit(tilOutline, etOutline));
-        ivEditLectures.setOnClickListener(v -> toggleFieldEdit(tilLectures, etLectures));
-        ivEditMembers.setOnClickListener(v -> toggleFieldEdit(tilMembers, etMembers));
-        ivEditPreRequisite.setOnClickListener(v -> toggleFieldEdit(tilPreRequisite, etPreRequisite));
-        ivEditFollowUp.setOnClickListener(v -> toggleFieldEdit(tilFollowUp, etFollowUp));
-        ivEditCreditHours.setOnClickListener(v -> toggleFieldEdit(tilCreditHours, etCreditHours));
-        ivEditInstructor.setOnClickListener(v -> toggleFieldEdit(tilInstructor, etInstructor));
-        ivEditLanguage.setOnClickListener(v -> toggleFieldEdit(tilLanguage, etLanguage));
-        ivEditNoOfQuizzes.setOnClickListener(v -> toggleFieldEdit(tilNoOfQuizzes, etNoOfQuizzes));
-        ivEditNoOfAssignments.setOnClickListener(v -> toggleFieldEdit(tilNoOfAssignments, etNoOfAssignments));
-        ivEditLevel.setOnClickListener(v -> toggleFieldEdit(tilLevel, etLevelDropdown));
-        ivEditSemester.setOnClickListener(v -> toggleFieldEdit(tilSemester, etSemester));
-    }
-
-    private void toggleFieldEdit(TextInputLayout layout, View editText) {
-        if (!isEditMode) {
-            // Enable specific field for editing
-            editText.setEnabled(true);
-            editText.setFocusable(true);
-            editText.setFocusableInTouchMode(true);
-            editText.requestFocus();
-
-            // Show keyboard for text fields
-            if (editText instanceof TextInputEditText) {
-                ((TextInputEditText) editText).selectAll();
-            }
-        }
     }
 
     private void loadCourseData() {
@@ -358,6 +297,7 @@ public class EditCourseActivity extends AppCompatActivity {
 
             // List fields with null checks and safe conversion
             setListTextSafely(etTags, (List<String>) document.get("tags"));
+            setListTextSafely(etTopicCategories, (List<String>) document.get("topicCategories"));
             setListTextSafely(etPreRequisite, (List<String>) document.get("preRequisite"));
             setListTextSafely(etFollowUp, (List<String>) document.get("followUp"));
 
@@ -584,6 +524,7 @@ public class EditCourseActivity extends AppCompatActivity {
         etCourseCode.setEnabled(enabled);
         etDuration.setEnabled(enabled);
         etTags.setEnabled(enabled);
+        etTopicCategories.setEnabled(enabled);
         etDescription.setEnabled(enabled);
         etOutline.setEnabled(enabled);
         etLectures.setEnabled(enabled);
@@ -621,26 +562,6 @@ public class EditCourseActivity extends AppCompatActivity {
         switchCatMathematical.setEnabled(enabled);
         switchCatOthers.setEnabled(enabled);
 
-        // Edit icons visibility
-        int visibility = enabled ? View.VISIBLE : View.GONE;
-        ivEditTitle.setVisibility(visibility);
-        ivEditShortTitle.setVisibility(visibility);
-        ivEditCourseCode.setVisibility(visibility);
-        ivEditDuration.setVisibility(visibility);
-        ivEditTags.setVisibility(visibility);
-        ivEditDescription.setVisibility(visibility);
-        ivEditOutline.setVisibility(visibility);
-        ivEditLectures.setVisibility(visibility);
-        ivEditMembers.setVisibility(visibility);
-        ivEditPreRequisite.setVisibility(visibility);
-        ivEditFollowUp.setVisibility(visibility);
-        ivEditCreditHours.setVisibility(visibility);
-        ivEditInstructor.setVisibility(visibility);
-        ivEditLanguage.setVisibility(visibility);
-        ivEditNoOfQuizzes.setVisibility(visibility);
-        ivEditNoOfAssignments.setVisibility(visibility);
-        ivEditLevel.setVisibility(visibility);
-        ivEditSemester.setVisibility(visibility);
     }
 
     private void saveCourseData() {
@@ -689,6 +610,11 @@ public class EditCourseActivity extends AppCompatActivity {
         List<String> tags = getListFromEditText(etTags);
         if (!tags.isEmpty()) {
             updates.put("tags", tags);
+        }
+
+        List<String> topicCategories = getListFromEditText(etTopicCategories);
+        if (!topicCategories.isEmpty()) {
+            updates.put("topicCategories", topicCategories);
         }
 
         List<String> preRequisite = getListFromEditText(etPreRequisite);

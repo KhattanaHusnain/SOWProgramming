@@ -1,4 +1,4 @@
-package com.sowp.user.models;
+package com.sowp.admin;
 
 public class Quiz {
 

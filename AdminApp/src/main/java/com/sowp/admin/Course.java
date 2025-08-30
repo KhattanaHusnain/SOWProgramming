@@ -15,6 +15,7 @@ public class Course {
     private String duration;
     private List<String> categoryArray;
     private List<String> departmentArray;
+    private List<String> topicCategories; // Added field for topic categories
     private String outline;
     private long createdAt;
     private long updatedAt;
@@ -42,9 +43,9 @@ public class Course {
     // Full constructor
     public Course(int id, String illustration, String title, String shortTitle, String courseCode,
                   String instructor, int members, String description, String duration,
-                  List<String> categoryArray, List<String> departmentArray, String outline,
-                  long createdAt, long updatedAt, boolean isPublic, int lectures, boolean completed,
-                  String semester, List<String> tags, List<String> preRequisite,
+                  List<String> categoryArray, List<String> departmentArray, List<String> topicCategories,
+                  String outline, long createdAt, long updatedAt, boolean isPublic, int lectures,
+                  boolean completed, String semester, List<String> tags, List<String> preRequisite,
                   List<String> followUp, int creditHours, boolean isLab, boolean isComputer,
                   String language, int noOfQuizzes, int noOfAssignments, String level,
                   boolean isPaid, double avgCourseRating) {
@@ -59,6 +60,7 @@ public class Course {
         this.duration = duration;
         this.categoryArray = categoryArray;
         this.departmentArray = departmentArray;
+        this.topicCategories = topicCategories;
         this.outline = outline;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -190,6 +192,14 @@ public class Course {
 
     public void setDepartmentArray(List<String> departmentArray) {
         this.departmentArray = departmentArray;
+    }
+
+    public List<String> getTopicCategories() {
+        return topicCategories;
+    }
+
+    public void setTopicCategories(List<String> topicCategories) {
+        this.topicCategories = topicCategories;
     }
 
     public String getOutline() {

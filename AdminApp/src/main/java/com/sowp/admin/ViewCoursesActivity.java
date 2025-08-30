@@ -386,9 +386,17 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
     @Override
     public void onCourseClick(Course course) {
         // Navigate to course details/edit page
-        Intent intent = new Intent(this, EditCourseActivity.class);
-        intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
-        startActivity(intent);
+        Intent intnt = getIntent();
+        boolean cameForTopics = intnt.getBooleanExtra("cameForTopics",false);
+        if(cameForTopics){
+            Intent intent = new Intent(this, ViewTopicsActivity.class);
+            intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, EditCourseActivity.class);
+            intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
+            startActivity(intent);
+        }
     }
 
     @Override

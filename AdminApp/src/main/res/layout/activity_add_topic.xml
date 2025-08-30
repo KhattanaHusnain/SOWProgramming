@@ -24,22 +24,25 @@
             android:layout_marginBottom="24dp"
             android:textColor="@android:color/black" />
 
+        <!-- Course Selection -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:boxStrokeColor="@color/primary"
             app:hintTextColor="@color/primary"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCourseId"
+            <AutoCompleteTextView
+                android:id="@+id/actvCourse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Course ID"
-                android:inputType="number" />
+                android:hint="Select Course"
+                android:inputType="none"
+                android:focusable="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Topic Name -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +59,7 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Topic Description -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,6 +78,7 @@
                 android:gravity="top" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Video ID -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,22 +95,7 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:boxStrokeColor="@color/primary"
-            app:hintTextColor="@color/primary"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etOrderIndex"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Order Index"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
-
+        <!-- Content -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,6 +114,67 @@
                 android:gravity="top" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Tags -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tags (comma separated)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Semester -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSemester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Semester (e.g., Fall 2025)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Categories Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select applicable categories for this topic:"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/darker_gray" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:singleSelection="false"
+            app:chipSpacing="8dp" />
+
+        <!-- Is Public Switch -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,16 +198,18 @@
                 android:checked="true" />
         </LinearLayout>
 
+        <!-- Info Text -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Timestamps will be auto-generated (createdAt, updatedAt)"
+            android:text="• Topic ID will be auto-generated\n• Timestamps will be auto-generated (createdAt, updatedAt)\n• Views will be initialized to 0"
             android:textSize="12sp"
             android:textStyle="italic"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="16dp"
-            android:textAlignment="center" />
+            android:lineSpacingExtra="2dp" />
 
+        <!-- Add Topic Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddTopic"
             android:layout_width="match_parent"
@@ -167,6 +220,7 @@
             android:layout_marginTop="16dp"
             app:cornerRadius="8dp" />
 
+        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
