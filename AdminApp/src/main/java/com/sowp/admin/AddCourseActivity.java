@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,22 +40,35 @@ import java.util.stream.Collectors;
 
 public class AddCourseActivity extends AppCompatActivity {
 
-    // Existing fields
-    private TextInputEditText etId, etTitle, etShortTitle, etCategory, etPrimaryCategory,
-            etCategoryArray, etDuration, etTags, etDescription, etOutline, etLectures,
-            etMembers, etCourseCode, etPreRequisite, etFollowUp, etCreditHours,
-            etInstructor, etLanguage, etNoOfQuizzes, etNoOfAssignments,
-            etDepartmentArray;
+    // Text input fields matching XML IDs
+    private TextInputEditText etId, etCourseCode, etTitle, etShortTitle, etInstructor,
+            etDuration, etCreditHours, etTags, etPreRequisite, etFollowUp,
+            etDescription, etOutline, etLectures, etMembers, etNoOfQuizzes, etNoOfAssignments;
 
+    // Dropdown fields
+    private AutoCompleteTextView etSemester, etLevelDropdown, etLanguage;
+
+    // Department switches
+    private SwitchMaterial switchIT, switchSoftwareEng, switchComputerScience,
+            switchAI, switchCyberSecurity;
+
+    // Category switches
+    private SwitchMaterial switchCatAll, switchCatProgramming, switchCatNonProgramming,
+            switchCatMajor, switchCatMinor, switchCatTheoretical, switchCatMathematical,
+            switchCatOthers;
+
+    // Settings switches
     private SwitchMaterial switchIsPublic, switchIsLab, switchIsComputer, switchIsPaid;
+
+    // Other UI elements
     private MaterialButton btnAddCourse, btnSelectImage;
-    private AutoCompleteTextView etSemester, etLevelDropdown;
     private ImageView ivCourseImage;
     private ProgressBar progressBar;
 
     // Dropdown options
     private String[] semesterOptions = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "Graduated"};
     private String[] levelOptions = {"Beginner", "Intermediate", "Advanced", "Expert"};
+    private String[] languageOptions = {"English", "Urdu", "Arabic", "Chinese", "Spanish", "French", "German"};
 
     private FirebaseFirestore db;
     private String base64Image = "";
@@ -75,6 +89,9 @@ public class AddCourseActivity extends AppCompatActivity {
 
         // Initialize views
         initViews();
+
+        // Setup category switch logic
+        setupCategorySwitchLogic();
 
         // Set click listeners
         btnAddCourse.setOnClickListener(v -> checkCourseIdAndAdd());
@@ -158,32 +175,47 @@ public class AddCourseActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // Basic info fields
+        // Text input fields
         etId = findViewById(R.id.etId);
+        etCourseCode = findViewById(R.id.etCourseCode);
         etTitle = findViewById(R.id.etTitle);
         etShortTitle = findViewById(R.id.etShortTitle);
-        etCategory = findViewById(R.id.etCategory);
-        etPrimaryCategory = findViewById(R.id.etPrimaryCategory);
-        etCategoryArray = findViewById(R.id.etCategoryArray);
+        etInstructor = findViewById(R.id.etInstructor);
         etDuration = findViewById(R.id.etDuration);
+        etCreditHours = findViewById(R.id.etCreditHours);
         etTags = findViewById(R.id.etTags);
+        etPreRequisite = findViewById(R.id.etPreRequisite);
+        etFollowUp = findViewById(R.id.etFollowUp);
         etDescription = findViewById(R.id.etDescription);
         etOutline = findViewById(R.id.etOutline);
         etLectures = findViewById(R.id.etLectures);
         etMembers = findViewById(R.id.etMembers);
-
-        // New fields
-        etCourseCode = findViewById(R.id.etCourseCode);
-        etPreRequisite = findViewById(R.id.etPreRequisite);
-        etFollowUp = findViewById(R.id.etFollowUp);
-        etCreditHours = findViewById(R.id.etCreditHours);
-        etInstructor = findViewById(R.id.etInstructor);
-        etLanguage = findViewById(R.id.etLanguage);
         etNoOfQuizzes = findViewById(R.id.etNoOfQuizzes);
         etNoOfAssignments = findViewById(R.id.etNoOfAssignments);
-        etDepartmentArray = findViewById(R.id.etDepartmentArray);
 
-        // Switches
+        // Dropdown fields
+        etSemester = findViewById(R.id.etSemester);
+        etLevelDropdown = findViewById(R.id.etLevelDropdown);
+        etLanguage = findViewById(R.id.etLanguage);
+
+        // Department switches
+        switchIT = findViewById(R.id.switchIT);
+        switchSoftwareEng = findViewById(R.id.switchSoftwareEng);
+        switchComputerScience = findViewById(R.id.switchComputerScience);
+        switchAI = findViewById(R.id.switchAI);
+        switchCyberSecurity = findViewById(R.id.switchCyberSecurity);
+
+        // Category switches
+        switchCatAll = findViewById(R.id.switchCatAll);
+        switchCatProgramming = findViewById(R.id.switchCatProgramming);
+        switchCatNonProgramming = findViewById(R.id.switchCatNonProgramming);
+        switchCatMajor = findViewById(R.id.switchCatMajor);
+        switchCatMinor = findViewById(R.id.switchCatMinor);
+        switchCatTheoretical = findViewById(R.id.switchCatTheoretical);
+        switchCatMathematical = findViewById(R.id.switchCatMathematical);
+        switchCatOthers = findViewById(R.id.switchCatOthers);
+
+        // Settings switches
         switchIsPublic = findViewById(R.id.switchIsPublic);
         switchIsLab = findViewById(R.id.switchIsLab);
         switchIsComputer = findViewById(R.id.switchIsComputer);
@@ -194,8 +226,6 @@ public class AddCourseActivity extends AppCompatActivity {
         btnSelectImage = findViewById(R.id.btnSelectImage);
         ivCourseImage = findViewById(R.id.ivCourseImage);
         progressBar = findViewById(R.id.progressBar);
-        etSemester = findViewById(R.id.etSemester);
-        etLevelDropdown = findViewById(R.id.etLevelDropdown);
 
         // Setup dropdowns
         setupDropdowns();
@@ -211,6 +241,41 @@ public class AddCourseActivity extends AppCompatActivity {
         ArrayAdapter<String> levelAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, levelOptions);
         etLevelDropdown.setAdapter(levelAdapter);
+
+        // Language dropdown
+        ArrayAdapter<String> languageAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, languageOptions);
+        etLanguage.setAdapter(languageAdapter);
+    }
+
+    private void setupCategorySwitchLogic() {
+        // When "All" is selected, disable other category switches
+        switchCatAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                switchCatProgramming.setChecked(false);
+                switchCatNonProgramming.setChecked(false);
+                switchCatMajor.setChecked(false);
+                switchCatMinor.setChecked(false);
+                switchCatTheoretical.setChecked(false);
+                switchCatMathematical.setChecked(false);
+                switchCatOthers.setChecked(false);
+            }
+        });
+
+        // When any other category is selected, uncheck "All"
+        SwitchMaterial.OnCheckedChangeListener uncheckAllListener = (buttonView, isChecked) -> {
+            if (isChecked && switchCatAll.isChecked()) {
+                switchCatAll.setChecked(false);
+            }
+        };
+
+        switchCatProgramming.setOnCheckedChangeListener(uncheckAllListener);
+        switchCatNonProgramming.setOnCheckedChangeListener(uncheckAllListener);
+        switchCatMajor.setOnCheckedChangeListener(uncheckAllListener);
+        switchCatMinor.setOnCheckedChangeListener(uncheckAllListener);
+        switchCatTheoretical.setOnCheckedChangeListener(uncheckAllListener);
+        switchCatMathematical.setOnCheckedChangeListener(uncheckAllListener);
+        switchCatOthers.setOnCheckedChangeListener(uncheckAllListener);
     }
 
     private void checkCourseIdAndAdd() {
@@ -263,29 +328,29 @@ public class AddCourseActivity extends AppCompatActivity {
         course.put("id", Integer.parseInt(docId));
         course.put("title", getTextFromEditText(etTitle));
         course.put("shortTitle", getTextFromEditText(etShortTitle));
-        course.put("category", getTextFromEditText(etCategory));
-        course.put("primaryCategory", getTextFromEditText(etPrimaryCategory));
-        course.put("categoryArray", getListFromEditText(etCategoryArray));
+        course.put("courseCode", getTextFromEditText(etCourseCode));
+        course.put("instructor", getTextFromEditText(etInstructor));
         course.put("duration", getTextFromEditText(etDuration));
-        course.put("illustration", base64Image); // Base64 image instead of URL
+        course.put("illustration", base64Image);
+        course.put("semester", etSemester.getText().toString());
+        course.put("creditHours", getIntegerFromEditText(etCreditHours));
+        course.put("level", etLevelDropdown.getText().toString());
+        course.put("language", etLanguage.getText().toString());
+        course.put("tags", getListFromEditText(etTags));
+        course.put("preRequisite", getListFromEditText(etPreRequisite));
+        course.put("followUp", getListFromEditText(etFollowUp));
         course.put("description", getTextFromEditText(etDescription));
         course.put("outline", getTextFromEditText(etOutline));
         course.put("lectures", getIntegerFromEditText(etLectures));
         course.put("members", getIntegerFromEditText(etMembers));
-        course.put("semester", etSemester.getText().toString());
-        course.put("tags", getListFromEditText(etTags));
-
-        // New fields
-        course.put("courseCode", getTextFromEditText(etCourseCode));
-        course.put("preRequisite", getListFromEditText(etPreRequisite));
-        course.put("followUp", getListFromEditText(etFollowUp));
-        course.put("creditHours", getIntegerFromEditText(etCreditHours));
-        course.put("instructor", getTextFromEditText(etInstructor));
-        course.put("language", getTextFromEditText(etLanguage));
         course.put("noOfQuizzes", getIntegerFromEditText(etNoOfQuizzes));
         course.put("noOfAssignments", getIntegerFromEditText(etNoOfAssignments));
-        course.put("level", etLevelDropdown.getText().toString());
-        course.put("departmentArray", getListFromEditText(etDepartmentArray));
+
+        // Department array based on switches
+        course.put("departmentArray", getSelectedDepartments());
+
+        // Category array based on switches
+        course.put("categoryArray", getSelectedCategories());
 
         // Boolean fields
         course.put("isPublic", switchIsPublic.isChecked());
@@ -318,17 +383,64 @@ public class AddCourseActivity extends AppCompatActivity {
                 });
     }
 
+    private List<String> getSelectedDepartments() {
+        List<String> departments = new ArrayList<>();
+
+        if (switchIT.isChecked()) {
+            departments.add("Information Technology");
+        }
+        if (switchSoftwareEng.isChecked()) {
+            departments.add("Software Engineering");
+        }
+        if (switchComputerScience.isChecked()) {
+            departments.add("Computer Science");
+        }
+        if (switchAI.isChecked()) {
+            departments.add("Artificial Intelligence");
+        }
+        if (switchCyberSecurity.isChecked()) {
+            departments.add("Cyber Security");
+        }
+
+        return departments;
+    }
+
+    private List<String> getSelectedCategories() {
+        List<String> categories = new ArrayList<>();
+
+        if (switchCatAll.isChecked()) {
+            categories.add("All");
+        }
+        if (switchCatProgramming.isChecked()) {
+            categories.add("Programming");
+        }
+        if (switchCatNonProgramming.isChecked()) {
+            categories.add("Non Programming");
+        }
+        if (switchCatMajor.isChecked()) {
+            categories.add("Major");
+        }
+        if (switchCatMinor.isChecked()) {
+            categories.add("Minor");
+        }
+        if (switchCatTheoretical.isChecked()) {
+            categories.add("Theoretical");
+        }
+        if (switchCatMathematical.isChecked()) {
+            categories.add("Mathematical");
+        }
+        if (switchCatOthers.isChecked()) {
+            categories.add("Others");
+        }
+
+        return categories;
+    }
+
     private boolean validateInputs() {
         // Required field validations
         if (TextUtils.isEmpty(getTextFromEditText(etId))) {
             etId.setError("Course ID is required");
             etId.requestFocus();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(getTextFromEditText(etTitle))) {
-            etTitle.setError("Title is required");
-            etTitle.requestFocus();
             return false;
         }
 
@@ -338,21 +450,15 @@ public class AddCourseActivity extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(etPrimaryCategory))) {
-            etPrimaryCategory.setError("Primary Category is required");
-            etPrimaryCategory.requestFocus();
+        if (TextUtils.isEmpty(getTextFromEditText(etTitle))) {
+            etTitle.setError("Title is required");
+            etTitle.requestFocus();
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(etDuration))) {
-            etDuration.setError("Duration is required");
-            etDuration.requestFocus();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(etSemester.getText().toString())) {
-            etSemester.setError("Semester is required");
-            etSemester.requestFocus();
+        if (TextUtils.isEmpty(getTextFromEditText(etInstructor))) {
+            etInstructor.setError("Instructor name is required");
+            etInstructor.requestFocus();
             return false;
         }
 
@@ -361,15 +467,9 @@ public class AddCourseActivity extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(etDescription))) {
-            etDescription.setError("Description is required");
-            etDescription.requestFocus();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(getTextFromEditText(etInstructor))) {
-            etInstructor.setError("Instructor name is required");
-            etInstructor.requestFocus();
+        if (TextUtils.isEmpty(etSemester.getText().toString())) {
+            etSemester.setError("Semester is required");
+            etSemester.requestFocus();
             return false;
         }
 
@@ -385,6 +485,18 @@ public class AddCourseActivity extends AppCompatActivity {
             return false;
         }
 
+        if (TextUtils.isEmpty(getTextFromEditText(etDuration))) {
+            etDuration.setError("Duration is required");
+            etDuration.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(getTextFromEditText(etDescription))) {
+            etDescription.setError("Description is required");
+            etDescription.requestFocus();
+            return false;
+        }
+
         // Validate numeric fields
         try {
             Integer.parseInt(getTextFromEditText(etId));
@@ -394,6 +506,15 @@ public class AddCourseActivity extends AppCompatActivity {
             return false;
         }
 
+        try {
+            Integer.parseInt(getTextFromEditText(etCreditHours));
+        } catch (NumberFormatException e) {
+            etCreditHours.setError("Please enter a valid number");
+            etCreditHours.requestFocus();
+            return false;
+        }
+
+        // Validate optional numeric fields
         String lecturesText = getTextFromEditText(etLectures);
         if (!TextUtils.isEmpty(lecturesText)) {
             try {
@@ -416,12 +537,26 @@ public class AddCourseActivity extends AppCompatActivity {
             }
         }
 
-        try {
-            Integer.parseInt(getTextFromEditText(etCreditHours));
-        } catch (NumberFormatException e) {
-            etCreditHours.setError("Please enter a valid number");
-            etCreditHours.requestFocus();
-            return false;
+        String quizzesText = getTextFromEditText(etNoOfQuizzes);
+        if (!TextUtils.isEmpty(quizzesText)) {
+            try {
+                Integer.parseInt(quizzesText);
+            } catch (NumberFormatException e) {
+                etNoOfQuizzes.setError("Please enter a valid number");
+                etNoOfQuizzes.requestFocus();
+                return false;
+            }
+        }
+
+        String assignmentsText = getTextFromEditText(etNoOfAssignments);
+        if (!TextUtils.isEmpty(assignmentsText)) {
+            try {
+                Integer.parseInt(assignmentsText);
+            } catch (NumberFormatException e) {
+                etNoOfAssignments.setError("Please enter a valid number");
+                etNoOfAssignments.requestFocus();
+                return false;
+            }
         }
 
         return true;
@@ -451,30 +586,45 @@ public class AddCourseActivity extends AppCompatActivity {
     private void clearForm() {
         // Clear all text fields
         etId.setText("");
+        etCourseCode.setText("");
         etTitle.setText("");
         etShortTitle.setText("");
-        etCategory.setText("");
-        etPrimaryCategory.setText("");
-        etCategoryArray.setText("");
-        etTags.setText("");
-        etSemester.setText("");
+        etInstructor.setText("");
         etDuration.setText("");
+        etCreditHours.setText("");
+        etTags.setText("");
+        etPreRequisite.setText("");
+        etFollowUp.setText("");
         etDescription.setText("");
         etOutline.setText("");
         etLectures.setText("");
         etMembers.setText("");
-        etCourseCode.setText("");
-        etPreRequisite.setText("");
-        etFollowUp.setText("");
-        etCreditHours.setText("");
-        etInstructor.setText("");
-        etLanguage.setText("");
         etNoOfQuizzes.setText("");
         etNoOfAssignments.setText("");
-        etLevelDropdown.setText("");
-        etDepartmentArray.setText("");
 
-        // Reset switches
+        // Clear dropdowns
+        etSemester.setText("");
+        etLevelDropdown.setText("");
+        etLanguage.setText("");
+
+        // Reset department switches
+        switchIT.setChecked(false);
+        switchSoftwareEng.setChecked(false);
+        switchComputerScience.setChecked(false);
+        switchAI.setChecked(false);
+        switchCyberSecurity.setChecked(false);
+
+        // Reset category switches
+        switchCatAll.setChecked(false);
+        switchCatProgramming.setChecked(false);
+        switchCatNonProgramming.setChecked(false);
+        switchCatMajor.setChecked(false);
+        switchCatMinor.setChecked(false);
+        switchCatTheoretical.setChecked(false);
+        switchCatMathematical.setChecked(false);
+        switchCatOthers.setChecked(false);
+
+        // Reset settings switches to default values
         switchIsPublic.setChecked(true);
         switchIsLab.setChecked(false);
         switchIsComputer.setChecked(true);
