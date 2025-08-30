@@ -23,8 +23,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
     private List<Quiz> quizzes;
     private List<Quiz> filteredQuizzes;
     private Course currentCourse;
-    private int courseId;
+    private String courseId;
 
     // Pagination
     private static final int PAGE_SIZE = 10;
@@ -68,8 +66,8 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
         setContentView(R.layout.activity_view_quizzes);
 
         // Get course ID from intent
-        courseId = getIntent().getIntExtra("COURSE_ID", 0);
-        if (courseId == 0) {
+        courseId = getIntent().getStringExtra("COURSE_ID");
+        if (courseId.isEmpty()) {
             Toast.makeText(this, "Invalid course ID", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -178,7 +176,7 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
 
     private void loadCourseDetails() {
         firestore.collection("Course")
-                .document(String.valueOf(courseId))
+                .document(courseId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -194,6 +192,9 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
                 });
     }
 
+
+    // Key methods from ViewQuizzesActivity.java with ConcurrentModificationException fixes
+
     private void loadQuizzes() {
         if (isLoading) return;
 
@@ -201,7 +202,7 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
         showLoading(true);
 
         firestore.collection("Course")
-                .document(String.valueOf(courseId))
+                .document(courseId)
                 .collection("Quizzes")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -209,14 +210,19 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
                     showLoading(false);
 
                     if (task.isSuccessful() && task.getResult() != null) {
-                        quizzes.clear();
+                        // Create a new list to avoid concurrent modification
+                        List<Quiz> newQuizzes = new ArrayList<>();
 
                         for (DocumentSnapshot document : task.getResult()) {
                             Quiz quiz = document.toObject(Quiz.class);
                             if (quiz != null) {
-                                quizzes.add(quiz);
+                                newQuizzes.add(quiz);
                             }
                         }
+
+                        // Thread-safe update of the main quizzes list
+                        quizzes.clear();
+                        quizzes.addAll(newQuizzes);
 
                         applyFilters();
                         updateQuizCount();
@@ -230,32 +236,48 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
     }
 
     private void applyFilters() {
-        filteredQuizzes.clear();
+        // Create a temporary list to avoid modifying filteredQuizzes during iteration
+        List<Quiz> tempFilteredQuizzes = new ArrayList<>();
 
-        for (Quiz quiz : quizzes) {
+        // Use a defensive copy of the original quizzes list to prevent concurrent modification
+        List<Quiz> quizzesCopy;
+        synchronized (quizzes) {
+            quizzesCopy = new ArrayList<>(quizzes);
+        }
+
+        for (Quiz quiz : quizzesCopy) {
+            if (quiz == null) continue;
+
+            // Add null checks for safety
+            String title = quiz.getTitle() != null ? quiz.getTitle() : "";
+            String description = quiz.getDescription() != null ? quiz.getDescription() : "";
+            String level = quiz.getLevel() != null ? quiz.getLevel() : "";
+
             boolean matchesSearch = searchQuery.isEmpty() ||
-                    quiz.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                    quiz.getDescription().toLowerCase().contains(searchQuery.toLowerCase());
+                    title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                    description.toLowerCase().contains(searchQuery.toLowerCase());
 
             boolean matchesFilter = currentFilter.equals("All Quizzes") ||
                     (currentFilter.equals("Active") && quiz.isActive()) ||
                     (currentFilter.equals("Inactive") && !quiz.isActive()) ||
-                    currentFilter.equals(quiz.getLevel());
+                    currentFilter.equals(level);
 
             if (matchesSearch && matchesFilter) {
-                filteredQuizzes.add(quiz);
+                tempFilteredQuizzes.add(quiz);
             }
+        }
+
+        // Now safely update the filteredQuizzes list
+        synchronized (filteredQuizzes) {
+            filteredQuizzes.clear();
+            filteredQuizzes.addAll(tempFilteredQuizzes);
         }
 
         calculatePagination();
         currentPage = 1; // Reset to first page when filter changes
         updatePaginatedDisplay();
         updatePaginationControls();
-    }
-
-    private void calculatePagination() {
-        totalPages = (int) Math.ceil((double) filteredQuizzes.size() / PAGE_SIZE);
-        if (totalPages == 0) totalPages = 1;
+        updateQuizCount();
     }
 
     private void updatePaginatedDisplay() {
@@ -263,10 +285,18 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
         int endIndex = Math.min(startIndex + PAGE_SIZE, filteredQuizzes.size());
 
         List<Quiz> paginatedQuizzes = new ArrayList<>();
-        if (startIndex < filteredQuizzes.size()) {
-            paginatedQuizzes = filteredQuizzes.subList(startIndex, endIndex);
+
+        // Thread-safe access to filteredQuizzes
+        synchronized (filteredQuizzes) {
+            if (startIndex < filteredQuizzes.size()) {
+                // Create a safe copy instead of using subList directly
+                for (int i = startIndex; i < endIndex && i < filteredQuizzes.size(); i++) {
+                    paginatedQuizzes.add(filteredQuizzes.get(i));
+                }
+            }
         }
 
+        // Update adapter with the safe copy
         quizAdapter.updateQuizzes(paginatedQuizzes);
 
         if (paginatedQuizzes.isEmpty() && filteredQuizzes.isEmpty()) {
@@ -276,6 +306,29 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
         }
     }
 
+    private void updateQuizCount() {
+        int count;
+        synchronized (filteredQuizzes) {
+            count = filteredQuizzes.size();
+        }
+
+        String countText;
+        if (count == 0) {
+            countText = "No quizzes found";
+        } else if (count == 1) {
+            countText = "1 quiz found";
+        } else {
+            countText = count + " quizzes found";
+        }
+        tvQuizCount.setText(countText);
+    }
+
+    private void calculatePagination() {
+        totalPages = (int) Math.ceil((double) filteredQuizzes.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+    }
+
+
     private void updatePaginationControls() {
         btnPrevious.setEnabled(currentPage > 1);
         btnNext.setEnabled(currentPage < totalPages);
@@ -284,17 +337,6 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
         layoutPagination.setVisibility(totalPages > 1 ? View.VISIBLE : View.GONE);
     }
 
-    private void updateQuizCount() {
-        String countText;
-        if (filteredQuizzes.isEmpty()) {
-            countText = "No quizzes found";
-        } else if (filteredQuizzes.size() == 1) {
-            countText = "1 quiz found";
-        } else {
-            countText = filteredQuizzes.size() + " quizzes found";
-        }
-        tvQuizCount.setText(countText);
-    }
 
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -318,7 +360,7 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
     public void onQuizClick(Quiz quiz) {
         Intent intent = new Intent(this, EditQuizActivity.class);
         intent.putExtra("COURSE_ID", courseId);
-        intent.putExtra("QUIZ_ID", quiz.getQuizId());
+        intent.putExtra("QUIZ_ID", String.valueOf(quiz.getQuizId()));
         startActivity(intent);
     }
 

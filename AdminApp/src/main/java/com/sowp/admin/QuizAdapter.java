@@ -1,3 +1,5 @@
+// Fixed QuizAdapter.java - Complete class with ConcurrentModificationException fixes
+
 package com.sowp.admin;
 
 import android.content.Context;
@@ -10,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +30,8 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
 
     public QuizAdapter(Context context, List<Quiz> quizzes, OnQuizClickListener listener) {
         this.context = context;
-        this.quizzes = quizzes;
+        // Create defensive copy to prevent concurrent modification
+        this.quizzes = new ArrayList<>(quizzes);
         this.listener = listener;
         this.dateFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
     }
@@ -41,8 +45,10 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull QuizViewHolder holder, int position) {
-        Quiz quiz = quizzes.get(position);
-        holder.bind(quiz, position);
+        if (position >= 0 && position < quizzes.size()) {
+            Quiz quiz = quizzes.get(position);
+            holder.bind(quiz, position);
+        }
     }
 
     @Override
@@ -50,9 +56,19 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
         return quizzes.size();
     }
 
+    /**
+     * Thread-safe method to update quizzes list
+     * Creates defensive copies to prevent ConcurrentModificationException
+     */
     public void updateQuizzes(List<Quiz> newQuizzes) {
-        this.quizzes.clear();
-        this.quizzes.addAll(newQuizzes);
+        if (newQuizzes == null) {
+            this.quizzes.clear();
+        } else {
+            // Create a defensive copy to avoid ConcurrentModificationException
+            List<Quiz> safeCopy = new ArrayList<>(newQuizzes);
+            this.quizzes.clear();
+            this.quizzes.addAll(safeCopy);
+        }
         notifyDataSetChanged();
     }
 
@@ -75,18 +91,22 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && listener != null) {
+                if (position != RecyclerView.NO_POSITION && position < quizzes.size() && listener != null) {
                     listener.onQuizClick(quizzes.get(position));
                 }
             });
         }
 
         public void bind(Quiz quiz, int position) {
-            tvQuizNumber.setText(String.valueOf(quiz.getQuizId()));
-            tvQuizTitle.setText(quiz.getTitle());
-            tvQuizDescription.setText(quiz.getDescription());
+            if (quiz == null) return;
 
-            // Set status
+            tvQuizNumber.setText(String.valueOf(quiz.getQuizId()));
+
+            // Safe string handling with null checks
+            tvQuizTitle.setText(quiz.getTitle() != null ? quiz.getTitle() : "Untitled Quiz");
+            tvQuizDescription.setText(quiz.getDescription() != null ? quiz.getDescription() : "No description");
+
+            // Set status with null safety
             if (quiz.isActive()) {
                 tvQuizStatus.setText("Active");
                 tvQuizStatus.setBackgroundResource(R.drawable.status_active_background);
@@ -99,10 +119,14 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
             tvPassingScore.setText(quiz.getPassingScore() + "%");
             tvQuizLevel.setText(quiz.getLevel() != null ? quiz.getLevel() : "N/A");
 
-            // Format date
+            // Format date with null safety
             if (quiz.getCreatedAt() > 0) {
-                Date date = new Date(quiz.getCreatedAt());
-                tvCreatedDate.setText(dateFormat.format(date));
+                try {
+                    Date date = new Date(quiz.getCreatedAt());
+                    tvCreatedDate.setText(dateFormat.format(date));
+                } catch (Exception e) {
+                    tvCreatedDate.setText("N/A");
+                }
             } else {
                 tvCreatedDate.setText("N/A");
             }

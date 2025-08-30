@@ -90,10 +90,6 @@ public class Quiz {
         this.active = active;
     }
 
-    // Keep getter for backward compatibility
-    public boolean getActive() {
-        return active;
-    }
 
     public int getPassingScore() {
         return passingScore;

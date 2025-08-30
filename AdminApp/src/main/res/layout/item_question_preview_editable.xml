@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Question Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvQuestionNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Question 1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50" />
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnEditQuestion"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_edit"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Edit Question"
+                    android:scaleType="centerInside"
+                    android:padding="8dp" />
+
+                <ImageButton
+                    android:id="@+id/btnDeleteQuestion"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_delete"
+                    android:contentDescription="Delete Question"
+                    android:scaleType="centerInside"
+                    android:padding="8dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Question Text -->
+        <TextView
+            android:id="@+id/tvQuestionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sample question text goes here..."
+            android:textSize="14sp"
+            android:textColor="#34495e"
+            android:layout_marginBottom="8dp"
+            android:lineSpacingExtra="2dp" />
+
+        <!-- Correct Answer -->
+        <TextView
+            android:id="@+id/tvCorrectAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Correct: Option A"
+            android:textSize="12sp"
+            android:textColor="#27ae60"
+            android:textStyle="bold"
+            android:drawableStart="@drawable/circle_background"
+            android:drawablePadding="8dp"
+            android:drawableTint="#27ae60"
+            android:gravity="center_vertical" />
+
+        <!-- Divider for visual separation -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ecf0f1"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
