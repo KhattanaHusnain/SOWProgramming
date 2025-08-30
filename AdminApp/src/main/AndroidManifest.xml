@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NexCode">
         <activity
+            android:name=".EditQuizActivity"
+            android:exported="false" />
+        <activity
             android:name=".ViewQuizzesActivity"
             android:exported="false" />
         <activity
