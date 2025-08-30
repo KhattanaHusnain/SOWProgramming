@@ -28,30 +28,60 @@
                 android:padding="24dp"
                 android:gravity="center">
 
-                <!-- Profile Image -->
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/iv_profile_large"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:src="@drawable/ic_person"
-                     />
-
-                <!-- User Name with Verification -->
-                <LinearLayout
+                <!-- Profile Image Container -->
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="16dp">
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tv_profile_name"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_profile_large"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_person" />
+
+                    <!-- Edit Profile Image Button -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_edit_profile_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="User Name"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#2C3E50" />
+                        android:layout_alignEnd="@id/iv_profile_large"
+                        android:layout_alignBottom="@id/iv_profile_large"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_camera"
+                        app:backgroundTint="#3498DB"
+                        app:tint="#FFFFFF"
+                        app:fabSize="mini" />
+
+                </RelativeLayout>
+
+                <!-- Editable User Name with Verification -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Full Name"
+                        app:boxStrokeWidth="1dp"
+                        app:boxBackgroundMode="outline">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_profile_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="User Name"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#2C3E50"
+                            android:gravity="center" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
                         android:id="@+id/iv_profile_verification"
@@ -62,7 +92,7 @@
 
                 </LinearLayout>
 
-                <!-- User Email -->
+                <!-- User Email (Non-editable) -->
                 <TextView
                     android:id="@+id/tv_profile_email"
                     android:layout_width="wrap_content"
@@ -72,18 +102,27 @@
                     android:textColor="#7F8C8D"
                     android:layout_marginTop="8dp" />
 
-                <!-- Role Badge -->
-                <TextView
-                    android:id="@+id/tv_profile_role"
+                <!-- Editable Role -->
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="User"
-                    android:textSize="14sp"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/badge_role_large"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    android:layout_marginTop="12dp" />
+                    android:hint="Role"
+                    android:layout_marginTop="12dp"
+                    app:boxStrokeWidth="1dp"
+                    app:boxBackgroundMode="outline"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/spinner_role"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="120dp"
+                        android:text="User"
+                        android:textSize="14sp"
+                        android:textColor="#FFFFFF"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -113,45 +152,6 @@
                     android:textColor="#2C3E50"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Phone -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_phone"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#1565C0" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Phone"
-                            android:textSize="12sp"
-                            android:textColor="#7F8C8D" />
-
-                        <TextView
-                            android:id="@+id/tv_phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Not provided"
-                            android:textSize="16sp"
-                            android:textColor="#2C3E50" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
                 <!-- Birth Date -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -164,30 +164,29 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_calendar"
                         android:layout_marginEnd="12dp"
+                        android:layout_marginTop="12dp"
                         app:tint="#1565C0" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:hint="Birth Date"
+                        app:boxStrokeWidth="1dp"
+                        app:boxBackgroundMode="outline">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Birth Date"
-                            android:textSize="12sp"
-                            android:textColor="#7F8C8D" />
-
-                        <TextView
-                            android:id="@+id/tv_birthdate"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_birthdate"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Not provided"
                             android:textSize="16sp"
-                            android:textColor="#2C3E50" />
+                            android:textColor="#2C3E50"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:clickable="true" />
 
-                    </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -202,30 +201,28 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_person"
                         android:layout_marginEnd="12dp"
+                        android:layout_marginTop="12dp"
                         app:tint="#1565C0" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:hint="Gender"
+                        app:boxStrokeWidth="1dp"
+                        app:boxBackgroundMode="outline"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gender"
-                            android:textSize="12sp"
-                            android:textColor="#7F8C8D" />
-
-                        <TextView
-                            android:id="@+id/tv_gender_detail"
-                            android:layout_width="wrap_content"
+                        <AutoCompleteTextView
+                            android:id="@+id/spinner_gender"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Not specified"
                             android:textSize="16sp"
-                            android:textColor="#2C3E50" />
+                            android:textColor="#2C3E50"
+                            android:inputType="none" />
 
-                    </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -269,30 +266,26 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_school"
                         android:layout_marginEnd="12dp"
+                        android:layout_marginTop="12dp"
                         app:tint="#27AE60" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:hint="Degree"
+                        app:boxStrokeWidth="1dp"
+                        app:boxBackgroundMode="outline">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Degree"
-                            android:textSize="12sp"
-                            android:textColor="#7F8C8D" />
-
-                        <TextView
-                            android:id="@+id/tv_degree_detail"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_degree"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Not specified"
                             android:textSize="16sp"
                             android:textColor="#2C3E50" />
 
-                    </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -307,30 +300,27 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_book"
                         android:layout_marginEnd="12dp"
+                        android:layout_marginTop="12dp"
                         app:tint="#27AE60" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:hint="Semester"
+                        app:boxStrokeWidth="1dp"
+                        app:boxBackgroundMode="outline">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Semester"
-                            android:textSize="12sp"
-                            android:textColor="#7F8C8D" />
-
-                        <TextView
-                            android:id="@+id/tv_semester_detail"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_semester"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Not specified"
                             android:textSize="16sp"
-                            android:textColor="#2C3E50" />
+                            android:textColor="#2C3E50"
+                            android:inputType="number" />
 
-                    </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -454,10 +444,11 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Account Actions -->
+        <!-- Account Info Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="3dp">
@@ -471,7 +462,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Actions"
+                    android:text="Account Information"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
@@ -516,20 +507,48 @@
 
                 </LinearLayout>
 
-                <!-- Delete User Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_delete_user"
+                <!-- Action Buttons -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Delete User"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    app:cornerRadius="8dp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#AB1B0B"
-                    android:drawableStart="@drawable/ic_delete"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#FFFFFF" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <!-- Save Changes Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_save_changes"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="Save Changes"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        app:cornerRadius="8dp"
+                        android:textStyle="bold"
+                        app:backgroundTint="#27AE60"
+                        android:drawableStart="@drawable/ic_save"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="#FFFFFF" />
+
+                    <!-- Delete User Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_delete_user"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="Delete User"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        app:cornerRadius="8dp"
+                        android:textStyle="bold"
+                        app:backgroundTint="#AB1B0B"
+                        android:drawableStart="@drawable/ic_delete"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="#FFFFFF" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

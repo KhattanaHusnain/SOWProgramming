@@ -20,11 +20,10 @@
         <!-- User Profile Image -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_person"
-             />
+            android:src="@drawable/ic_person" />
 
         <!-- User Info Container -->
         <LinearLayout
@@ -46,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="User Name"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
                     android:maxLines="1"
@@ -55,8 +54,8 @@
                 <!-- Verification Badge -->
                 <ImageView
                     android:id="@+id/iv_verification_status"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_marginStart="8dp"
                     android:src="@drawable/ic_verified"
                     android:visibility="gone" />
@@ -71,73 +70,29 @@
                 android:text="user@example.com"
                 android:textSize="14sp"
                 android:textColor="#7F8C8D"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
-            <!-- User Details Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
-
-                <!-- Role -->
-                <TextView
-                    android:id="@+id/tv_role"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF"
-                    android:background="@drawable/badge_role"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp" />
-
-                <!-- Gender -->
-                <TextView
-                    android:id="@+id/tv_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Male"
-                    android:textSize="12sp"
-                    android:textColor="#34495E"
-                    android:layout_marginStart="8dp"
-                    android:visibility="gone" />
-
-                <!-- Degree -->
-                <TextView
-                    android:id="@+id/tv_degree"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Computer Science"
-                    android:textSize="12sp"
-                    android:textColor="#34495E"
-                    android:layout_marginStart="8dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <!-- Semester -->
+            <!-- Role Badge -->
             <TextView
-                android:id="@+id/tv_semester"
+                android:id="@+id/tv_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Semester 8"
-                android:textSize="12sp"
-                android:textColor="#27AE60"
-                android:layout_marginTop="4dp"
-                android:visibility="gone" />
+                android:text="User"
+                android:textSize="11sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/badge_role"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:layout_marginTop="6dp" />
 
         </LinearLayout>
 
         <!-- Chevron Right Icon -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_chevron_right"
             android:layout_marginStart="8dp"
             app:tint="#BDC3C7" />

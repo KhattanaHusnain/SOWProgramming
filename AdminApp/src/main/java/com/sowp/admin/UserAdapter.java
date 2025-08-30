@@ -62,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivProfile, ivVerificationStatus;
-        private TextView tvFullName, tvEmail, tvRole, tvGender, tvDegree, tvSemester;
+        private TextView tvFullName, tvEmail, tvRole;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,9 +72,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             tvFullName = itemView.findViewById(R.id.tv_full_name);
             tvEmail = itemView.findViewById(R.id.tv_email);
             tvRole = itemView.findViewById(R.id.tv_role);
-            tvGender = itemView.findViewById(R.id.tv_gender);
-            tvDegree = itemView.findViewById(R.id.tv_degree);
-            tvSemester = itemView.findViewById(R.id.tv_semester);
 
             itemView.setOnClickListener(v -> {
                 if (onItemClickListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
@@ -102,11 +99,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 ivVerificationStatus.setVisibility(View.GONE);
             }
 
-            // Set optional fields with visibility management
-            setOptionalField(tvGender, user.getDisplayGender(), !"Not specified".equals(user.getDisplayGender()));
-            setOptionalField(tvDegree, user.getDisplayDegree(), !"Not specified".equals(user.getDisplayDegree()));
-            setOptionalField(tvSemester, user.getDisplaySemester(), !"Not specified".equals(user.getDisplaySemester()));
-
             // Set profile image
             setProfileImage(user.getPhoto());
         }
@@ -126,15 +118,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     break;
             }
             tvRole.setBackgroundColor(backgroundColor);
-        }
-
-        private void setOptionalField(TextView textView, String value, boolean hasValue) {
-            if (hasValue && value != null && !value.trim().isEmpty()) {
-                textView.setText(value);
-                textView.setVisibility(View.VISIBLE);
-            } else {
-                textView.setVisibility(View.GONE);
-            }
         }
 
         private void setProfileImage(String base64Image) {

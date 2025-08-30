@@ -237,8 +237,8 @@ public class UserManagementActivity extends AppCompatActivity {
                     user.getEmail().toLowerCase().contains(currentSearchQuery);
 
             boolean matchesVerification = currentVerificationFilter.equals("All") ||
-                    (currentVerificationFilter.equals("Verified") && user.isEmailVerified()) ||
-                    (currentVerificationFilter.equals("Unverified") && !user.isEmailVerified());
+                    (currentVerificationFilter.equals("Verified") && !user.isEmailVerified()) ||
+                    (currentVerificationFilter.equals("Unverified") && user.isEmailVerified());
 
             if (matchesSearch && matchesVerification) {
                 filteredUserList.add(user);

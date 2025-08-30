@@ -1,46 +1,61 @@
 package com.sowp.admin;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UserProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "UserProfileActivity";
+    private static final int IMAGE_PICK_REQUEST = 1000;
 
     // UI Components
     private ImageView ivProfileLarge, ivProfileVerification;
-    private TextView tvProfileName, tvProfileEmail, tvProfileRole;
-    private TextView tvPhone, tvBirthdate, tvGenderDetail;
-    private TextView tvDegreeDetail, tvSemesterDetail;
+    private TextInputEditText etProfileName, etBirthdate, etDegree, etSemester;
+    private AutoCompleteTextView spinnerRole, spinnerGender;
+    private TextView tvProfileEmail;
     private TextView tvEnrolledCount, tvAssignmentAvg, tvQuizAvg;
     private TextView tvCreatedDate;
-    private Button btnDeleteUser;
+    private MaterialButton btnSaveChanges, btnDeleteUser;
+    private FloatingActionButton fabEditProfileImage;
 
     // Firebase
     private FirebaseFirestore firestore;
@@ -49,12 +64,16 @@ public class UserProfileActivity extends AppCompatActivity {
     // Data
     private String userEmail;
     private User currentUser;
+    private String selectedImageBase64;
+
+    // Activity Result Launchers
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user_profile);
+
 
         // Get user email from intent
         userEmail = getIntent().getStringExtra("USER_EMAIL");
@@ -66,7 +85,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
         initializeViews();
         setupFirebase();
+        setupActivityResultLaunchers();
         setupListeners();
+        setupDropdowns();
         loadUserData();
     }
 
@@ -74,18 +95,18 @@ public class UserProfileActivity extends AppCompatActivity {
         // Profile header
         ivProfileLarge = findViewById(R.id.iv_profile_large);
         ivProfileVerification = findViewById(R.id.iv_profile_verification);
-        tvProfileName = findViewById(R.id.tv_profile_name);
+        etProfileName = findViewById(R.id.et_profile_name);
         tvProfileEmail = findViewById(R.id.tv_profile_email);
-        tvProfileRole = findViewById(R.id.tv_profile_role);
+        spinnerRole = findViewById(R.id.spinner_role);
+        fabEditProfileImage = findViewById(R.id.fab_edit_profile_image);
 
         // Personal information
-        tvPhone = findViewById(R.id.tv_phone);
-        tvBirthdate = findViewById(R.id.tv_birthdate);
-        tvGenderDetail = findViewById(R.id.tv_gender_detail);
+        etBirthdate = findViewById(R.id.et_birthdate);
+        spinnerGender = findViewById(R.id.spinner_gender);
 
         // Academic information
-        tvDegreeDetail = findViewById(R.id.tv_degree_detail);
-        tvSemesterDetail = findViewById(R.id.tv_semester_detail);
+        etDegree = findViewById(R.id.et_degree);
+        etSemester = findViewById(R.id.et_semester);
 
         // Statistics
         tvEnrolledCount = findViewById(R.id.tv_enrolled_count);
@@ -94,6 +115,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // Account info
         tvCreatedDate = findViewById(R.id.tv_created_date);
+        btnSaveChanges = findViewById(R.id.btn_save_changes);
         btnDeleteUser = findViewById(R.id.btn_delete_user);
     }
 
@@ -102,8 +124,228 @@ public class UserProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
     }
 
+    private void setupActivityResultLaunchers() {
+        // Image picker launcher
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                                // Resize bitmap if too large
+                                bitmap = resizeBitmap(bitmap, 300, 300);
+                                selectedImageBase64 = bitmapToBase64(bitmap);
+                                ivProfileLarge.setImageBitmap(bitmap);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
     private void setupListeners() {
+        // Profile image click for full screen view
+        ivProfileLarge.setOnClickListener(v -> showFullScreenImage());
+
+        // Edit profile image FAB
+        fabEditProfileImage.setOnClickListener(v -> selectProfileImage());
+
+        // Birth date picker
+        etBirthdate.setOnClickListener(v -> showDatePicker());
+
+        // Action buttons
+        btnSaveChanges.setOnClickListener(v -> saveChanges());
         btnDeleteUser.setOnClickListener(v -> showDeleteConfirmation());
+    }
+
+    private void setupDropdowns() {
+        // Role dropdown
+        String[] roles = {"User", "Instructor", "Admin"};
+        ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, roles);
+        spinnerRole.setAdapter(roleAdapter);
+
+        // Gender dropdown
+        String[] genders = {"Male", "Female", "Other", "Prefer not to say"};
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, genders);
+        spinnerGender.setAdapter(genderAdapter);
+    }
+
+    private void showFullScreenImage() {
+        // Create full screen dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_fullscreen_image, null);
+        ImageView fullScreenImage = dialogView.findViewById(R.id.iv_fullscreen_image);
+
+        // Set the same image as profile
+        if (selectedImageBase64 != null && !selectedImageBase64.isEmpty()) {
+            try {
+                String cleanBase64 = selectedImageBase64;
+                if (selectedImageBase64.contains(",")) {
+                    cleanBase64 = selectedImageBase64.substring(selectedImageBase64.indexOf(",") + 1);
+                }
+                byte[] decodedBytes = Base64.decode(cleanBase64, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                fullScreenImage.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                fullScreenImage.setImageResource(R.drawable.ic_person);
+            }
+        } else if (currentUser != null && currentUser.getPhoto() != null && !currentUser.getPhoto().isEmpty()) {
+            setProfileImageFromBase64(fullScreenImage, currentUser.getPhoto());
+        } else {
+            fullScreenImage.setImageResource(R.drawable.ic_person);
+        }
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        // Close on image click
+        fullScreenImage.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    private void selectProfileImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
+    }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+
+        // Parse current date if exists
+        String currentDate = etBirthdate.getText().toString();
+        if (!currentDate.equals("Not provided") && !currentDate.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                calendar.setTime(sdf.parse(currentDate));
+            } catch (Exception e) {
+                // Use current date if parsing fails
+            }
+        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> {
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.set(year, month, dayOfMonth);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    etBirthdate.setText(sdf.format(selectedDate.getTime()));
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        // Set max date to today
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+        datePickerDialog.show();
+    }
+
+    private void saveChanges() {
+        if (currentUser == null) return;
+
+        btnSaveChanges.setEnabled(false);
+        btnSaveChanges.setText("Saving...");
+
+        // Get updated values from UI
+        String updatedName = etProfileName.getText().toString().trim();
+        String updatedRole = spinnerRole.getText().toString().trim();
+        String updatedBirthdate = etBirthdate.getText().toString().trim();
+        String updatedGender = spinnerGender.getText().toString().trim();
+        String updatedDegree = etDegree.getText().toString().trim();
+        String updatedSemester = etSemester.getText().toString().trim();
+
+        // Validate required fields
+        if (updatedName.isEmpty()) {
+            etProfileName.setError("Name is required");
+            btnSaveChanges.setEnabled(true);
+            btnSaveChanges.setText("Save Changes");
+            return;
+        }
+
+        // Create update map
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("fullName", updatedName);
+        updates.put("role", updatedRole);
+        updates.put("birthdate", updatedBirthdate.equals("Not provided") ? "" : updatedBirthdate);
+        updates.put("gender", updatedGender.equals("Not specified") ? "" : updatedGender);
+        updates.put("degree", updatedDegree.equals("Not specified") ? "" : updatedDegree);
+
+        // Handle semester - store as string to match User model
+        if (!updatedSemester.equals("Not specified") && !updatedSemester.isEmpty()) {
+            updates.put("semester", updatedSemester);
+        } else {
+            updates.put("semester", "");
+        }
+
+        // Add image if changed
+        if (selectedImageBase64 != null) {
+            updates.put("photo", selectedImageBase64);
+        }
+
+        updates.put("lastModified", System.currentTimeMillis());
+
+        // Update in Firestore
+        firestore.collection("User")
+                .document(userEmail)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    btnSaveChanges.setEnabled(true);
+                    btnSaveChanges.setText("Save Changes");
+
+                    // Update current user object
+                    updateCurrentUserObject(updates);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to update profile: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                    btnSaveChanges.setEnabled(true);
+                    btnSaveChanges.setText("Save Changes");
+                });
+    }
+
+    private void updateCurrentUserObject(Map<String, Object> updates) {
+        if (currentUser != null) {
+            if (updates.containsKey("fullName")) {
+                currentUser.setFullName((String) updates.get("fullName"));
+            }
+            if (updates.containsKey("role")) {
+                currentUser.setRole((String) updates.get("role"));
+            }
+            if (updates.containsKey("birthdate")) {
+                currentUser.setBirthdate((String) updates.get("birthdate"));
+            }
+            if (updates.containsKey("gender")) {
+                currentUser.setGender((String) updates.get("gender"));
+            }
+            if (updates.containsKey("degree")) {
+                currentUser.setDegree((String) updates.get("degree"));
+            }
+            if (updates.containsKey("semester")) {
+                // Convert to string since User model expects string
+                Object semesterObj = updates.get("semester");
+                if (semesterObj instanceof Integer) {
+                    currentUser.setSemester(String.valueOf(semesterObj));
+                } else if (semesterObj instanceof String) {
+                    currentUser.setSemester((String) semesterObj);
+                }
+            }
+            if (updates.containsKey("photo")) {
+                currentUser.setPhoto((String) updates.get("photo"));
+            }
+
+            checkEmailVerificationStatus();
+        }
     }
 
     private void loadUserData() {
@@ -137,21 +379,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void populateUserData() {
         // Profile header
-        tvProfileName.setText(currentUser.getDisplayName());
+        etProfileName.setText(currentUser.getDisplayName());
         tvProfileEmail.setText(currentUser.getEmail());
-        tvProfileRole.setText(currentUser.getRole());
-
-        // Set role background
-        setRoleBackground(currentUser.getRole());
+        spinnerRole.setText(currentUser.getRole(), false);
 
         // Personal information
-        tvPhone.setText(currentUser.getDisplayPhone());
-        tvBirthdate.setText(currentUser.getDisplayBirthdate());
-        tvGenderDetail.setText(currentUser.getDisplayGender());
+        etBirthdate.setText(currentUser.getDisplayBirthdate());
+        spinnerGender.setText(currentUser.getDisplayGender(), false);
 
         // Academic information
-        tvDegreeDetail.setText(currentUser.getDisplayDegree());
-        tvSemesterDetail.setText(currentUser.getDisplaySemester());
+        etDegree.setText(currentUser.getDisplayDegree());
+        etSemester.setText(currentUser.getDisplaySemester());
 
         // Statistics
         tvEnrolledCount.setText(String.valueOf(currentUser.getEnrolledCoursesCount()));
@@ -174,24 +412,11 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void setRoleBackground(String role) {
-        int backgroundColor;
-        switch (role.toLowerCase()) {
-            case "admin":
-                backgroundColor = getResources().getColor(R.color.role_admin, null);
-                break;
-            case "instructor":
-                backgroundColor = getResources().getColor(R.color.role_instructor, null);
-                break;
-            case "user":
-            default:
-                backgroundColor = getResources().getColor(R.color.role_user, null);
-                break;
-        }
-        tvProfileRole.setBackgroundColor(backgroundColor);
+    private void setProfileImage(String base64Image) {
+        setProfileImageFromBase64(ivProfileLarge, base64Image);
     }
 
-    private void setProfileImage(String base64Image) {
+    private void setProfileImageFromBase64(ImageView imageView, String base64Image) {
         if (base64Image != null && !base64Image.isEmpty()) {
             try {
                 String cleanBase64 = base64Image;
@@ -203,16 +428,16 @@ public class UserProfileActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
 
                 if (bitmap != null) {
-                    ivProfileLarge.setImageBitmap(bitmap);
+                    imageView.setImageBitmap(bitmap);
                 } else {
-                    ivProfileLarge.setImageResource(R.drawable.ic_person);
+                    imageView.setImageResource(R.drawable.ic_person);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ivProfileLarge.setImageResource(R.drawable.ic_person);
+                imageView.setImageResource(R.drawable.ic_person);
             }
         } else {
-            ivProfileLarge.setImageResource(R.drawable.ic_person);
+            imageView.setImageResource(R.drawable.ic_person);
         }
     }
 
@@ -238,9 +463,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // Customize button colors
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
-                getResources().getColor(R.color.error_color, null));
+                getResources().getColor(android.R.color.holo_red_dark, null));
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
-                getResources().getColor(R.color.primary_color, null));
+                getResources().getColor(android.R.color.holo_blue_dark, null));
     }
 
     private void deleteUserAccount() {
@@ -387,6 +612,30 @@ public class UserProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.w(TAG, "Failed to create deletion audit record", e);
                 });
+    }
+
+    private String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    private Bitmap resizeBitmap(Bitmap original, int maxWidth, int maxHeight) {
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        float aspectRatio = (float) width / height;
+
+        if (width > height) {
+            width = maxWidth;
+            height = (int) (width / aspectRatio);
+        } else {
+            height = maxHeight;
+            width = (int) (height * aspectRatio);
+        }
+
+        return Bitmap.createScaledBitmap(original, width, height, true);
     }
 
     private void showError(String message) {
