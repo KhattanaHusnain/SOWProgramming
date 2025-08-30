@@ -264,8 +264,6 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
             course.setDescription(document.getString("description"));
             course.setIllustration(document.getString("illustration"));
             course.setInstructor(document.getString("instructor"));
-            course.setCategory(document.getString("category"));
-            course.setPrimaryCategory(document.getString("primaryCategory"));
             course.setDuration(document.getString("duration"));
             course.setLanguage(document.getString("language"));
             course.setSemester(document.getString("semester"));
@@ -361,8 +359,6 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
         return (course.getTitle() != null && course.getTitle().toLowerCase().contains(query)) ||
                 (course.getCourseCode() != null && course.getCourseCode().toLowerCase().contains(query)) ||
                 (course.getInstructor() != null && course.getInstructor().toLowerCase().contains(query)) ||
-                (course.getCategory() != null && course.getCategory().toLowerCase().contains(query)) ||
-                (course.getPrimaryCategory() != null && course.getPrimaryCategory().toLowerCase().contains(query)) ||
                 (course.getSemester() != null && course.getSemester().toLowerCase().contains(query)) ||
                 (course.getLevel() != null && course.getLevel().toLowerCase().contains(query)) ||
                 (course.getTags() != null && course.getTags().toString().toLowerCase().contains(query));
@@ -389,49 +385,10 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
 
     @Override
     public void onCourseClick(Course course) {
+        // Navigate to course details/edit page
         Intent intent = new Intent(this, EditCourseActivity.class);
         intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
         startActivity(intent);
-    }
-
-    @Override
-    public void onEditClick(Course course) {
-        Intent intent = new Intent(this, EditCourseActivity.class);
-        intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
-        startActivity(intent);
-    }
-
-    @Override
-    public void onDeleteClick(Course course) {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Delete Course")
-                .setMessage("Are you sure you want to delete \"" + course.getTitle() + "\"?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteCourse(course))
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    private void deleteCourse(Course course) {
-        progressBar.setVisibility(View.VISIBLE);
-
-        db.collection("Course")
-                .document(String.valueOf(course.getId()))
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, "Course deleted successfully", Toast.LENGTH_SHORT).show();
-
-                    // Remove from local lists
-                    courseList.remove(course);
-                    filteredCourseList.remove(course);
-                    adapter.notifyDataSetChanged();
-                    updateUI();
-                })
-                .addOnFailureListener(e -> {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, "Error deleting course: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                });
     }
 
     @Override

@@ -23,6 +23,12 @@ public class Course {
     @ColumnInfo(name = "short_title")
     private String shortTitle;
 
+    @ColumnInfo(name = "course_code")
+    private String courseCode;
+
+    @ColumnInfo(name = "instructor")
+    private String instructor;
+
     @ColumnInfo(name = "members")
     private int members;
 
@@ -32,14 +38,11 @@ public class Course {
     @ColumnInfo(name = "duration")
     private String duration;
 
-    @ColumnInfo(name = "category")
-    private String category;
-
-    @ColumnInfo(name = "primary_category")
-    private String primaryCategory;
-
     @ColumnInfo(name = "category_array")
     private List<String> categoryArray;
+
+    @ColumnInfo(name = "department_array")
+    private List<String> departmentArray;
 
     @ColumnInfo(name = "outline")
     private String outline;
@@ -62,9 +65,6 @@ public class Course {
     @ColumnInfo(name = "semester")
     private String semester;
 
-    @ColumnInfo(name = "course_code")
-    private String courseCode;
-
     @ColumnInfo(name = "tags")
     private List<String> tags;
 
@@ -76,9 +76,6 @@ public class Course {
 
     @ColumnInfo(name = "credit_hours")
     private int creditHours;
-
-    @ColumnInfo(name = "instructor")
-    private String instructor;
 
     @ColumnInfo(name = "is_lab")
     private boolean isLab; // true for lab, false for theoretical
@@ -98,9 +95,6 @@ public class Course {
     @ColumnInfo(name = "level")
     private String level; // e.g., "Beginner", "Intermediate", "Advanced"
 
-    @ColumnInfo(name = "department_array")
-    private List<String> departmentArray;
-
     @ColumnInfo(name = "is_paid")
     private boolean isPaid;
 
@@ -112,25 +106,26 @@ public class Course {
     public Course() {
     }
 
-    // Full constructor
-    public Course(int id, String illustration, String title, String shortTitle, int members,
-                  String description, String duration, String category, String primaryCategory,
-                  List<String> categoryArray, String outline, long createdAt, long updatedAt,
-                  boolean isPublic, int lectures, boolean completed, String semester,
-                  String courseCode, List<String> tags, List<String> preRequisite,
-                  List<String> followUp, int creditHours, String instructor, boolean isLab,
-                  boolean isComputer, String language, int noOfQuizzes, int noOfAssignments,
-                  String level, List<String> departmentArray, boolean isPaid, double avgCourseRating) {
+    // Full constructor (Room will use this)
+    public Course(int id, String illustration, String title, String shortTitle, String courseCode,
+                  String instructor, int members, String description, String duration,
+                  List<String> categoryArray, List<String> departmentArray, String outline,
+                  long createdAt, long updatedAt, boolean isPublic, int lectures, boolean completed,
+                  String semester, List<String> tags, List<String> preRequisite,
+                  List<String> followUp, int creditHours, boolean isLab, boolean isComputer,
+                  String language, int noOfQuizzes, int noOfAssignments, String level,
+                  boolean isPaid, double avgCourseRating) {
         this.id = id;
         this.illustration = illustration;
         this.title = title;
         this.shortTitle = shortTitle;
+        this.courseCode = courseCode;
+        this.instructor = instructor;
         this.members = members;
         this.description = description;
         this.duration = duration;
-        this.category = category;
-        this.primaryCategory = primaryCategory;
         this.categoryArray = categoryArray;
+        this.departmentArray = departmentArray;
         this.outline = outline;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -138,35 +133,42 @@ public class Course {
         this.lectures = lectures;
         this.completed = completed;
         this.semester = semester;
-        this.courseCode = courseCode;
         this.tags = tags;
         this.preRequisite = preRequisite;
         this.followUp = followUp;
         this.creditHours = creditHours;
-        this.instructor = instructor;
         this.isLab = isLab;
         this.isComputer = isComputer;
         this.language = language;
         this.noOfQuizzes = noOfQuizzes;
         this.noOfAssignments = noOfAssignments;
         this.level = level;
-        this.departmentArray = departmentArray;
         this.isPaid = isPaid;
         this.avgCourseRating = avgCourseRating;
     }
 
     // Simplified constructor for basic course creation
     @Ignore
-    public Course(int id, String illustration, String title, int members, String description,
-                  String duration, String category, String outline) {
+    public Course(int id, String illustration, String title, String courseCode, String instructor,
+                  int members, String description, String duration, String outline) {
         this.id = id;
         this.illustration = illustration;
         this.title = title;
+        this.courseCode = courseCode;
+        this.instructor = instructor;
         this.members = members;
         this.description = description;
         this.duration = duration;
-        this.category = category;
         this.outline = outline;
+        // Initialize default values
+        this.createdAt = System.currentTimeMillis();
+        this.updatedAt = System.currentTimeMillis();
+        this.isPublic = true;
+        this.completed = false;
+        this.isLab = false;
+        this.isComputer = false;
+        this.isPaid = false;
+        this.avgCourseRating = 0.0;
     }
 
     // Getters and Setters
@@ -202,6 +204,22 @@ public class Course {
         this.shortTitle = shortTitle;
     }
 
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(String instructor) {
+        this.instructor = instructor;
+    }
+
     public int getMembers() {
         return members;
     }
@@ -226,28 +244,20 @@ public class Course {
         this.duration = duration;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getPrimaryCategory() {
-        return primaryCategory;
-    }
-
-    public void setPrimaryCategory(String primaryCategory) {
-        this.primaryCategory = primaryCategory;
-    }
-
     public List<String> getCategoryArray() {
         return categoryArray;
     }
 
     public void setCategoryArray(List<String> categoryArray) {
         this.categoryArray = categoryArray;
+    }
+
+    public List<String> getDepartmentArray() {
+        return departmentArray;
+    }
+
+    public void setDepartmentArray(List<String> departmentArray) {
+        this.departmentArray = departmentArray;
     }
 
     public String getOutline() {
@@ -306,14 +316,6 @@ public class Course {
         this.semester = semester;
     }
 
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
-
     public List<String> getTags() {
         return tags;
     }
@@ -344,14 +346,6 @@ public class Course {
 
     public void setCreditHours(int creditHours) {
         this.creditHours = creditHours;
-    }
-
-    public String getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(String instructor) {
-        this.instructor = instructor;
     }
 
     public boolean isLab() {
@@ -402,14 +396,6 @@ public class Course {
         this.level = level;
     }
 
-    public List<String> getDepartmentArray() {
-        return departmentArray;
-    }
-
-    public void setDepartmentArray(List<String> departmentArray) {
-        this.departmentArray = departmentArray;
-    }
-
     public boolean isPaid() {
         return isPaid;
     }
@@ -428,7 +414,21 @@ public class Course {
 
     // Progress method (keeping your existing logic)
     public int getProgress() {
-        int progress = 80;
-        return progress;
+        return completed ? 100 : 80;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", courseCode='" + courseCode + '\'' +
+                ", instructor='" + instructor + '\'' +
+                ", semester='" + semester + '\'' +
+                ", creditHours=" + creditHours +
+                ", level='" + level + '\'' +
+                ", isPublic=" + isPublic +
+                ", completed=" + completed +
+                '}';
     }
 }
