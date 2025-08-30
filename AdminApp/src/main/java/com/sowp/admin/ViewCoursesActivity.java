@@ -388,8 +388,14 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
         // Navigate to course details/edit page
         Intent intnt = getIntent();
         boolean cameForTopics = intnt.getBooleanExtra("cameForTopics",false);
+        boolean cameForQuizzes = intnt.getBooleanExtra("cameForQuizzes",false);
+
         if(cameForTopics){
             Intent intent = new Intent(this, ViewTopicsActivity.class);
+            intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
+            startActivity(intent);
+        } else if (cameForQuizzes) {
+            Intent intent = new Intent(this, ViewQuizzesActivity.class);
             intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
             startActivity(intent);
         } else {

@@ -157,4 +157,10 @@
     <color name="primary_20">#331976D2</color>
     <color name="success_10">#1A4CAF50</color>
     <color name="error_10">#1AF44336</color>
+
+    <color name="chip_background">#E3F2FD</color>
+    <color name="chip_text_color">#1976D2</color>
+    <color name="chip_selected_background">#1976D2</color>
+    <color name="chip_selected_text_color">#FFFFFF</color>
+
 </resources>

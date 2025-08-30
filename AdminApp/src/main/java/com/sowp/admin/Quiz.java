@@ -1,5 +1,7 @@
 package com.sowp.admin;
 
+import java.util.List;
+
 public class Quiz {
 
     private int quizId;             // Quiz ID (int instead of String)
@@ -12,7 +14,7 @@ public class Quiz {
     private int passingScore;
     private int totalQuestions;
 
-    private String semester;        // e.g., Fall 2025
+    private String semester;        // e.g., 1st Semester, 2nd Semester
     private String level;           // Beginner, Intermediate, Advanced
     private String tags;            // e.g., "Algorithms, Complexity"
     private String categories;      // e.g., "Computer Science"
@@ -21,6 +23,7 @@ public class Quiz {
     private long updatedAt;
 
     private int orderIndex;         // For ordering quizzes
+    private List<Question> questions; // List of questions for the quiz
 
     // Default constructor
     public Quiz() {}
@@ -47,45 +50,165 @@ public class Quiz {
     }
 
     // Getters and Setters
-    public int getQuizId() { return quizId; }
-    public void setQuizId(int quizId) { this.quizId = quizId; }
+    public int getQuizId() {
+        return quizId;
+    }
 
-    public int getCourseId() { return courseId; }
-    public void setCourseId(int courseId) { this.courseId = courseId; }
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public int getCourseId() {
+        return courseId;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public String getTitle() {
+        return title;
+    }
 
-    public int getPassingScore() { return passingScore; }
-    public void setPassingScore(int passingScore) { this.passingScore = passingScore; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public int getTotalQuestions() { return totalQuestions; }
-    public void setTotalQuestions(int totalQuestions) { this.totalQuestions = totalQuestions; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getSemester() { return semester; }
-    public void setSemester(String semester) { this.semester = semester; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public String getLevel() { return level; }
-    public void setLevel(String level) { this.level = level; }
+    public boolean isActive() {
+        return active;
+    }
 
-    public String getTags() { return tags; }
-    public void setTags(String tags) { this.tags = tags; }
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-    public String getCategories() { return categories; }
-    public void setCategories(String categories) { this.categories = categories; }
+    // Keep getter for backward compatibility
+    public boolean getActive() {
+        return active;
+    }
 
-    public long getCreatedAt() { return createdAt; }
-    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+    public int getPassingScore() {
+        return passingScore;
+    }
 
-    public long getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
+    public void setPassingScore(int passingScore) {
+        this.passingScore = passingScore;
+    }
 
-    public int getOrderIndex() { return orderIndex; }
-    public void setOrderIndex(int orderIndex) { this.orderIndex = orderIndex; }
+    public int getTotalQuestions() {
+        return totalQuestions;
+    }
+
+    public void setTotalQuestions(int totalQuestions) {
+        this.totalQuestions = totalQuestions;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public int getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(int orderIndex) {
+        this.orderIndex = orderIndex;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    // Additional helper methods
+    public String getId() {
+        return String.valueOf(quizId);
+    }
+
+    public void setId(String id) {
+        try {
+            this.quizId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            this.quizId = 0;
+        }
+    }
+
+    public int getCourse() {
+        return courseId;
+    }
+
+    public void setCourse(int course) {
+        this.courseId = course;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "quizId=" + quizId +
+                ", courseId=" + courseId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", active=" + active +
+                ", passingScore=" + passingScore +
+                ", totalQuestions=" + totalQuestions +
+                ", semester='" + semester + '\'' +
+                ", level='" + level + '\'' +
+                ", categories='" + categories + '\'' +
+                '}';
+    }
 }

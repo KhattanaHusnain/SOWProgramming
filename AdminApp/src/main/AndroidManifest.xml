@@ -11,13 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NexCode">
         <activity
+            android:name=".ViewQuizzesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewTopicsActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserProfileActivity"
             android:exported="false" />
         <activity
             android:name=".UserManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewTopicsActivity"
             android:exported="false" />
         <activity
             android:name=".EditTopicActivity"

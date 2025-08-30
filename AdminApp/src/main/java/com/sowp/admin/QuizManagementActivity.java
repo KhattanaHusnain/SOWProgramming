@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -55,9 +54,9 @@ public class QuizManagementActivity extends AppCompatActivity {
         cardViewQuizzes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(QuizManagementActivity.this, QuizListActivity.class);
-//                startActivity(intent);
-                showToast("Opening Quizzes List");
+                Intent intent = new Intent(QuizManagementActivity.this, ViewCoursesActivity.class);
+                intent.putExtra("cameForQuizzes", true);
+                startActivity(intent);
             }
         });
 
@@ -67,7 +66,6 @@ public class QuizManagementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(QuizManagementActivity.this, UploadQuizActivity.class);
                 startActivity(intent);
-                showToast("Opening Quiz Upload");
             }
         });
     }
@@ -97,11 +95,6 @@ public class QuizManagementActivity extends AppCompatActivity {
         return 8; // Dummy data
     }
 
-    // Method to show toast messages
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -113,11 +106,6 @@ public class QuizManagementActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Refresh statistics when returning to this activity
-        loadQuizStatistics();
-    }
-
-    // Method to refresh quiz statistics (can be called from other activities)
-    public void refreshStatistics() {
         loadQuizStatistics();
     }
 
