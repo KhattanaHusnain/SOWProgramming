@@ -149,5 +149,31 @@
     <string name="payment_methods">Payment Methods</string>
     <string name="subscription_details">Subscription Details</string>
     <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+    <!-- Course Categories -->
+    <string-array name="course_categories">
+        <item>All</item>
+        <item>Programming</item>
+        <item>Web Development</item>
+        <item>Mobile Development</item>
+        <item>Data Science</item>
+        <item>Machine Learning</item>
+        <item>Database</item>
+        <item>Networking</item>
+        <item>Cybersecurity</item>
+        <item>UI/UX Design</item>
+        <item>Computer Science</item>
+        <item>Software Engineering</item>
+        <item>Mathematics</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- Course Levels -->
+    <string-array name="course_levels">
+        <item>All</item>
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+        <item>Expert</item>
+    </string-array>
 
 </resources>

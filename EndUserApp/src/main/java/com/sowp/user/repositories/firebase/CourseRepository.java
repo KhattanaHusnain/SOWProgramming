@@ -102,4 +102,15 @@ public class CourseRepository {
                 );
 
     }
+    public void decrementEnrollmentCount(int courseId, Callback callback) {
+        db.collection("Course")
+                .document(String.valueOf(courseId))
+                .update("members", FieldValue.increment(-1))
+                .addOnSuccessListener(aVoid -> {
+                    callback.onSuccess(null);
+                })
+                .addOnFailureListener(e -> {
+                    callback.onFailure("Error updating enrollment count");
+                });
+    }
 }
