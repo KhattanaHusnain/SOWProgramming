@@ -81,12 +81,8 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             // Set description
             descriptionTextView.setText(assignment.getDescription() != null ? assignment.getDescription() : "No description available");
 
-            // Set due date
-            if (assignment.getDueDate() != null) {
-                dueDateTextView.setText(assignment.getDueDate());
-            } else {
+
                 dueDateTextView.setText("No due date");
-            }
 
             // Set status and update UI accordingly
             updateStatusAndButton(assignment);

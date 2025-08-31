@@ -2,7 +2,9 @@ package com.sowp.user.presenters.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +28,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class QuizListFragment extends Fragment {
 
     private static final String ARG_QUIZ_LIST = "quiz_list";
-    private List<Quiz> quizList = new ArrayList<>();
+    private List<Parcelable> quizList = new ArrayList<>();
     private RecyclerView recyclerView;
     private TextView emptyView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -49,8 +52,7 @@ public class QuizListFragment extends Fragment {
     public static QuizListFragment newInstance(List<Quiz> quizList, AssessmentFragment parentFragment) {
         QuizListFragment fragment = new QuizListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_QUIZ_LIST, new ArrayList<>(quizList));
-        fragment.setArguments(args);
+
         fragment.parentFragment = parentFragment;
         return fragment;
     }
@@ -59,7 +61,9 @@ public class QuizListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            quizList = getArguments().getParcelableArrayList(ARG_QUIZ_LIST);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                quizList = getArguments().getParcelableArrayList(ARG_QUIZ_LIST).reversed();
+            }
         }
     }
 
@@ -86,7 +90,7 @@ public class QuizListFragment extends Fragment {
                     @Override
                     public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
                         quizList.clear();
-                        quizList.addAll(quizzes);
+                       // quizList.addAll((Collection<? extends Parcelable>) quizzes);
                         hasMoreData = hasMore;
                         adapter.notifyDataSetChanged();
                         updateEmptyView();
@@ -110,7 +114,7 @@ public class QuizListFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new QuizAdapter(quizList, getContext());
+        adapter = new QuizAdapter(new ArrayList<>(), getContext());
         recyclerView.setAdapter(adapter);
 
         // Add scroll listener for pagination
@@ -151,7 +155,7 @@ public class QuizListFragment extends Fragment {
 
                 if (!quizzes.isEmpty()) {
                     int startPosition = quizList.size();
-                    quizList.addAll(quizzes);
+                   // quizList.addAll(quizzes);
                     adapter.notifyItemRangeInserted(startPosition, quizzes.size());
                 }
 
@@ -202,12 +206,11 @@ public class QuizListFragment extends Fragment {
             Quiz quiz = quizList.get(position);
             holder.titleTextView.setText(quiz.getTitle());
             holder.descriptionTextView.setText(quiz.getDescription());
-            holder.dueDateTextView.setText(quiz.getDueDate());
 
             holder.startQuizButton.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), QuizActivity.class);
-                intent.putExtra("QUIZ_ID", quiz.getId());
-                userRepository.addQuiz(quiz.getId(), new UserRepository.UserCallback() {
+                intent.putExtra("QUIZ_ID", quiz.getQuizId());
+                userRepository.addQuiz(String.valueOf(quiz.getQuizId()), new UserRepository.UserCallback() {
 
                     @Override
                     public void onSuccess(User user) {

@@ -1,7 +1,9 @@
 package com.sowp.user.presenters.fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,13 @@ import com.sowp.user.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class AssignmentListFragment extends Fragment {
 
     private static final String ARG_ASSIGNMENT_LIST = "assignment_list";
-    private List<Assignment> assignmentList = new ArrayList<>();
+    private List<Parcelable> assignmentList = new ArrayList<>();
     private RecyclerView recyclerView;
     private TextView emptyView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -42,19 +45,11 @@ public class AssignmentListFragment extends Fragment {
         // Required empty constructor
     }
 
-    public static AssignmentListFragment newInstance(List<Assignment> assignmentList) {
-        AssignmentListFragment fragment = new AssignmentListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_ASSIGNMENT_LIST, new ArrayList<>(assignmentList));
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static AssignmentListFragment newInstance(List<Assignment> assignmentList, AssessmentFragment parentFragment) {
         AssignmentListFragment fragment = new AssignmentListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_ASSIGNMENT_LIST, new ArrayList<>(assignmentList));
-        fragment.setArguments(args);
+        //args.putParcelableArrayList(ARG_ASSIGNMENT_LIST, new ArrayList<android.os.Parcelable>((Collection<? extends Parcelable>) assignmentList));
+        //fragment.setArguments(args);
         fragment.parentFragment = parentFragment;
         return fragment;
     }
@@ -63,7 +58,9 @@ public class AssignmentListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            assignmentList = getArguments().getParcelableArrayList(ARG_ASSIGNMENT_LIST);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                assignmentList = getArguments().getParcelableArrayList(ARG_ASSIGNMENT_LIST).reversed();
+            }
         }
     }
 
@@ -90,7 +87,7 @@ public class AssignmentListFragment extends Fragment {
                     @Override
                     public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
                         assignmentList.clear();
-                        assignmentList.addAll(assignments);
+                        //assignmentList.addAll((Collection<? extends Parcelable>) assignments);
                         hasMoreData = hasMore;
                         adapter.notifyDataSetChanged();
                         updateEmptyView();
@@ -114,7 +111,7 @@ public class AssignmentListFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new AssignmentAdapter(assignmentList);
+        adapter = new AssignmentAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
         // Add scroll listener for pagination
@@ -155,7 +152,7 @@ public class AssignmentListFragment extends Fragment {
 
                 if (!assignments.isEmpty()) {
                     int startPosition = assignmentList.size();
-                    assignmentList.addAll(assignments);
+                   // assignmentList.addAll((Collection<? extends Parcelable>) assignments);
                     adapter.notifyItemRangeInserted(startPosition, assignments.size());
                 }
 
@@ -204,11 +201,7 @@ public class AssignmentListFragment extends Fragment {
             Assignment assignment = assignmentList.get(position);
             holder.titleTextView.setText(assignment.getTitle());
             holder.descriptionTextView.setText(assignment.getDescription());
-            holder.dueDateTextView.setText("Due: " + assignment.getDueDate());
-            holder.statusTextView.setText(assignment.getStatus());
 
-            // Set status color based on assignment status
-            setStatusColor(holder.statusTextView, assignment.getStatus());
 
             holder.itemView.setOnClickListener(v -> {
                 // Navigate to AssignmentActivity

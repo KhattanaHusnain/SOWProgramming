@@ -281,7 +281,6 @@ public class Description extends AppCompatActivity {
             @Override
             public void onSuccess(List<Course> courses) {
                 course = courses.get(0);
-                tvCourseCategory.setText(course.getCategory());
                 tvCourseTitle.setText(course.getTitle());
                 tvCourseDescription.setText(course.getDescription());
                 tvCourseDuration.setText(course.getDuration());

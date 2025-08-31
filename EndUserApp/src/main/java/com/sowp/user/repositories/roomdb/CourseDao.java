@@ -33,11 +33,6 @@ public interface CourseDao {
     @Query("SELECT * FROM courses WHERE members > 50") // Example threshold for popularity
     LiveData<List<Course>> getPopularCourses();
 
-    @Query("SELECT * FROM courses WHERE category = 'Programming'")
-    LiveData<List<Course>> getProgrammingCourses();
-
-    @Query("SELECT * FROM courses WHERE category = 'Non-Programming'")
-    LiveData<List<Course>> getNonProgrammingCourses();
 
     @Query("SELECT * FROM courses WHERE title LIKE :query")
     LiveData<List<Course>> searchCourses(String query);

@@ -258,15 +258,11 @@ public class AssessmentFragment extends Fragment {
                     .get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             if (!task1.getResult().isEmpty()) {
-                                assignment.setStatus("Submitted");
-                                assignment.setEarnedScore(task1.getResult().getDocuments().get(0).getDouble("score"));
                                 // Don't add submitted assignments to filtered list
                             } else {
-                                assignment.setStatus("Not Started");
                                 filteredAssignments.add(assignment); // Only add non-submitted assignments
                             }
                         } else {
-                            assignment.setStatus("Not Started");
                             filteredAssignments.add(assignment); // Add if status check failed (assume not submitted)
                         }
 

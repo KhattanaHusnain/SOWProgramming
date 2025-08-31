@@ -41,7 +41,7 @@ public class QuizRepository {
                     List<Quiz> quizzes = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Quiz quiz = document.toObject(Quiz.class);
-                        quiz.setId(document.getId()); // Set document ID
+                        quiz.setQuizId(Integer.parseInt(document.getId())); // Set document ID
                         quizzes.add(quiz);
                     }
                     callback.onSuccess(quizzes);
@@ -71,7 +71,7 @@ public class QuizRepository {
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Quiz quiz = document.toObject(Quiz.class);
-                        quiz.setId(document.getId());
+                        quiz.setQuizId(Integer.parseInt(document.getId()));
                         quizzes.add(quiz);
                         lastDoc = document;
                     }

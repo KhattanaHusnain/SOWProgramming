@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F5F5F5"
     tools:context=".AddCourseActivity">
 
     <LinearLayout
@@ -15,681 +14,17 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add New Course"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textAlignment="center"
             android:layout_marginBottom="24dp"
-            android:textColor="#2C3E50" />
+            android:textColor="@android:color/black" />
 
-        <!-- Basic Course Information Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Basic Information"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"/>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etId"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Course ID*"
-                        android:inputType="number" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etCourseCode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Course Code* (e.g., CS101)"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Course Title*"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etShortTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Short Title"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etInstructor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Instructor Name*"
-                        android:inputType="textPersonName" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Course Image"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSelectImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select Course Image*"
-                    android:textSize="16sp"
-                    android:textColor="@color/primary"
-                    app:cornerRadius="8dp"
-                    app:icon="@android:drawable/ic_menu_gallery"
-                    app:iconTint="#27AE60"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-                <ImageView
-                    android:id="@+id/ivCourseImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="8dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/rounded_background"
-                    android:visibility="gone"
-                    tools:src="@drawable/ic_launcher_background" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Academic Details"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    android:hint="Semester*"
-                    app:errorEnabled="false"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/etSemester"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:inputType="none"
-                        android:textSize="16sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etCreditHours"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Credit Hours*"
-                        android:inputType="number" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    android:hint="Course Level*"
-                    app:errorEnabled="false"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/etLevelDropdown"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:inputType="none"
-                        android:textSize="16sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    android:hint="Language"
-                    app:errorEnabled="false"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/etLanguage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:inputType="none"
-                        android:textSize="16sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDuration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Duration* (e.g., 12 Hours)"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Departments/Degrees"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/rounded_background"
-                    android:padding="12dp">
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchIT"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Information Technology"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchSoftwareEng"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Software Engineering"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchComputerScience"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Computer Science"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchAI"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Artificial Intelligence"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCyberSecurity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Cyber Security"
-                        android:textSize="16sp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-            </LinearLayout>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Categories"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/rounded_background"
-                    android:padding="12dp">
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatAll"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="All"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatProgramming"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Programming"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatNonProgramming"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Non Programming"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatMajor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Major"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatMinor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Minor"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatTheoretical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Theoretical"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatMathematical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Mathematical"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchCatOthers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Others"
-                        android:textSize="16sp"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Course Metadata"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"/>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Tags (comma separated)"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTopicCategories"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Topic Categories (comma separated)"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPreRequisite"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Pre-requisites (comma separated)"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etFollowUp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Follow-up Courses (comma separated)"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Course Content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Course Description*"
-                        android:inputType="textMultiLine"
-                        android:lines="4"
-                        android:gravity="top" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etOutline"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Course Outline"
-                        android:inputType="textMultiLine"
-                        android:lines="3"
-                        android:gravity="top"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="4dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Course Statistics"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#2C3E50"
-            android:layout_marginBottom="16dp" />
-
+        <!-- Course ID -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -698,15 +33,505 @@
             app:hintTextColor="@color/primary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etLectures"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number of Lectures"
-            android:inputType="number"/>
-
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Course ID*"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Course Code -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCourseCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Course Code* (e.g., CS101)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Course Title -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Course Title*"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Short Title -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etShortTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Short Title"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Instructor -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etInstructor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Instructor Name*"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Image Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Course Image*"
+                android:textSize="16sp"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="8dp"
+                app:icon="@android:drawable/ic_menu_gallery"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            <ImageView
+                android:id="@+id/ivCourseImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/rounded_background"
+                android:visibility="gone"
+                tools:src="@drawable/ic_launcher_background" />
+        </LinearLayout>
+
+        <!-- Semester -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            android:hint="Semester*"
+            app:errorEnabled="false"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/etSemester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:inputType="none"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Credit Hours -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCreditHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Credit Hours*"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Level -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            android:hint="Course Level*"
+            app:errorEnabled="false"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/etLevelDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:inputType="none"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Language -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            android:hint="Language"
+            app:errorEnabled="false"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/etLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:inputType="none"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Duration -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Duration* (e.g., 12 Hours)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Department Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Departments/Degrees"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_background"
+            android:padding="12dp">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchIT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Information Technology"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchSoftwareEng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Software Engineering"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchComputerScience"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Computer Science"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchAI"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Artificial Intelligence"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCyberSecurity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cyber Security"
+                android:textSize="14sp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+        </LinearLayout>
+
+        <!-- Categories Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_background"
+            android:padding="12dp">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatProgramming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Programming"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatNonProgramming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Non Programming"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatMajor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Major"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatMinor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Minor"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatTheoretical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Theoretical"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatMathematical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mathematical"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchCatOthers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Others"
+                android:textSize="14sp"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track" />
+
+        </LinearLayout>
+
+        <!-- Tags -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tags (comma separated)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Topic Categories -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTopicCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Topic Categories (comma separated)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Pre-requisites -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPreRequisite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Pre-requisites (comma separated)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Follow-up Courses -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFollowUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Follow-up Courses (comma separated)"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Description -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Course Description*"
+                android:inputType="textMultiLine"
+                android:lines="4"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Outline -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etOutline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Course Outline"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Number of Lectures -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etLectures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Number of Lectures"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Number of Members -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -721,9 +546,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Number of Members"
                 android:inputType="number" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Number of Quizzes -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -738,9 +563,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Number of Quizzes"
                 android:inputType="number" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Number of Assignments -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -755,155 +580,134 @@
                 android:layout_height="wrap_content"
                 android:hint="Number of Assignments"
                 android:inputType="number" />
-
         </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
+        <!-- Course Settings Header -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp">
+            android:text="Course Settings"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <!-- Is Public Switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_weight="1"
+                android:text="Is Public:"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Course Settings"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp" />
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchIsPublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track"
+                android:checked="true" />
+        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/rounded_background"
-                    android:padding="12dp">
+        <!-- Is Lab Switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Is Lab Course:"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Is Public:"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical" />
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchIsLab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track"
+                android:checked="false" />
+        </LinearLayout>
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchIsPublic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track"
-                        android:checked="true" />
+        <!-- Is Computer Switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
 
-                </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Is Computer-based:"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchIsComputer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track"
+                android:checked="true" />
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Is Lab Course:"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical" />
+        <!-- Is Paid Switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchIsLab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track"
-                        android:checked="false" />
-                </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Is Paid Course:"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="12dp">
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchIsPaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_thumb"
+                app:trackTint="@color/switch_track"
+                android:checked="false" />
+        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Is Computer-based:"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical" />
+        <!-- Add Course Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddCourse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Course"
+            android:textSize="16sp"
+            app:backgroundTint="@color/primary"
+            android:layout_marginTop="16dp"
+            app:cornerRadius="8dp" />
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchIsComputer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track"
-                        android:checked="true" />
-                </LinearLayout>
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="24dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Is Paid Course:"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchIsPaid"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track"
-                        android:checked="false" />
-                </LinearLayout>
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAddCourse"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Add Course"
-                    android:textSize="16sp"
-                    app:backgroundTint="@color/primary"
-                    android:layout_marginTop="16dp"
-                    app:cornerRadius="8dp" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
     </LinearLayout>
 </ScrollView>

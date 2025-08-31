@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class AssignmentActivity extends AppCompatActivity {
 
     public static Intent createIntent(android.content.Context context, Assignment assignment) {
         Intent intent = new Intent(context, AssignmentActivity.class);
-        intent.putExtra(EXTRA_ASSIGNMENT, assignment);
+        intent.putExtra(EXTRA_ASSIGNMENT, (Parcelable) assignment);
         return intent;
     }
 
@@ -131,48 +132,14 @@ public class AssignmentActivity extends AppCompatActivity {
         // Set assignment details
         titleTextView.setText(assignment.getTitle());
         descriptionTextView.setText(assignment.getDescription());
-        dueDateTextView.setText("Due: " + assignment.getDueDate());
-        statusTextView.setText("Status: " + assignment.getStatus());
-        maxScoreTextView.setText("Max Score: " + assignment.getMaxScore());
+
 
         // Load assignment image from base64 if available
-        loadAssignmentImage();
 
         // Initialize UI state
         updateUIState();
 
         // Handle submitted assignments
-        handleSubmittedAssignment();
-    }
-
-    private void loadAssignmentImage() {
-        if (assignment.getFileUrl() != null && !assignment.getFileUrl().isEmpty()) {
-            try {
-                String cleanBase64 = assignment.getFileUrl();
-                if (assignment.getFileUrl().contains(",")) {
-                    cleanBase64 = assignment.getFileUrl().split(",")[1];
-                }
-
-                byte[] decodedBytes = Base64.decode(cleanBase64, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-                assignmentImageView.setImageBitmap(bitmap);
-                assignmentImageView.setVisibility(View.VISIBLE);
-            } catch (Exception e) {
-                Log.e(TAG, "Error loading assignment image", e);
-                assignmentImageView.setVisibility(View.GONE);
-            }
-        } else {
-            assignmentImageView.setVisibility(View.GONE);
-        }
-    }
-
-    private void handleSubmittedAssignment() {
-        if ("Submitted".equals(assignment.getStatus())) {
-            selectImagesButton.setVisibility(View.GONE);
-            submitButton.setVisibility(View.GONE);
-            selectedImagesContainer.setVisibility(View.GONE);
-            submissionTitleTextView.setText("Score: " + assignment.getEarnedScore());
-        }
     }
 
     private void setupClickListeners() {
@@ -340,7 +307,7 @@ public class AssignmentActivity extends AppCompatActivity {
 
         // Submit assignment progress
         firestore.collection("User/" + email + "/AssignmentProgress")
-                .document(assignment.getId())
+                .document(String.valueOf(assignment.getId()))
                 .set(submissionData)
                 .addOnSuccessListener(aVoid -> handleSubmissionSuccess())
                 .addOnFailureListener(this::handleSubmissionFailure);
@@ -352,7 +319,6 @@ public class AssignmentActivity extends AppCompatActivity {
         submissionData.put("submittedImages", base64Images);
         submissionData.put("submissionTimestamp", System.currentTimeMillis());
         submissionData.put("score", 0);
-        submissionData.put("maxScore", assignment.getMaxScore());
         submissionData.put("checked", false);
         submissionData.put("status", "Submitted");
         return submissionData;
@@ -363,7 +329,6 @@ public class AssignmentActivity extends AppCompatActivity {
         Toast.makeText(this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show();
 
         // Update UI
-        assignment.setStatus("Submitted");
         statusTextView.setText("Status: Submitted");
 
         // Hide submission controls

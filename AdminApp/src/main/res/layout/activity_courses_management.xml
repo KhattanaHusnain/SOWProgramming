@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light"
-    tools:context=".CoursesManagementActivity">
+    tools:context=".coursemanagement.CoursesManagementActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -262,140 +262,12 @@
         <!-- Edit Courses Button -->
 
         <!-- Topic Management Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Topic Management"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_dark"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="16dp" />
 
         <!-- Add Topic to Course Button -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardAddTopic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:clickable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_topic_add"
-                    android:layout_marginEnd="16dp"
-                    app:tint="#4CAF50" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Add Topic to Course"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Add new topics to existing courses"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/text_secondary" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
 
         <!-- Edit Topic Button -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardEditTopic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:clickable="true"/>
 
         <!-- View Topics Button -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewTopics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:clickable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_topic_list"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="View Topics"
-                    app:tint="#9C27B0" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="View All Topics"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Browse topics across all courses"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/text_secondary" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
 
         <!-- Additional Management Section -->
         <TextView

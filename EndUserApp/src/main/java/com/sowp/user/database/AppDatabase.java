@@ -16,7 +16,7 @@ import com.sowp.user.utils.DatabaseUtils;
 
 import net.sqlcipher.database.SupportFactory;
 
-@Database(entities = {Course.class, Topic.class}, version = 14, exportSchema = false)
+@Database(entities = {Course.class, Topic.class}, version = 15, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CourseDao courseDao();
