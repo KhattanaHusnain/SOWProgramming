@@ -57,9 +57,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                Intent intent=new Intent(MainActivity.this,Assignment.class);
-//                startActivity(intent);
-                Toast.makeText(MainActivity.this, "Assignment card clicked", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this, AssignmentManagementActivity.class);
+                startActivity(intent);
             }
         });
 
