@@ -356,8 +356,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Information Technology"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -366,8 +366,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Software Engineering"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -376,8 +376,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Computer Science"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -386,8 +386,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Artificial Intelligence"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -396,7 +396,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Cyber Security"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -437,8 +437,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="All"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -447,8 +447,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Programming"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -457,8 +457,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Non Programming"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -467,8 +467,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Major"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -477,8 +477,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Minor"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -487,8 +487,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Theoretical"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -497,8 +497,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Mathematical"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="4dp"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
@@ -507,7 +507,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Others"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
 
