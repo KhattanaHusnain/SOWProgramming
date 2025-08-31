@@ -61,9 +61,9 @@
                         android:fontFamily="@font/poppins_medium" />
 
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cardTopicManagement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
