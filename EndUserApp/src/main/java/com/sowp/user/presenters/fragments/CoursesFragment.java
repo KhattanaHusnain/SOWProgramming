@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,10 @@ import java.util.stream.Collectors;
 
 public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseClickListener {
 
+    private static final String TAG = "CoursesFragment";
+    private static final int PAGE_SIZE = 10;
+
+    // UI Components
     private EditText searchEditText;
     private Button filterToggleButton;
     private CardView filterLayout;
@@ -48,13 +53,14 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     private RecyclerView coursesRecyclerView;
     private LinearLayout emptyStateLayout;
 
+    // Data and State
     private CourseAdapter courseAdapter;
     private CourseRepository courseRepository;
     private List<Course> allCourses = new ArrayList<>();
-    private List<Course> filteredCourses = new ArrayList<>();
+    private List<Course> displayedCourses = new ArrayList<>();
     private boolean isLoading = false;
-    private static final int PAGE_SIZE = 10;
 
+    // Filter State
     private String currentSearchQuery = "";
     private String selectedCategory = "All";
     private String selectedLevel = "All";
@@ -91,14 +97,16 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         coursesRecyclerView = view.findViewById(R.id.coursesRecyclerView);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
 
+        // Initially hide filter layout
         filterLayout.setVisibility(View.GONE);
     }
 
     private void setupRecyclerView() {
-        courseAdapter = new CourseAdapter(getContext(), filteredCourses, this);
+        courseAdapter = new CourseAdapter(getContext(), displayedCourses, this);
         coursesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         coursesRecyclerView.setAdapter(courseAdapter);
 
+        // Add scroll listener for pagination
         coursesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -109,7 +117,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
                     int totalItemCount = layoutManager.getItemCount();
                     int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-                    if (lastVisibleItem >= totalItemCount - 5) {
+                    if (lastVisibleItem >= totalItemCount - 5 && totalItemCount > 0) {
                         loadMoreCourses();
                     }
                 }
@@ -118,13 +126,14 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     }
 
     private void setupSearchAndFilters() {
+        // Search functionality
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                currentSearchQuery = s.toString();
+                currentSearchQuery = s.toString().trim();
                 applyFiltersAndSearch();
             }
 
@@ -132,16 +141,10 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void afterTextChanged(Editable s) {}
         });
 
-        filterToggleButton.setOnClickListener(v -> {
-            if (filterLayout.getVisibility() == View.GONE) {
-                filterLayout.setVisibility(View.VISIBLE);
-                filterToggleButton.setText("Hide Filters");
-            } else {
-                filterLayout.setVisibility(View.GONE);
-                filterToggleButton.setText("Show Filters");
-            }
-        });
+        // Filter toggle
+        filterToggleButton.setOnClickListener(v -> toggleFilters());
 
+        // Category filter
         categorySpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -153,6 +156,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
+        // Level filter
         levelSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -164,149 +168,264 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
+        // Public only filter
         publicOnlyCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             showOnlyPublic = isChecked;
             applyFiltersAndSearch();
         });
 
+        // Clear filters button
         clearFiltersButton.setOnClickListener(v -> clearFilters());
 
-        refreshButton.setOnClickListener(v -> {
-            allCourses.clear();
-            filteredCourses.clear();
-            courseAdapter.notifyDataSetChanged();
-            loadCourses();
-        });
+        // Refresh button
+        refreshButton.setOnClickListener(v -> refreshCourses());
+    }
+
+    private void toggleFilters() {
+        if (filterLayout.getVisibility() == View.GONE) {
+            filterLayout.setVisibility(View.VISIBLE);
+            filterToggleButton.setText("Hide Filters");
+        } else {
+            filterLayout.setVisibility(View.GONE);
+            filterToggleButton.setText("Show Filters");
+        }
     }
 
     private void loadCourses() {
-        if (isLoading) return;
+        if (isLoading) {
+            Log.d(TAG, "Already loading, skipping request");
+            return;
+        }
 
-        showLoading(true);
-        isLoading = true;
+        Log.d(TAG, "Starting to load courses");
+        setLoadingState(true);
 
         courseRepository.loadCourses(new CourseRepository.Callback() {
             @Override
             public void onSuccess(List<Course> courses) {
-                if (getActivity() != null) {
+                Log.d(TAG, "Courses loaded successfully: " + courses.size() + " courses");
+
+                if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
-                        allCourses.clear();
-                        allCourses.addAll(courses);
-                        applyFiltersAndSearch();
-                        showLoading(false);
-                        isLoading = false;
-                        updateResultsCount();
+                        handleCoursesLoaded(courses);
                     });
                 }
             }
 
             @Override
             public void onFailure(String message) {
-                if (getActivity() != null) {
+                Log.e(TAG, "Failed to load courses: " + message);
+
+                if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
-                        showLoading(false);
-                        isLoading = false;
-                        showError(message);
+                        handleLoadFailure(message);
                     });
                 }
             }
         });
     }
 
-    private void loadMoreCourses() {
-        List<Course> allFiltered = getAllFilteredCourses();
-        if (filteredCourses.size() < allFiltered.size()) {
-            int currentSize = filteredCourses.size();
-            int endIndex = Math.min(currentSize + PAGE_SIZE, allFiltered.size());
+    private void handleCoursesLoaded(List<Course> courses) {
+        allCourses.clear();
+        allCourses.addAll(courses);
 
-            List<Course> newCourses = allFiltered.subList(currentSize, endIndex);
-            filteredCourses.addAll(newCourses);
-            courseAdapter.notifyItemRangeInserted(currentSize, newCourses.size());
-            updateResultsCount();
-        }
+        Log.d(TAG, "All courses populated: " + allCourses.size());
+
+        // Apply filters and update display
+        applyFiltersAndSearch();
+        setLoadingState(false);
+    }
+
+    private void handleLoadFailure(String message) {
+        setLoadingState(false);
+        showError("Failed to load courses: " + message);
     }
 
     private void applyFiltersAndSearch() {
-        List<Course> filtered = getAllFilteredCourses();
-
-        filteredCourses.clear();
-
-        int endIndex = Math.min(PAGE_SIZE, filtered.size());
-        if (endIndex > 0) {
-            filteredCourses.addAll(filtered.subList(0, endIndex));
+        if (allCourses.isEmpty()) {
+            Log.d(TAG, "No courses to filter");
+            updateUI();
+            return;
         }
 
-        courseAdapter.updateData(filteredCourses);
-        updateResultsCount();
+        Log.d(TAG, "Applying filters - Total courses: " + allCourses.size());
 
-        emptyStateLayout.setVisibility(filteredCourses.isEmpty() ? View.VISIBLE : View.GONE);
-        coursesRecyclerView.setVisibility(filteredCourses.isEmpty() ? View.GONE : View.VISIBLE);
+        // Get all filtered courses
+        List<Course> filteredCourses = getFilteredCourses();
+        Log.d(TAG, "Filtered courses: " + filteredCourses.size());
+
+        // Update displayed courses with pagination
+        displayedCourses.clear();
+        int endIndex = Math.min(PAGE_SIZE, filteredCourses.size());
+        if (endIndex > 0) {
+            displayedCourses.addAll(filteredCourses.subList(0, endIndex));
+        }
+
+        Log.d(TAG, "Displayed courses: " + displayedCourses.size());
+
+        // Update UI
+        updateUI();
     }
 
-    private List<Course> getAllFilteredCourses() {
+    private List<Course> getFilteredCourses() {
         return allCourses.stream()
-                .filter(course -> {
-                    if (course == null) return false;
-
-                    boolean matchesSearch = currentSearchQuery.isEmpty() ||
-                            (course.getTitle() != null && course.getTitle().toLowerCase().contains(currentSearchQuery.toLowerCase())) ||
-                            (course.getDescription() != null && course.getDescription().toLowerCase().contains(currentSearchQuery.toLowerCase())) ||
-                            (course.getInstructor() != null && course.getInstructor().toLowerCase().contains(currentSearchQuery.toLowerCase()));
-
-                    boolean matchesCategory = selectedCategory.equals("All") ||
-                            (course.getCategoryArray() != null && course.getCategoryArray().contains(selectedCategory));
-
-                    boolean matchesLevel = selectedLevel.equals("All") ||
-                            (course.getLevel() != null && selectedLevel.equals(course.getLevel()));
-
-                    boolean matchesPublic = !showOnlyPublic || course.isPublic();
-
-                    return matchesSearch && matchesCategory && matchesLevel && matchesPublic;
-                })
+                .filter(this::courseMatchesFilters)
                 .collect(Collectors.toList());
     }
 
+    private boolean courseMatchesFilters(Course course) {
+        if (course == null) return false;
+
+        // Search filter
+        boolean matchesSearch = currentSearchQuery.isEmpty() ||
+                courseMatchesSearchQuery(course, currentSearchQuery);
+
+        // Category filter
+        boolean matchesCategory = selectedCategory.equals("All") ||
+                (course.getCategoryArray() != null && course.getCategoryArray().contains(selectedCategory));
+
+        // Level filter
+        boolean matchesLevel = selectedLevel.equals("All") ||
+                (course.getLevel() != null && selectedLevel.equals(course.getLevel()));
+
+        // Public filter
+        boolean matchesPublic = !showOnlyPublic || course.isPublic();
+
+        return matchesSearch && matchesCategory && matchesLevel && matchesPublic;
+    }
+
+    private boolean courseMatchesSearchQuery(Course course, String query) {
+        String lowerQuery = query.toLowerCase();
+
+        return (course.getTitle() != null && course.getTitle().toLowerCase().contains(lowerQuery)) ||
+                (course.getDescription() != null && course.getDescription().toLowerCase().contains(lowerQuery)) ||
+                (course.getInstructor() != null && course.getInstructor().toLowerCase().contains(lowerQuery));
+    }
+
+    private void loadMoreCourses() {
+        if (isLoading) return;
+
+        List<Course> allFiltered = getFilteredCourses();
+        int currentSize = displayedCourses.size();
+
+        if (currentSize < allFiltered.size()) {
+            int endIndex = Math.min(currentSize + PAGE_SIZE, allFiltered.size());
+            List<Course> newCourses = allFiltered.subList(currentSize, endIndex);
+
+            int insertPosition = displayedCourses.size();
+            displayedCourses.addAll(newCourses);
+
+            courseAdapter.notifyItemRangeInserted(insertPosition, newCourses.size());
+            updateResultsCount();
+
+            Log.d(TAG, "Loaded more courses: " + newCourses.size() + ", Total displayed: " + displayedCourses.size());
+        }
+    }
+
+    private void updateUI() {
+        if (courseAdapter != null) {
+            courseAdapter.notifyDataSetChanged();
+        }
+
+        updateResultsCount();
+        updateEmptyState();
+    }
+
+    private void updateResultsCount() {
+        if (resultsCountTextView != null) {
+            int totalFiltered = getFilteredCourses().size();
+            String countText = String.format("Showing %d of %d courses", displayedCourses.size(), totalFiltered);
+            resultsCountTextView.setText(countText);
+            Log.d(TAG, countText);
+        }
+    }
+
+    private void updateEmptyState() {
+        boolean isEmpty = displayedCourses.isEmpty();
+
+        if (emptyStateLayout != null) {
+            emptyStateLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        }
+
+        if (coursesRecyclerView != null) {
+            coursesRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        }
+    }
+
     private void clearFilters() {
+        // Reset UI components
         searchEditText.setText("");
         categorySpinner.setSelection(0);
         levelSpinner.setSelection(0);
         publicOnlyCheckBox.setChecked(false);
 
+        // Reset filter state
         currentSearchQuery = "";
         selectedCategory = "All";
         selectedLevel = "All";
         showOnlyPublic = false;
 
+        // Reapply filters (which will show all courses)
         applyFiltersAndSearch();
     }
 
-    private void updateResultsCount() {
-        int totalFiltered = getAllFilteredCourses().size();
-        resultsCountTextView.setText(String.format("Showing %d of %d courses",
-                filteredCourses.size(), totalFiltered));
+    private void refreshCourses() {
+        Log.d(TAG, "Refreshing courses");
+
+        // Clear all data
+        allCourses.clear();
+        displayedCourses.clear();
+
+        // Notify adapter of changes
+        if (courseAdapter != null) {
+            courseAdapter.notifyDataSetChanged();
+        }
+
+        // Reload courses
+        loadCourses();
     }
 
-    private void showLoading(boolean show) {
-        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        coursesRecyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+    private void setLoadingState(boolean loading) {
+        isLoading = loading;
+
+        if (progressBar != null) {
+            progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
+
+        if (coursesRecyclerView != null) {
+            coursesRecyclerView.setVisibility(loading ? View.GONE : View.VISIBLE);
+        }
+
+        if (refreshButton != null) {
+            refreshButton.setEnabled(!loading);
+        }
     }
 
     private void showError(String message) {
-        Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_LONG).show();
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        }
+        Log.e(TAG, "Error: " + message);
     }
 
     @Override
     public void onCourseClick(Course course) {
         if (course != null && course.getId() != 0) {
+            Log.d(TAG, "Course clicked: " + course.getTitle() + " (ID: " + course.getId() + ")");
+
             Intent intent = new Intent(getContext(), Description.class);
-            intent.putExtra("ID", course.getId());
+            intent.putExtra("COURSE_ID", course.getId());
             startActivity(intent);
+        } else {
+            Log.w(TAG, "Invalid course clicked");
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // Clean up references
         searchEditText = null;
         filterToggleButton = null;
         filterLayout = null;
@@ -321,5 +440,13 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         emptyStateLayout = null;
         courseAdapter = null;
         courseRepository = null;
+
+        // Clear data lists
+        if (allCourses != null) {
+            allCourses.clear();
+        }
+        if (displayedCourses != null) {
+            displayedCourses.clear();
+        }
     }
 }

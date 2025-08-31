@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#f5f5f5">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -16,14 +15,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:title="Edit Topic"
             app:titleTextColor="@android:color/white"
             app:navigationIcon="?attr/homeAsUpIndicator" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,15 +33,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Topic ID Display -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutline">
+                android:backgroundTint="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,25 +62,26 @@
                         android:layout_weight="1"
                         android:text="Loading..."
                         android:textSize="14sp"
-                        android:textColor="?attr/colorPrimary" />
+                        android:textColor="@color/primary" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipPublicStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Public"
+                        android:textColor="@color/white"
                         android:checkable="true"
-                        app:chipBackgroundColor="?attr/colorSecondaryContainer" />
+                        app:chipBackgroundColor="@color/primary"/>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Basic Information Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/white"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp">
 
@@ -100,7 +97,7 @@
                         android:text="Basic Information"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/black"
                         android:layout_marginBottom="16dp" />
 
                     <!-- Topic Name -->
@@ -109,8 +106,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="?attr/colorPrimary"
-                        app:hintTextColor="?attr/colorPrimary"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -129,8 +126,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="?attr/colorPrimary"
-                        app:hintTextColor="?attr/colorPrimary">
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTopicDescription"
@@ -156,8 +153,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
-                            app:boxStrokeColor="?attr/colorPrimary"
-                            app:hintTextColor="?attr/colorPrimary">
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etOrderIndex"
@@ -174,8 +171,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
-                            app:boxStrokeColor="?attr/colorPrimary"
-                            app:hintTextColor="?attr/colorPrimary">
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etViews"
@@ -196,8 +193,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="?attr/colorPrimary"
-                        app:hintTextColor="?attr/colorPrimary">
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary">
 
                         <AutoCompleteTextView
                             android:id="@+id/actvSemester"
@@ -208,17 +205,15 @@
                             android:focusable="false" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Content Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="8dp"
+                android:backgroundTint="@color/white"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -233,7 +228,7 @@
                         android:text="Content"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/black"
                         android:layout_marginBottom="16dp" />
 
                     <!-- Topic Content -->
@@ -242,8 +237,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="?attr/colorPrimary"
-                        app:hintTextColor="?attr/colorPrimary">
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTopicContent"
@@ -264,8 +259,8 @@
                         android:id="@+id/tilVideoId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:boxStrokeColor="?attr/colorPrimary"
-                        app:hintTextColor="?attr/colorPrimary"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         app:helperText="YouTube video ID (optional)"
                         app:helperTextEnabled="true">
 
@@ -283,12 +278,12 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Categories Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="8dp"
+                android:backgroundTint="@color/white"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -311,20 +306,21 @@
                             android:text="Categories"
                             android:textStyle="bold"
                             android:textSize="16sp"
-                            android:textColor="?attr/colorPrimary" />
+                            android:textColor="@color/black"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnRefreshCategories"
-                            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Refresh"
+                            android:text="R E F R E S H"
+                            android:textColor="@color/primary"
+                            android:backgroundTint="@color/white"
                             app:icon="@android:drawable/ic_menu_rotate"
+                            app:iconTint="@color/primary"
                             app:iconSize="18dp" />
 
                     </LinearLayout>
 
-                    <!-- Categories Chips -->
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chipGroupCategories"
                         android:layout_width="match_parent"
@@ -333,7 +329,6 @@
                         app:chipSpacingVertical="4dp"
                         app:selectionRequired="false" />
 
-                    <!-- Loading indicator for categories -->
                     <ProgressBar
                         android:id="@+id/progressCategories"
                         android:layout_width="wrap_content"
@@ -351,6 +346,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/white"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp">
 
@@ -366,16 +362,15 @@
                         android:text="Tags"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/black"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Tags Input -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:boxStrokeColor="?attr/colorPrimary"
-                        app:hintTextColor="?attr/colorPrimary"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
                         app:helperText="Separate tags with commas (e.g., OOP, Java, Programming)"
                         app:helperTextEnabled="true">
 
@@ -393,12 +388,12 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Timestamps Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="20dp"
                 app:cardCornerRadius="8dp"
+                android:backgroundTint="@color/white"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -413,7 +408,7 @@
                         android:text="Timestamps"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/black"
                         android:layout_marginBottom="16dp" />
 
                     <LinearLayout
@@ -433,7 +428,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Created At"
                                 android:textSize="12sp"
-                                android:textColor="?attr/colorOnSurfaceVariant" />
+                                android:textColor="@color/text_dark" />
 
                             <TextView
                                 android:id="@+id/tvCreatedAt"
@@ -457,7 +452,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Updated At"
                                 android:textSize="12sp"
-                                android:textColor="?attr/colorOnSurfaceVariant" />
+                                android:textColor="@color/text_dark" />
 
                             <TextView
                                 android:id="@+id/tvUpdatedAt"
@@ -468,79 +463,76 @@
                                 android:textStyle="bold" />
 
                         </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_save_changes"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Save Changes"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    app:cornerRadius="8dp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#028E10"
+                    app:icon="@drawable/ic_save" />
+
+                <!-- Delete User Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_delete_topic"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Delete Topic"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    app:cornerRadius="8dp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#AB1B0B"
+                    app:icon="@drawable/ic_delete" />
+
+            </LinearLayout>
+
+            <!-- Progress Overlay -->
+            <LinearLayout
+                android:id="@+id/progressOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="#80000000"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminateTint="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvProgressMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Saving changes..."
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Floating Action Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <!-- Delete FAB -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="20dp"
-            android:src="@android:drawable/ic_menu_delete"
-            android:backgroundTint="#F44336"
-            app:tint="@android:color/white"
-            />
-
-        <!-- Save FAB -->
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fabSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save Changes"
-            app:icon="@android:drawable/ic_menu_save"
-            app:iconTint="@android:color/white"
-            android:textColor="@android:color/white" />
-
-    </LinearLayout>
-
-    <!-- Progress Overlay -->
-    <LinearLayout
-        android:id="@+id/progressOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="#80000000"
-        android:visibility="gone"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateTint="@android:color/white" />
-
-        <TextView
-            android:id="@+id/tvProgressMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Saving changes..."
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-
-    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

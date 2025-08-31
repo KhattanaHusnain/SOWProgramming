@@ -7,22 +7,25 @@
     android:background="@color/background_grey"
     tools:context=".coursemanagement.ViewCoursesActivity">
 
-    <!-- Header -->
-    <LinearLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/primary"
-        android:elevation="4dp">
 
         <!-- Title Bar -->
         <LinearLayout
+            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
+            android:background="@color/primary"
+            android:elevation="4dp"
             android:orientation="horizontal"
             android:padding="16dp"
             android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_arrow_back"
+                android:layout_marginEnd="8dp"
+                app:tint="@color/white"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -46,41 +49,41 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <!-- Search Bar -->
-        <LinearLayout
+    <!-- Search Bar -->
+    <LinearLayout
+        android:id="@+id/SearchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="16dp">
+            app:boxBackgroundColor="@android:color/white"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="@color/primary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="2dp"
-                app:boxStrokeColor="@color/primary_dark"
-                app:hintTextColor="@color/primary"
-                app:startIconDrawable="@drawable/ic_search"
-                app:startIconTint="@color/primary"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="Search courses..."
+                android:inputType="text"
+                android:maxLines="1"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Search courses..."
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:textSize="16sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <!-- Main Content -->
@@ -88,7 +91,7 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/headerLayout">
+        android:layout_below="@id/SearchLayout">
 
         <RelativeLayout
             android:layout_width="match_parent"

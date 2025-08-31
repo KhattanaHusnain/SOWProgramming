@@ -6,10 +6,9 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
-    app:strokeWidth="0dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:backgroundTint="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,14 +16,12 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Topic Order Index -->
             <TextView
                 android:id="@+id/tvTopicOrder"
                 android:layout_width="32dp"
@@ -37,7 +34,6 @@
                 android:gravity="center"
                 android:layout_marginEnd="12dp" />
 
-            <!-- Topic Name -->
             <TextView
                 android:id="@+id/tvTopicName"
                 android:layout_width="0dp"
@@ -46,11 +42,8 @@
                 android:text="Introduction to Object-Oriented Programming"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:maxLines="2" />
 
-            <!-- Status Indicator -->
             <View
                 android:id="@+id/statusIndicator"
                 android:layout_width="8dp"
@@ -60,19 +53,16 @@
 
         </LinearLayout>
 
-        <!-- Description -->
         <TextView
             android:id="@+id/tvTopicDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Learn the fundamentals of OOP including classes, objects, inheritance, and polymorphism"
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:text="Learn the fundamentals of OOP including classes, objects, inheritance, and polymorphism"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp" />
 
-        <!-- Bottom Row with Stats -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,7 +70,6 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Views Count -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,8 +79,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@android:drawable/ic_menu_view"
-                    android:alpha="0.7" />
+                    android:src="@android:drawable/ic_menu_view" />
 
                 <TextView
                     android:id="@+id/tvViews"
@@ -100,7 +88,7 @@
                     android:layout_marginStart="4dp"
                     android:text="245"
                     android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/text_dark" />
 
             </LinearLayout>
 
@@ -117,8 +105,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@android:drawable/ic_media_play"
-                    android:alpha="0.7" />
+                    android:src="@android:drawable/ic_media_play" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -126,29 +113,25 @@
                     android:layout_marginStart="4dp"
                     android:text="Video"
                     android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/text_dark" />
 
             </LinearLayout>
 
-            <!-- Spacer -->
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <!-- Creation Date -->
             <TextView
                 android:id="@+id/tvCreatedDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dec 15, 2024"
                 android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:alpha="0.8" />
+                android:textColor="@color/text_dark"/>
 
         </LinearLayout>
 
-        <!-- Tags (if any) -->
         <LinearLayout
             android:id="@+id/tagsContainer"
             android:layout_width="match_parent"
@@ -163,8 +146,9 @@
                 android:layout_height="wrap_content"
                 android:text="OOP • Java • Programming"
                 android:textSize="11sp"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/white"
                 android:background="@drawable/tag_background"
+                android:backgroundTint="@color/primary"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="2dp" />
 
