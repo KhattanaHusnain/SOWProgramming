@@ -123,8 +123,7 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@android:drawable/ic_menu_info_details"
-                android:alpha="0.5" />
+                android:src="@android:drawable/ic_menu_info_details" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -132,8 +131,7 @@
                 android:layout_marginTop="16dp"
                 android:text="No topics found"
                 android:textSize="18sp"
-                android:textColor="?attr/colorOnSurface"
-                android:alpha="0.7" />
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -141,8 +139,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Try adjusting your search criteria"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnSurface"
-                android:alpha="0.5" />
+                android:textColor="?attr/colorOnSurface" />
 
         </LinearLayout>
 
