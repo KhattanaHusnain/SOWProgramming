@@ -82,7 +82,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                 binding.courseTitleTextView.setText(course.getTitle() != null ? course.getTitle() : "Untitled");
 
                 // Set category
-                binding.categoryTextView.setText(course.getCategory());
 
                 // Set description
                 binding.descriptionTextView.setText(course.getDescription());

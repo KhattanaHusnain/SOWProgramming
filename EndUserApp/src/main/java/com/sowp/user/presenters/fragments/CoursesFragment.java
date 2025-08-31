@@ -180,7 +180,6 @@ public class CoursesFragment extends Fragment {
     private boolean matchesSearchQuery(Course course, String query) {
         String lowerQuery = query.toLowerCase();
         return course.getTitle().toLowerCase().contains(lowerQuery) ||
-                course.getCategory().toLowerCase().contains(lowerQuery) ||
                 course.getDescription().toLowerCase().contains(lowerQuery);
     }
 

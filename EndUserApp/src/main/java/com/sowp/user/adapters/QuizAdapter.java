@@ -45,11 +45,8 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
         holder.descriptionTextView.setText(quiz.getDescription() != null ? quiz.getDescription() : "No description available");
 
         // Set due date
-        if (quiz.getDueDate() != null) {
-            holder.dueDateTextView.setText(quiz.getDueDate());
-        } else {
+
             holder.dueDateTextView.setText("No due date");
-        }
 
         // Check if quiz is overdue and update button accordingly
         //updateButtonState(quiz, holder);
@@ -57,14 +54,14 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
         // Set click listeners
         holder.startQuizButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, QuizActivity.class);
-            intent.putExtra("QUIZ_ID", quiz.getId());
+            intent.putExtra("QUIZ_ID", quiz.getQuizId());
             context.startActivity(intent);
         });
 
         // Set item click listener for the entire card
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, QuizActivity.class);
-            intent.putExtra("QUIZ_ID", quiz.getId());
+            intent.putExtra("QUIZ_ID", quiz.getQuizId());
             context.startActivity(intent);
         });
     }

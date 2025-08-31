@@ -40,7 +40,7 @@ public class AssignmentRepository {
                     List<Assignment> assignments = new ArrayList<>();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         Assignment assignment = doc.toObject(Assignment.class);
-                        assignment.setId(doc.getId()); // Set document ID
+                        assignment.setId(Integer.parseInt(doc.getId())); // Set document ID
                         assignments.add(assignment);
                     }
                     callback.onSuccess(assignments);
@@ -65,7 +65,7 @@ public class AssignmentRepository {
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Assignment assignment = document.toObject(Assignment.class);
-                        assignment.setId(document.getId());
+                        assignment.setId(Integer.parseInt(document.getId()));
                         assignments.add(assignment);
                         lastDoc = document;
                     }
