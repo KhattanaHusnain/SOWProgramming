@@ -48,12 +48,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_school"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#3498DB" />
+                    android:layout_marginBottom="16dp"/>
 
-                <!-- Course ID -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,9 +64,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Course ID*"
                         android:inputType="number" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Course Code -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,9 +81,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Course Code* (e.g., CS101)"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Course Title -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -102,9 +98,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Course Title*"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Short Title -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -119,9 +115,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Short Title"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Instructor -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,13 +131,13 @@
                         android:layout_height="wrap_content"
                         android:hint="Instructor Name*"
                         android:inputType="textPersonName" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Course Image Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,10 +159,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@android:drawable/ic_menu_gallery"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#E74C3C" />
+                    android:layout_marginBottom="16dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSelectImage"
@@ -174,9 +167,10 @@
                     android:layout_height="wrap_content"
                     android:text="Select Course Image*"
                     android:textSize="16sp"
-                    app:backgroundTint="@color/primary"
+                    android:textColor="@color/primary"
                     app:cornerRadius="8dp"
                     app:icon="@android:drawable/ic_menu_gallery"
+                    app:iconTint="#27AE60"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
                 <ImageView
@@ -193,7 +187,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Academic Details Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -215,12 +208,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_book"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#27AE60" />
+                    android:layout_marginBottom="16dp" />
 
-                <!-- Semester -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -240,9 +229,9 @@
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="none"
                         android:textSize="16sp" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Credit Hours -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -257,9 +246,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Credit Hours*"
                         android:inputType="number" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Level -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -279,9 +268,9 @@
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="none"
                         android:textSize="16sp" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Language -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -301,29 +290,28 @@
                         android:fontFamily="@font/poppins_regular"
                         android:inputType="none"
                         android:textSize="16sp" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Duration -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxStrokeColor="@color/primary"
                     app:hintTextColor="@color/primary"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDuration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Duration* (e.g., 12 Hours)"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Department Selection Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -345,11 +333,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_school"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#9B59B6" />
-
+                    android:layout_marginBottom="16dp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchIT"
@@ -404,7 +388,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Categories Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -426,11 +409,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_book"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#F39C12" />
-
+                    android:layout_marginBottom="16dp"/>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchCatAll"
@@ -516,7 +495,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Course Metadata Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -538,12 +516,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_book"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#E67E22" />
+                    android:layout_marginBottom="16dp"/>
 
-                <!-- Tags -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -558,9 +532,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Tags (comma separated)"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Topic Categories -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -575,9 +549,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Topic Categories (comma separated)"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Pre-requisites -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -592,9 +566,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Pre-requisites (comma separated)"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Follow-up Courses -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -608,13 +582,13 @@
                         android:layout_height="wrap_content"
                         android:hint="Follow-up Courses (comma separated)"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Course Content Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -636,12 +610,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
-                    android:layout_marginBottom="16dp"
-                    android:drawableStart="@drawable/ic_book"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="#1ABC9C" />
+                    android:layout_marginBottom="16dp" />
 
-                <!-- Description -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -658,9 +628,9 @@
                         android:inputType="textMultiLine"
                         android:lines="4"
                         android:gravity="top" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Outline -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -676,6 +646,7 @@
                         android:inputType="textMultiLine"
                         android:lines="3"
                         android:gravity="top"/>
+
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -703,7 +674,6 @@
             android:textColor="#2C3E50"
             android:layout_marginBottom="16dp" />
 
-        <!-- Number of Lectures -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -721,7 +691,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Number of Members -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -736,9 +705,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Number of Members"
                 android:inputType="number" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Number of Quizzes -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -753,9 +722,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Number of Quizzes"
                 android:inputType="number" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Number of Assignments -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -770,11 +739,10 @@
                 android:layout_height="wrap_content"
                 android:hint="Number of Assignments"
                 android:inputType="number" />
+
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-        <!-- Course Settings Header -->
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -790,7 +758,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Course Settings Header -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -801,7 +768,6 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Is Public Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -823,9 +789,9 @@
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track"
                         android:checked="true" />
+
                 </LinearLayout>
 
-                <!-- Is Lab Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -849,7 +815,6 @@
                         android:checked="false" />
                 </LinearLayout>
 
-                <!-- Is Computer Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -873,7 +838,6 @@
                         android:checked="true" />
                 </LinearLayout>
 
-                <!-- Is Paid Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -897,7 +861,6 @@
                         android:checked="false" />
                 </LinearLayout>
 
-                <!-- Add Course Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddCourse"
                     android:layout_width="match_parent"
@@ -908,7 +871,6 @@
                     android:layout_marginTop="16dp"
                     app:cornerRadius="8dp" />
 
-                <!-- Progress Bar -->
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
