@@ -123,6 +123,8 @@
     <color name="delete_red">#F44336</color>
     <color name="edit_blue">#2196F3</color>
     <color name="disabled_grey">#9E9E9E</color>
+    <color name="light_gray">#F5F5F5</color>
+
 
     <!-- Background Colors -->
     <color name="background_grey">#F5F5F5</color>
@@ -162,5 +164,9 @@
     <color name="chip_text_color">#1976D2</color>
     <color name="chip_selected_background">#1976D2</color>
     <color name="chip_selected_text_color">#FFFFFF</color>
+    <color name="chip_tag_background">#FFF3E0</color>
+    <color name="chip_tag_text_color">#F57C00</color>
+    <color name="chip_category_background">#E8F5E8</color>
+    <color name="chip_category_text_color">#388E3C</color>
 
 </resources>
