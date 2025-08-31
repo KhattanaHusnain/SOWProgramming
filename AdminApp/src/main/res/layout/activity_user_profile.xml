@@ -510,7 +510,6 @@
                     android:orientation="horizontal"
                     android:gravity="center">
 
-                    <!-- Save Changes Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_save_changes"
                         android:layout_width="0dp"

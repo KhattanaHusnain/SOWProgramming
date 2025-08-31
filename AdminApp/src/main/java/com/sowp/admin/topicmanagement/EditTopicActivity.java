@@ -52,9 +52,7 @@ public class EditTopicActivity extends AppCompatActivity {
     private AutoCompleteTextView actvSemester;
     private ChipGroup chipGroupCategories;
     private Chip chipPublicStatus;
-    private MaterialButton btnRefreshCategories;
-    private ExtendedFloatingActionButton fabSave;
-    private FloatingActionButton fabDelete;
+    private MaterialButton btnRefreshCategories, btnDelete, btnSave;
     private ProgressBar progressCategories;
     private LinearLayout progressOverlay;
 
@@ -121,8 +119,8 @@ public class EditTopicActivity extends AppCompatActivity {
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         chipPublicStatus = findViewById(R.id.chipPublicStatus);
         btnRefreshCategories = findViewById(R.id.btnRefreshCategories);
-        fabSave = findViewById(R.id.fabSave);
-        fabDelete = findViewById(R.id.fabDelete);
+        btnSave = findViewById(R.id.btn_save_changes);
+        btnDelete = findViewById(R.id.btn_delete_topic);
         progressCategories = findViewById(R.id.progressCategories);
         progressOverlay = findViewById(R.id.progressOverlay);
     }
@@ -143,8 +141,8 @@ public class EditTopicActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        fabSave.setOnClickListener(v -> saveTopicChanges());
-        fabDelete.setOnClickListener(v -> confirmDeleteTopic());
+        btnSave.setOnClickListener(v -> saveTopicChanges());
+        btnDelete.setOnClickListener(v -> confirmDeleteTopic());
         btnRefreshCategories.setOnClickListener(v -> loadCourseData());
 
         chipPublicStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
