@@ -61,9 +61,9 @@
                         android:fontFamily="@font/poppins_medium" />
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_forward"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
                         android:layout_gravity="center_vertical"
                         app:tint="#bdc3c7" />
 
@@ -102,10 +102,11 @@
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins_medium" />
 
+
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_forward"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
                         android:layout_gravity="center_vertical"
                         app:tint="#bdc3c7" />
 
@@ -146,9 +147,9 @@
                         android:fontFamily="@font/poppins_medium" />
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_forward"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
                         android:layout_gravity="center_vertical"
                         app:tint="#bdc3c7" />
 
@@ -189,9 +190,9 @@
                         android:fontFamily="@font/poppins_medium" />
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_forward"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
                         android:layout_gravity="center_vertical"
                         app:tint="#bdc3c7" />
 
