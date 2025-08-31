@@ -49,14 +49,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, QuizManagementActivity.class);
                 startActivity(intent);
-
-
             }
         });
         assignmentManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent=new Intent(MainActivity.this, AssignmentManagementActivity.class);
                 startActivity(intent);
             }
