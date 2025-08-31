@@ -60,6 +60,13 @@
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins_medium" />
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        android:layout_gravity="center_vertical"
+                        app:tint="#bdc3c7" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -68,8 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:cardBackgroundColor="@color/white">
@@ -84,9 +89,9 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_courses"
+                        android:src="@drawable/ic_topic_list"
                         android:layout_marginEnd="16dp"
-                        app:tint="#1565C0" />
+                        app:tint="#8E051A" />
 
                     <TextView
                         android:layout_width="0dp"
