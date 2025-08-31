@@ -11,6 +11,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NexCode">
         <activity
+            android:name=".EditAssignmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewAssignmentsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UploadAssignmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AssignmentManagementActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditQuizActivity"
             android:exported="false" />
         <activity

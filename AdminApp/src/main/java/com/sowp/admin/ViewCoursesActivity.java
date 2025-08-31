@@ -389,6 +389,7 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
         Intent intnt = getIntent();
         boolean cameForTopics = intnt.getBooleanExtra("cameForTopics",false);
         boolean cameForQuizzes = intnt.getBooleanExtra("cameForQuizzes",false);
+        boolean cameForAssignments = intnt.getBooleanExtra("cameForAssignments",false);
 
         if(cameForTopics){
             Intent intent = new Intent(this, ViewTopicsActivity.class);
@@ -396,6 +397,10 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
             startActivity(intent);
         } else if (cameForQuizzes) {
             Intent intent = new Intent(this, ViewQuizzesActivity.class);
+            intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
+            startActivity(intent);
+        } else if (cameForAssignments) {
+            Intent intent = new Intent(this, ViewAssignmentsActivity.class);
             intent.putExtra("COURSE_ID", String.valueOf(course.getId()));
             startActivity(intent);
         } else {
