@@ -335,6 +335,13 @@
                     android:textColor="#2C3E50"
                     android:layout_marginBottom="16dp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/rounded_background"
+                    android:padding="12dp">
+
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchIT"
                         android:layout_width="match_parent"
@@ -385,6 +392,7 @@
                         app:trackTint="@color/switch_track" />
 
             </LinearLayout>
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -410,6 +418,13 @@
                     android:textStyle="bold"
                     android:textColor="#2C3E50"
                     android:layout_marginBottom="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/rounded_background"
+                    android:padding="12dp">
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchCatAll"
@@ -489,9 +504,10 @@
                         android:textSize="16sp"
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track" />
-
+                </LinearLayout>
 
             </LinearLayout>
+
 
         </androidx.cardview.widget.CardView>
 
@@ -771,6 +787,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/rounded_background"
+                    android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="12dp">
 
@@ -859,6 +882,7 @@
                         app:thumbTint="@color/switch_thumb"
                         app:trackTint="@color/switch_track"
                         android:checked="false" />
+                </LinearLayout>
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
