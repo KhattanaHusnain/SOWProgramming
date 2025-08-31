@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import java.util.List;
 public class ViewCoursesActivity extends AppCompatActivity implements CourseAdapter.OnCourseClickListener {
 
     // UI Components
+    private ImageView back;
     private RecyclerView recyclerView;
     private CourseAdapter adapter;
     private ProgressBar progressBar, paginationProgressBar;
@@ -67,6 +69,8 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
         setupSwipeRefresh();
         loadCourses(false);
 
+        back.setOnClickListener(v -> finish());
+
         fabAddCourse.setOnClickListener(v -> {
             startActivity(new Intent(this, AddCourseActivity.class));
         });
@@ -81,6 +85,7 @@ public class ViewCoursesActivity extends AppCompatActivity implements CourseAdap
         etSearch = findViewById(R.id.etSearch);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         fabAddCourse = findViewById(R.id.fabAddCourse);
+        back = findViewById(R.id.back);
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();

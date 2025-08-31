@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:text="Edit Quiz"
             android:textSize="20sp"
-            android:fontFamily="@font/poppins_bold"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:gravity="center"
             android:layout_gravity="center_vertical"
