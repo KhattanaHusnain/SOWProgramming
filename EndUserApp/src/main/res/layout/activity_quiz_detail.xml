@@ -24,8 +24,18 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content - Changed from ScrollView to NestedScrollView -->
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="32dp"
+        android:visibility="gone" />
+
+    <!-- Content Layout -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -88,6 +98,21 @@
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="@color/colorPrimary" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <!-- Passing Score -->
+                        <TextView
+                            android:id="@+id/passingScoreText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pass: 70%"
+                            android:textSize="14sp"
+                            android:textColor="@color/gray_600"
+                            android:gravity="end" />
 
                     </LinearLayout>
 
@@ -199,7 +224,7 @@
                 android:textColor="@color/black"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Questions List - KEEP nestedScrollingEnabled="false" -->
+            <!-- Questions List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/questionsRecyclerView"
                 android:layout_width="match_parent"
@@ -207,6 +232,18 @@
                 android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
                 android:paddingBottom="16dp" />
+
+            <!-- No Questions Message -->
+            <TextView
+                android:id="@+id/noQuestionsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No detailed question data available for this attempt."
+                android:textSize="14sp"
+                android:textColor="@color/gray_600"
+                android:gravity="center"
+                android:padding="32dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -41,7 +42,8 @@ import java.util.stream.Collectors;
 public class EditCourseActivity extends AppCompatActivity {
 
     // UI Components
-    private ImageView ivBack, ivCourseImage, ivEditImage;
+    private ImageView ivBack, ivCourseImage;
+    private FloatingActionButton fabEditImage;
     private ProgressBar progressBar;
     private MaterialButton btnSaveCourse, btnDeleteCourse;
 
@@ -140,8 +142,8 @@ public class EditCourseActivity extends AppCompatActivity {
         // Basic views
         ivBack = findViewById(R.id.ivBack);
         ivCourseImage = findViewById(R.id.ivCourseImage);
-        ivEditImage = findViewById(R.id.ivEditImage);
-        progressBar = findViewById(R.id.progressBar);
+        fabEditImage = findViewById(R.id.fabEditImage);
+        progressBar = findViewById(R.id.progressLoading);
         btnSaveCourse = findViewById(R.id.btnSaveCourse);
         btnDeleteCourse = findViewById(R.id.btnDeleteCourse);
 
@@ -244,7 +246,7 @@ public class EditCourseActivity extends AppCompatActivity {
 
         btnDeleteCourse.setOnClickListener(v -> showDeleteConfirmation());
 
-        ivEditImage.setOnClickListener(v -> {
+        fabEditImage.setOnClickListener(v -> {
             if (isEditMode) {
                 selectImageFromGallery();
             }
@@ -507,11 +509,11 @@ public class EditCourseActivity extends AppCompatActivity {
         if (editMode) {
             btnSaveCourse.setText("Save Changes");
             btnSaveCourse.setIcon(getDrawable(R.drawable.ic_save));
-            ivEditImage.setVisibility(View.VISIBLE);
+            fabEditImage.setVisibility(View.VISIBLE);
         } else {
             btnSaveCourse.setText("Edit Course");
             btnSaveCourse.setIcon(getDrawable(R.drawable.ic_edit));
-            ivEditImage.setVisibility(View.GONE);
+            fabEditImage.setVisibility(View.GONE);
         }
 
         // Enable/disable all fields

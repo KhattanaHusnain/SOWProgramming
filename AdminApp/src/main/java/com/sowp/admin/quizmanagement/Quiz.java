@@ -1,7 +1,5 @@
 package com.sowp.admin.quizmanagement;
 
-import com.sowp.admin.topicmanagement.Question;
-
 import java.util.List;
 
 public class Quiz {

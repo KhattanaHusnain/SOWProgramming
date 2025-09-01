@@ -503,47 +503,47 @@
 
                 </LinearLayout>
 
-                <!-- Action Buttons -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_save_changes"
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="Save Changes"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        app:cornerRadius="8dp"
-                        android:textStyle="bold"
-                        app:backgroundTint="#028E10"
-                        app:icon="@drawable/ic_save" />
-
-                    <!-- Delete User Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_delete_user"
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="Delete User"
-                        android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        app:cornerRadius="8dp"
-                        android:textStyle="bold"
-                        app:backgroundTint="#AB1B0B"
-                        app:icon="@drawable/ic_delete" />
-
-                </LinearLayout>
-
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_changes"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Save Changes"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                app:cornerRadius="8dp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/primary"
+                app:icon="@drawable/ic_save" />
+
+            <!-- Delete User Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_user"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Delete User"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                app:cornerRadius="8dp"
+                android:textStyle="bold"
+                app:backgroundTint="#AB1B0B"
+                app:icon="@drawable/ic_delete" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
