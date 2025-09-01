@@ -16,7 +16,7 @@
         <!-- Enhanced Header with gradient background -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             app:cardCornerRadius="0dp"
             app:cardElevation="8dp">
 
@@ -105,7 +105,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_margin="16dp"
                                 android:src="@drawable/ic_camera"
-                                app:backgroundTint="@color/accent"
+                                app:backgroundTint="@color/primary"
                                 app:tint="@android:color/white"
                                 app:fabSize="mini"
                                 android:visibility="gone"/>
@@ -303,6 +303,7 @@
                                 android:hint="Semester"
                                 app:endIconMode="dropdown_menu"
                                 app:endIconTint="@color/primary"
+                                android:layout_marginBottom="16dp"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                                 <AutoCompleteTextView
@@ -320,6 +321,7 @@
                                 android:layout_height="wrap_content"
                                 app:boxStrokeColor="@color/primary"
                                 app:hintTextColor="@color/primary"
+                                android:layout_marginBottom="16dp"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -341,6 +343,7 @@
                                 android:hint="Course Level"
                                 app:endIconMode="dropdown_menu"
                                 app:endIconTint="@color/primary"
+                                android:layout_marginBottom="16dp"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                             <AutoCompleteTextView
@@ -361,6 +364,7 @@
                             android:hint="Language"
                             app:endIconMode="dropdown_menu"
                             app:endIconTint="@color/primary"
+                            android:layout_marginBottom="16dp"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                             <AutoCompleteTextView
@@ -378,6 +382,7 @@
                             android:layout_height="wrap_content"
                             app:boxStrokeColor="@color/primary"
                             app:hintTextColor="@color/primary"
+                            android:layout_marginBottom="16dp"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                             <com.google.android.material.textfield.TextInputEditText
