@@ -11,32 +11,30 @@
     <!-- Header Section -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:orientation="horizontal"
         android:padding="16dp"
+        android:background="@color/primary"
         android:elevation="4dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Back"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/white"
+            android:layout_marginEnd="16dp"
             android:layout_gravity="center_vertical" />
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/tvCourseTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Upload New Quiz"
+            android:text="Upload New Quize"
             android:textSize="20sp"
-            android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="48dp" />
+            android:textStyle="bold"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -304,42 +302,21 @@
 
             </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUploadQuiz"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:cornerRadius="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:text="Upload Quiz"
+                app:backgroundTint="@color/primary"
+                android:textColor="#FFFFFF" />
 
+
+        </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Action Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#FFFFFF"
-        android:elevation="8dp"
-        android:weightSum="2">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveDraft"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            app:cornerRadius="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Save Draft"
-            app:backgroundTint="#AB1B0B"
-            android:textColor="@color/white"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnUploadQuiz"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            app:cornerRadius="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Upload Quiz"
-            app:backgroundTint="@color/primary"
-            android:textColor="#FFFFFF" />
-
-    </LinearLayout>
 
 </LinearLayout>
