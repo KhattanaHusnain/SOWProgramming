@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -33,7 +34,7 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
 
 
     // UI Components
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private TextView tvCourseTitle, tvCourseCode, tvQuizCount, tvPageInfo;
     private MaterialButton btnAddQuiz;
     private TextInputEditText etSearch;
@@ -135,7 +136,7 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
     }
 
     private void setupClickListeners() {
-        btnBack.setOnClickListener(v -> onBackPressed());
+        btnBack.setOnClickListener(v -> finish());
 
         btnAddQuiz.setOnClickListener(v -> {
             Intent intent = new Intent(this, UploadQuizActivity.class);
