@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 public class AddCourseActivity extends AppCompatActivity {
 
     // Text input fields matching XML IDs
+
+    private ImageView btnBack;
     private TextInputEditText etId, etCourseCode, etTitle, etShortTitle, etInstructor,
             etDuration, etCreditHours, etTags, etTopicCategories, etPreRequisite, etFollowUp,
             etDescription, etOutline, etLectures, etMembers, etNoOfQuizzes, etNoOfAssignments;
@@ -91,6 +93,7 @@ public class AddCourseActivity extends AppCompatActivity {
         setupCategorySwitchLogic();
 
         // Set click listeners
+        btnBack.setOnClickListener(v -> finish());
         btnAddCourse.setOnClickListener(v -> checkCourseIdAndAdd());
         btnSelectImage.setOnClickListener(v -> selectImageFromGallery());
     }
@@ -173,6 +176,7 @@ public class AddCourseActivity extends AppCompatActivity {
 
     private void initViews() {
         // Text input fields
+        btnBack = findViewById(R.id.btnBack);
         etId = findViewById(R.id.etId);
         etCourseCode = findViewById(R.id.etCourseCode);
         etTitle = findViewById(R.id.etTitle);
