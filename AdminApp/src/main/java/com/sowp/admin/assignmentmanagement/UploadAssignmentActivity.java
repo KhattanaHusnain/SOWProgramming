@@ -42,14 +42,13 @@ public class UploadAssignmentActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     // UI Components
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private Spinner spinnerCourse;
     private TextInputEditText etAssignmentTitle, etDescription, etScore, etPassingScore;
     private ChipGroup chipGroupCategories, chipGroupTags;
-    private MaterialButton btnAddImage, btnSaveDraft, btnUploadAssignment;
+    private MaterialButton btnAddImage, btnUploadAssignment, btnAddTag;
     private LinearLayout imagesContainer;
     private EditText etNewTag;
-    private Button btnAddTag;
 
     // Data structures
     private List<Course> coursesList;
@@ -91,7 +90,6 @@ public class UploadAssignmentActivity extends AppCompatActivity {
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         chipGroupTags = findViewById(R.id.chipGroupTags);
         btnAddImage = findViewById(R.id.btnAddImage);
-        btnSaveDraft = findViewById(R.id.btnSaveDraft);
         btnUploadAssignment = findViewById(R.id.btnUploadAssignment);
         imagesContainer = findViewById(R.id.imagesContainer);
         etNewTag = findViewById(R.id.etNewTag);
@@ -107,9 +105,6 @@ public class UploadAssignmentActivity extends AppCompatActivity {
 
         // Add tag button
         btnAddTag.setOnClickListener(v -> addCustomTag());
-
-        // Save draft button
-        btnSaveDraft.setOnClickListener(v -> saveDraft());
 
         // Upload assignment button
         btnUploadAssignment.setOnClickListener(v -> uploadAssignment());

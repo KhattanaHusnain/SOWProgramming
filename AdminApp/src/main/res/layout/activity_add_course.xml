@@ -916,7 +916,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddCourse"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:text="Add Course"
                 android:textSize="16sp"
                 app:backgroundTint="@color/primary"
