@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/background_light"
     tools:context=".coursemanagement.EditCourseActivity">
 
     <LinearLayout
@@ -12,1150 +13,1087 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header with back button -->
-        <LinearLayout
+        <!-- Enhanced Header with gradient background -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:background="@color/primary">
+            app:cardCornerRadius="0dp"
+            app:cardElevation="8dp">
 
-            <ImageView
-                android:id="@+id/ivBack"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_back"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
-                app:tint="@android:color/white" />
-
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Edit Course"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginStart="16dp" />
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical"
+                android:background="@color/primary">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/ivBack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/white"/>
 
-        <!-- Content -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Edit Course"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="16dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Content with improved spacing -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Course Image Section -->
-            <LinearLayout
+            <!-- Course Image Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Course Image"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp">
-
-                    <ImageView
-                        android:id="@+id/ivCourseImage"
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:scaleType="centerCrop"
+                        android:layout_height="wrap_content"
+                        android:text="Course Image"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="12dp"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/ivCourseImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/placeholder_course" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/fabEditImage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_margin="16dp"
+                                android:src="@drawable/ic_camera"
+                                app:backgroundTint="@color/accent"
+                                app:tint="@android:color/white"
+                                app:fabSize="mini"
+                                android:visibility="gone"/>
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Basic Information Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Basic Information"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Course ID (Read-only) -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:boxStrokeColor="@color/primary"
+                        app:hintTextColor="@color/primary"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Course ID"
+                            android:inputType="number"
+                            android:enabled="false"
+                            android:textColor="@color/text_secondary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Course Code with enhanced styling -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilCourseCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCourseCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Course Code"
+                                android:inputType="text"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                    <!-- Course Title -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Course Title"
+                                android:inputType="text"
+                                android:enabled="false"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </RelativeLayout>
+
+                    <!-- Short Title -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilShortTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etShortTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Short Title"
+                                android:inputType="text"
+                                android:enabled="false"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                    <!-- Instructor -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilInstructor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etInstructor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Instructor Name"
+                                android:inputType="textPersonName"
+                                android:enabled="false"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Course Details Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Course Details"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Semester, Credit Hours, Level, Language, Duration in a grid -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="16dp">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilSemester"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                android:hint="Semester"
+                                app:endIconMode="dropdown_menu"
+                                app:endIconTint="@color/primary"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/etSemester"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none"
+                                    android:textSize="14sp"
+                                    android:enabled="false" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilCreditHours"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etCreditHours"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Credit Hours"
+                                    android:inputType="number"
+                                    android:textSize="14sp"
+                                    android:enabled="false" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilLevel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                android:hint="Course Level"
+                                app:endIconMode="dropdown_menu"
+                                app:endIconTint="@color/primary"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/etLevelDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:textSize="14sp"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilLanguage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            android:hint="Language"
+                            app:endIconMode="dropdown_menu"
+                            app:endIconTint="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/etLanguage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:textSize="14sp"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilDuration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etDuration"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Duration"
+                                android:inputType="text"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Prerequisites and Follow-up Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Course Dependencies"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp"
+                        />
+
+                    <!-- Pre-requisites -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilPreRequisite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPreRequisite"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Pre-requisites (comma separated)"
+                                android:inputType="text"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                    <!-- Follow-up Courses -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilFollowUp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etFollowUp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Follow-up Courses (comma separated)"
+                                android:inputType="text"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Department Selection Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Departments/Degrees"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
                         android:background="@drawable/rounded_background"
-                        android:src="@drawable/placeholder_course" />
+                        android:padding="12dp">
 
-                    <ImageView
-                        android:id="@+id/ivEditImage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/edit_icon_background"
-                        android:src="@drawable/ic_edit"
-                        android:padding="8dp"
-                        app:tint="@android:color/white"
-                        android:visibility="gone" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="12dp">
 
-                </RelativeLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchIT"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Information Technology"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
 
-            </LinearLayout>
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchSoftwareEng"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Software Engineering"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
 
-            <!-- Course ID (Read-only) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilId"
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchComputerScience"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Computer Science"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchAI"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Artificial Intelligence"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCyberSecurity"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Cyber Security"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:enabled="false" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Categories Selection Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etId"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Course ID"
-                    android:inputType="number"
-                    android:enabled="false" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            <!-- Course Code -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilCourseCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etCourseCode"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Course Code"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Categories"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp"/>
 
-                <ImageView
-                    android:id="@+id/ivEditCourseCode"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Course Title -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTitle"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Course Title"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical"
+                        android:background="@drawable/rounded_background"
+                        android:padding="12dp">
 
-                <ImageView
-                    android:id="@+id/ivEditTitle"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="12dp">
 
-            <!-- Short Title -->
-            <RelativeLayout
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatAll"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="All"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatProgramming"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Programming"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatNonProgramming"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Non Programming"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatMajor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Major"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatMinor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Minor"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatTheoretical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Theoretical"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatMathematical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Mathematical"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:layout_marginBottom="16dp"
+                                android:enabled="false" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchCatOthers"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Others"
+                                android:textSize="16sp"
+                                app:thumbTint="@color/switch_thumb"
+                                app:trackTint="@color/switch_track"
+                                android:enabled="false" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tags and Categories Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilShortTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etShortTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Short Title"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditShortTitle"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Instructor -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilInstructor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etInstructor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Instructor Name"
-                        android:inputType="textPersonName"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditInstructor"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Semester -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilSemester"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    android:hint="Semester"
-                    app:errorEnabled="false"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/etSemester"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:inputType="none"
-                        android:textSize="16sp"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditSemester"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="40dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Credit Hours -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilCreditHours"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etCreditHours"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Credit Hours"
-                        android:inputType="number"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditCreditHours"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Level -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilLevel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    android:hint="Course Level"
-                    app:errorEnabled="false"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/etLevelDropdown"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:inputType="none"
-                        android:textSize="16sp"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditLevel"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="40dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Language -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilLanguage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    android:hint="Language"
-                    app:errorEnabled="false"
-                    app:endIconMode="dropdown_menu"
-                    app:endIconTint="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/etLanguage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:inputType="none"
-                        android:textSize="16sp"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditLanguage"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="40dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Duration -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilDuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDuration"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Duration"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditDuration"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Pre-requisites -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilPreRequisite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPreRequisite"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Pre-requisites (comma separated)"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditPreRequisite"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Follow-up Courses -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilFollowUp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etFollowUp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Follow-up Courses (comma separated)"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditFollowUp"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Department Selection -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Departments/Degrees"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/rounded_background"
-                android:padding="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchIT"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Information Technology"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchSoftwareEng"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Software Engineering"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tags and Classifications"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchComputerScience"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Computer Science"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
+                    <!-- Tags -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchAI"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Artificial Intelligence"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCyberSecurity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Cyber Security"
-                    android:textSize="14sp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etTags"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Tags (comma separated)"
+                                android:inputType="text"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
+                    </RelativeLayout>
 
-            <!-- Categories Selection -->
-            <TextView
+                    <!-- Topic Categories -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilTopicCategories"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etTopicCategories"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Topic Categories (comma separated)"
+                                android:inputType="text"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Course Content Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Categories"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/rounded_background"
-                android:padding="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatAll"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="All"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatProgramming"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Programming"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatNonProgramming"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Non Programming"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatMajor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Major"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatMinor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Minor"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatTheoretical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Theoretical"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatMathematical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Mathematical"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCatOthers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Others"
-                    android:textSize="14sp"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-
-            </LinearLayout>
-
-            <!-- Tags -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilTags"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTags"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Tags (comma separated)"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Course Content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp"/>
 
-
-
-                <ImageView
-                    android:id="@+id/ivEditTags"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Topic Categories -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilTopicCategories"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTopicCategories"
+                    <!-- Description -->
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Topic Categories (comma separated)"
-                        android:inputType="text"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginBottom="16dp">
 
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Course Description"
+                                android:inputType="textMultiLine"
+                                android:lines="4"
+                                android:gravity="top"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageView
-                    android:id="@+id/ivEditTopicCategories"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                    </RelativeLayout>
 
+                    <!-- Outline -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            <!-- Description -->
-            <RelativeLayout
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilOutline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etOutline"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Course Outline"
+                                android:inputType="textMultiLine"
+                                android:lines="3"
+                                android:gravity="top"
+                                android:enabled="false" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Statistics Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilDescription"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDescription"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Course Description"
-                        android:inputType="textMultiLine"
-                        android:lines="4"
-                        android:gravity="top"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Course Statistics"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp" />
 
-                <ImageView
-                    android:id="@+id/ivEditDescription"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                    <!-- Statistics in grid layout -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-            <!-- Outline -->
-            <RelativeLayout
+                        <!-- Number of Lectures -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilLectures"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                android:layout_marginBottom="16dp"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etLectures"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Lectures"
+                                    android:inputType="number"
+                                    android:textSize="14sp"
+                                    android:enabled="false" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilMembers"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                android:layout_marginBottom="16dp"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etMembers"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Members"
+                                    android:inputType="number"
+                                    android:textSize="14sp"
+                                    android:enabled="false" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilNoOfQuizzes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                android:layout_marginBottom="16dp"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etNoOfQuizzes"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Quizzes"
+                                    android:inputType="number"
+                                    android:textSize="14sp"
+                                    android:enabled="false" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tilNoOfAssignments"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary"
+                                android:layout_marginBottom="16dp"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etNoOfAssignments"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Assignments"
+                                    android:inputType="number"
+                                    android:textSize="14sp"
+                                    android:enabled="false" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Course Settings Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilOutline"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etOutline"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Course Outline"
-                        android:inputType="textMultiLine"
-                        android:lines="3"
-                        android:gravity="top"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Course Settings"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#2C3E50"
+                        android:layout_marginBottom="16dp"/>
 
-                <ImageView
-                    android:id="@+id/ivEditOutline"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Number of Lectures -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilLectures"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etLectures"
+                    <!-- Settings switches in enhanced cards -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Number of Lectures"
-                        android:inputType="number"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical"
+                        android:background="@drawable/rounded_background"
+                        android:padding="16dp">
 
-                <ImageView
-                    android:id="@+id/ivEditLectures"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                        <!-- Is Public Switch -->
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchIsPublic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Is Public"
+                            android:textSize="16sp"
+                            app:thumbTint="@color/switch_thumb"
+                            app:trackTint="@color/switch_track"
+                            android:layout_marginBottom="16dp"
+                            android:enabled="true" />
 
-            <!-- Number of Members -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchIsLab"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Is Lab Course"
+                            android:textSize="16sp"
+                            app:thumbTint="@color/switch_thumb"
+                            app:trackTint="@color/switch_track"
+                            android:layout_marginBottom="16dp"
+                            android:enabled="false" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilMembers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchIsComputer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Is Computer Course"
+                            android:textSize="16sp"
+                            app:thumbTint="@color/switch_thumb"
+                            app:trackTint="@color/switch_track"
+                            android:layout_marginBottom="16dp"
+                            android:enabled="true" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etMembers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Number of Members"
-                        android:inputType="number"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchIsPaid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Is Paid Course"
+                            android:textSize="16sp"
+                            app:thumbTint="@color/switch_thumb"
+                            app:trackTint="@color/switch_track"
+                            android:layout_marginBottom="16dp"
+                            android:enabled="false" />
+                </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/ivEditMembers"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Number of Quizzes -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilNoOfQuizzes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNoOfQuizzes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Number of Quizzes"
-                        android:inputType="number"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditNoOfQuizzes"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Number of Assignments -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilNoOfAssignments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNoOfAssignments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Number of Assignments"
-                        android:inputType="number"
-                        android:enabled="false" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ivEditNoOfAssignments"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_edit"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/primary"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- Course Settings Header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Course Settings"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Is Public Switch -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Is Public:"
-                    android:textSize="16sp"
-                    android:layout_gravity="center_vertical" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchIsPublic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-            </LinearLayout>
-
-            <!-- Is Lab Switch -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Is Lab Course:"
-                    android:textSize="16sp"
-                    android:layout_gravity="center_vertical" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchIsLab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-            </LinearLayout>
-
-            <!-- Is Computer Switch -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Is Computer-based:"
-                    android:textSize="16sp"
-                    android:layout_gravity="center_vertical" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchIsComputer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-            </LinearLayout>
-
-            <!-- Is Paid Switch -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Is Paid Course:"
-                    android:textSize="16sp"
-                    android:layout_gravity="center_vertical" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchIsPaid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:thumbTint="@color/switch_thumb"
-                    app:trackTint="@color/switch_track"
-                    android:enabled="false" />
-            </LinearLayout>
-
-            <!-- Action Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="32dp">
+                android:padding="8dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveCourse"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:text="Edit Course"
-                    android:textSize="16sp"
-                    app:backgroundTint="@color/primary"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
                     app:cornerRadius="8dp"
-                    app:icon="@drawable/ic_edit"
-                    android:layout_marginEnd="8dp" />
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/primary"
+                    app:icon="@drawable/ic_edit" />
 
+                <!-- Delete User Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDeleteCourse"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:layout_weight="1"
-                    android:text="Delete"
-                    android:textSize="16sp"
-                    app:backgroundTint="@color/delete_red"
-                    app:cornerRadius="8dp"
-                    app:icon="@drawable/ic_delete"
                     android:layout_marginStart="8dp"
-                    style="@style/Widget.MaterialComponents.Button" />
+                    android:text="Delete Course"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    app:cornerRadius="8dp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#AB1B0B"
+                    app:icon="@drawable/ic_delete" />
+
             </LinearLayout>
-
-            <!-- Progress Bar -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:visibility="gone" />
-
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>
