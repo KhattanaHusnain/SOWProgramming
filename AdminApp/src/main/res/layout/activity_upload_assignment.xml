@@ -74,22 +74,22 @@
                         android:layout_marginBottom="16dp" />
 
                     <!-- Course Selection -->
+                    <!-- Course Selection -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:boxStrokeColor="@color/primary"
                         app:hintTextColor="@color/primary"
-                        android:hint="Select Course"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                        <Spinner
+                        <AutoCompleteTextView
                             android:id="@+id/spinnerCourse"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp" />
-
+                            android:layout_height="wrap_content"
+                            android:hint="Select Course"
+                            android:inputType="none"
+                            android:focusable="false" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Assignment Title -->
@@ -310,7 +310,7 @@
                             android:layout_height="56dp"
                             android:layout_gravity="bottom"
                             android:text="Add"
-                            app:cornerRadius="4dp"
+                            app:cornerRadius="8dp"
                             android:textSize="12sp"
                             android:textColor="@color/white"
                             android:backgroundTint="@color/primary_color" />
@@ -390,8 +390,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     app:cornerRadius="8dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="Upload Assignment"
                     android:backgroundTint="@color/primary_color"
                     android:textColor="@android:color/white" />

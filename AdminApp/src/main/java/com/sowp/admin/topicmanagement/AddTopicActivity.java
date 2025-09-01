@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import java.util.Map;
 
 public class AddTopicActivity extends AppCompatActivity {
 
+    private ImageView btnBack;
     private AutoCompleteTextView actvCourse;
     private TextInputEditText etName, etDescription, etVideoId, etContent, etTags, etSemester;
     private ChipGroup chipGroupCategories;
@@ -57,10 +59,12 @@ public class AddTopicActivity extends AppCompatActivity {
         loadCourses();
 
         // Set click listener
+        btnBack.setOnClickListener(v -> finish());
         btnAddTopic.setOnClickListener(v -> addTopicToFirestore());
     }
 
     private void initViews() {
+        btnBack = findViewById(R.id.btnBack);
         actvCourse = findViewById(R.id.actvCourse);
         etName = findViewById(R.id.etName);
         etDescription = findViewById(R.id.etDescription);

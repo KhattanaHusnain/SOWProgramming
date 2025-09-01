@@ -39,10 +39,10 @@ public class EditAssignmentActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     // UI Components
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private TextInputEditText etCourseDisplay, etAssignmentTitle, etDescription, etScore, etPassingScore;
     private ChipGroup chipGroupCategories, chipGroupTags;
-    private MaterialButton btnAddImage, btnCancel, btnUpdateAssignment;
+    private MaterialButton btnAddImage, btnUpdateAssignment;
     private LinearLayout imagesContainer;
     private EditText etNewTag;
     private Button btnAddTag;
@@ -100,7 +100,6 @@ public class EditAssignmentActivity extends AppCompatActivity {
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         chipGroupTags = findViewById(R.id.chipGroupTags);
         btnAddImage = findViewById(R.id.btnAddImage);
-        btnCancel = findViewById(R.id.btnCancel);
         btnUpdateAssignment = findViewById(R.id.btnUpdateAssignment);
         imagesContainer = findViewById(R.id.imagesContainer);
         etNewTag = findViewById(R.id.etNewTag);
@@ -116,9 +115,6 @@ public class EditAssignmentActivity extends AppCompatActivity {
 
         // Add tag button
         btnAddTag.setOnClickListener(v -> addCustomTag());
-
-        // Cancel button
-        btnCancel.setOnClickListener(v -> showCancelConfirmationDialog());
 
         // Update assignment button
         btnUpdateAssignment.setOnClickListener(v -> updateAssignment());
@@ -346,15 +342,6 @@ public class EditAssignmentActivity extends AppCompatActivity {
         imagesContainer.addView(imagePreview);
     }
 
-    private void showCancelConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Cancel Editing")
-                .setMessage("Are you sure you want to cancel? Any unsaved changes will be lost.")
-                .setPositiveButton("Yes", (dialog, which) -> finish())
-                .setNegativeButton("No", null)
-                .show();
-    }
-
     private void updateAssignment() {
         if (!validateAssignmentData()) {
             return;
@@ -456,7 +443,12 @@ public class EditAssignmentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (hasUnsavedChanges()) {
-            showCancelConfirmationDialog();
+            new AlertDialog.Builder(this)
+                    .setTitle("Cancel Editing")
+                    .setMessage("Are you sure you want to cancel? Any unsaved changes will be lost.")
+                    .setPositiveButton("Yes", (dialog, which) -> finish())
+                    .setNegativeButton("No", null)
+                    .show();
         } else {
             super.onBackPressed();
         }
