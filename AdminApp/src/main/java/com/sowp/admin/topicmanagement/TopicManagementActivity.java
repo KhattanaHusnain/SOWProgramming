@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import com.sowp.admin.coursemanagement.ViewCoursesActivity;
 
 public class TopicManagementActivity extends AppCompatActivity {
 
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private LinearLayout cardViewTopics;
     private LinearLayout cardUploadTopic;
     private TextView txtTotalQuizzes;
