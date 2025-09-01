@@ -15,7 +15,6 @@ import java.util.List;
 public class AssignmentRepository {
     private FirebaseFirestore db;
     private Context context;
-    private static final int PAGE_SIZE = 10;
     private static final String TAG = "AssignmentRepository";
 
     public AssignmentRepository(Context context) {
@@ -25,11 +24,6 @@ public class AssignmentRepository {
 
     public interface Callback {
         void onSuccess(List<Assignment> assignments);
-        void onFailure(String message);
-    }
-
-    public interface PaginatedCallback {
-        void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore);
         void onFailure(String message);
     }
 
@@ -112,6 +106,11 @@ public class AssignmentRepository {
                             assignments.add(assignment);
                         } catch (NumberFormatException e) {
                             Log.e(TAG, "Error parsing assignment ID: " + document.getId(), e);
+                            // Fallback: use document hashcode as ID
+                            Assignment assignment = document.toObject(Assignment.class);
+                            assignment.setId(document.getId().hashCode());
+                            assignment.setCourseId(courseId);
+                            assignments.add(assignment);
                         }
                     }
                     callback.onSuccess(assignments);
@@ -122,23 +121,21 @@ public class AssignmentRepository {
                 });
     }
 
-    public void loadAssignmentsWithPagination(List<Integer> courseIds, DocumentSnapshot lastDocument, PaginatedCallback callback) {
+    public void loadAllAssignmentsFromMultipleCourses(List<Integer> courseIds, Callback callback) {
         if (courseIds == null || courseIds.isEmpty()) {
-            callback.onSuccess(new ArrayList<>(), null, false);
+            callback.onSuccess(new ArrayList<>());
             return;
         }
 
-        // For pagination across multiple courses, we'll collect assignments from all courses
         List<Assignment> allAssignments = new ArrayList<>();
         int[] pendingQueries = {courseIds.size()};
 
         for (Integer courseId : courseIds) {
-            Query query = db.collection("Course")
+            db.collection("Course")
                     .document(String.valueOf(courseId))
                     .collection("Assignments")
-                    .limit(PAGE_SIZE);
-
-            query.get()
+                    .orderBy("orderIndex", Query.Direction.ASCENDING)
+                    .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             try {
@@ -148,34 +145,19 @@ public class AssignmentRepository {
                                 allAssignments.add(assignment);
                             } catch (NumberFormatException e) {
                                 Log.e(TAG, "Error parsing assignment ID: " + document.getId(), e);
+                                // Fallback: use document hashcode as ID
+                                Assignment assignment = document.toObject(Assignment.class);
+                                assignment.setId(document.getId().hashCode());
+                                assignment.setCourseId(courseId);
+                                allAssignments.add(assignment);
                             }
                         }
 
                         pendingQueries[0]--;
                         if (pendingQueries[0] == 0) {
-                            // Sort all assignments by creation date
+                            // Sort all assignments by creation date (most recent first)
                             allAssignments.sort((a1, a2) -> Long.compare(a2.getCreatedAt(), a1.getCreatedAt()));
-
-                            // Apply pagination
-                            int startIndex = 0;
-                            if (lastDocument != null) {
-                                // Find the position of the last document
-                                for (int i = 0; i < allAssignments.size(); i++) {
-                                    if (allAssignments.get(i).getCreatedAt() < lastDocument.getLong("createdAt")) {
-                                        startIndex = i;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            int endIndex = Math.min(startIndex + PAGE_SIZE, allAssignments.size());
-                            List<Assignment> pageAssignments = allAssignments.subList(startIndex, endIndex);
-
-                            DocumentSnapshot newLastDoc = pageAssignments.isEmpty() ? null :
-                                    createMockDocumentSnapshot(pageAssignments.get(pageAssignments.size() - 1));
-                            boolean hasMore = endIndex < allAssignments.size();
-
-                            callback.onSuccess(pageAssignments, newLastDoc, hasMore);
+                            callback.onSuccess(allAssignments);
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -183,19 +165,9 @@ public class AssignmentRepository {
                         pendingQueries[0]--;
                         if (pendingQueries[0] == 0) {
                             allAssignments.sort((a1, a2) -> Long.compare(a2.getCreatedAt(), a1.getCreatedAt()));
-                            callback.onSuccess(allAssignments, null, false);
+                            callback.onSuccess(allAssignments);
                         }
                     });
         }
-    }
-
-    public void loadFirstPageAssignments(List<Integer> courseIds, PaginatedCallback callback) {
-        loadAssignmentsWithPagination(courseIds, null, callback);
-    }
-
-    private DocumentSnapshot createMockDocumentSnapshot(Assignment assignment) {
-        // This is a simplified approach - in a real implementation, you might want to
-        // store the actual DocumentSnapshot references or implement a different pagination strategy
-        return null;
     }
 }

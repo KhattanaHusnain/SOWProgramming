@@ -18,6 +18,7 @@ public class AssignmentManagementActivity extends AppCompatActivity {
     private ImageView btnBack;
     private LinearLayout cardViewAssignments;
     private LinearLayout cardUploadAssignmenmt;
+    private LinearLayout cardViewUncheckedAssignment;
     private TextView txtTotalQuizzes;
     private TextView txtActiveQuizzes;
 
@@ -40,6 +41,7 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         cardViewAssignments = findViewById(R.id.cardViewAssignments);
         cardUploadAssignmenmt = findViewById(R.id.cardUploadAssignment);
+        cardViewUncheckedAssignment = findViewById(R.id.cardViewUncheckedAssignment);
         txtTotalQuizzes = findViewById(R.id.txtTotalQuizzes);
         txtActiveQuizzes = findViewById(R.id.txtActiveQuizzes);
     }
@@ -69,6 +71,14 @@ public class AssignmentManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AssignmentManagementActivity.this, UploadAssignmentActivity.class);
+                startActivity(intent);
+            }
+        });
+        // View Unchecked Assignments card click listener
+        cardViewUncheckedAssignment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AssignmentManagementActivity.this, ViewUncheckedAssignemntsActivity.class);
                 startActivity(intent);
             }
         });

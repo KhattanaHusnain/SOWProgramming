@@ -52,7 +52,7 @@
             android:name=".presenters.activities.AboutActivity"
             android:exported="false" />
         <activity
-            android:name=".presenters.activities.AssignmentActivity"
+            android:name=".presenters.activities.SubmitAssignmentActivity"
             android:exported="false" />
         <activity
             android:name=".presenters.activities.ChangeProfilePicture"

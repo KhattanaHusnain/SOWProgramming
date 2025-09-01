@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -27,23 +26,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sowp.user.R;
 import com.sowp.user.models.Assignment;
+import com.sowp.user.models.AssignmentAttempt;
+import com.sowp.user.repositories.firebase.AssignmentRepository;
+import com.sowp.user.repositories.firebase.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
-public class AssignmentActivity extends AppCompatActivity {
+public class SubmitAssignmentActivity extends AppCompatActivity {
 
-    private static final String TAG = "AssignmentActivity";
+    private static final String TAG = "SubmitAssignmentActivity";
     private static final int PICK_IMAGES_REQUEST = 1;
-    private static final String EXTRA_ASSIGNMENT = "extra_assignment";
 
     // UI Components
     private TextView titleTextView;
@@ -52,7 +52,9 @@ public class AssignmentActivity extends AppCompatActivity {
     private TextView statusTextView;
     private TextView maxScoreTextView;
     private TextView submissionTitleTextView;
-    private ImageView assignmentImageView;
+    private TextView tagsTextView;
+    private TextView categoriesTextView;
+    private LinearLayout assignmentImagesContainer;
     private LinearLayout selectedImagesContainer;
     private Button selectImagesButton;
     private Button submitButton;
@@ -60,35 +62,33 @@ public class AssignmentActivity extends AppCompatActivity {
     private RecyclerView selectedImagesRecyclerView;
 
     // Data
+    private int courseId;
+    private int assignmentId;
     private Assignment assignment;
     private List<Uri> selectedImageUris = new ArrayList<>();
     private SelectedImagesAdapter selectedImagesAdapter;
 
-    // Firebase
-    private FirebaseFirestore firestore;
+    // Repositories
+    private AssignmentRepository assignmentRepository;
+    private UserRepository userRepository;
     private FirebaseAuth firebaseAuth;
-
-    public static Intent createIntent(android.content.Context context, Assignment assignment) {
-        Intent intent = new Intent(context, AssignmentActivity.class);
-        intent.putExtra(EXTRA_ASSIGNMENT, (Parcelable) assignment);
-        return intent;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assignment);
+        setContentView(R.layout.activity_submit_assignment);
 
-        initializeFirebase();
+        initializeRepositories();
         initializeViews();
-        getAssignmentFromIntent();
+        getAssignmentDataFromIntent();
         setupRecyclerView();
-        setupUI();
         setupClickListeners();
+        loadAssignmentData();
     }
 
-    private void initializeFirebase() {
-        firestore = FirebaseFirestore.getInstance();
+    private void initializeRepositories() {
+        assignmentRepository = new AssignmentRepository(this);
+        userRepository = new UserRepository(this);
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -99,22 +99,25 @@ public class AssignmentActivity extends AppCompatActivity {
         statusTextView = findViewById(R.id.statusTextView);
         maxScoreTextView = findViewById(R.id.maxScoreTextView);
         submissionTitleTextView = findViewById(R.id.submissionTitle);
-        assignmentImageView = findViewById(R.id.assignmentImageView);
+        assignmentImagesContainer = findViewById(R.id.assignmentImagesContainer);
         selectedImagesContainer = findViewById(R.id.selectedImagesContainer);
         selectImagesButton = findViewById(R.id.selectImagesButton);
         submitButton = findViewById(R.id.submitButton);
         progressBar = findViewById(R.id.progressBar);
         selectedImagesRecyclerView = findViewById(R.id.selectedImagesRecyclerView);
+        tagsTextView = findViewById(R.id.tagsTextView);
+        categoriesTextView = findViewById(R.id.categoriesTextView);
     }
 
-    private void getAssignmentFromIntent() {
+    private void getAssignmentDataFromIntent() {
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(EXTRA_ASSIGNMENT)) {
-            assignment = intent.getParcelableExtra(EXTRA_ASSIGNMENT);
+        if (intent != null) {
+            courseId = intent.getIntExtra("COURSE_ID", 0);
+            assignmentId = intent.getIntExtra("ASSIGNMENT_ID", 0);
         }
 
-        if (assignment == null) {
-            Toast.makeText(this, "Assignment not found", Toast.LENGTH_SHORT).show();
+        if (courseId == 0 || assignmentId == 0) {
+            Toast.makeText(this, "Invalid assignment data", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -126,25 +129,112 @@ public class AssignmentActivity extends AppCompatActivity {
         selectedImagesRecyclerView.setAdapter(selectedImagesAdapter);
     }
 
-    private void setupUI() {
-        if (assignment == null) return;
-
-        // Set assignment details
-        titleTextView.setText(assignment.getTitle());
-        descriptionTextView.setText(assignment.getDescription());
-
-
-        // Load assignment image from base64 if available
-
-        // Initialize UI state
-        updateUIState();
-
-        // Handle submitted assignments
-    }
-
     private void setupClickListeners() {
         selectImagesButton.setOnClickListener(v -> openImagePicker());
         submitButton.setOnClickListener(v -> submitAssignment());
+    }
+
+    private void loadAssignmentData() {
+        showLoading(true);
+
+        List<Integer> courseIds = new ArrayList<>();
+        courseIds.add(courseId);
+
+        assignmentRepository.loadAllAssignmentsFromMultipleCourses(courseIds, new AssignmentRepository.Callback() {
+            @Override
+            public void onSuccess(List<Assignment> assignments) {
+                showLoading(false);
+
+                Assignment targetAssignment = null;
+                for (Assignment a : assignments) {
+                    if (a.getId() == assignmentId) {
+                        targetAssignment = a;
+                        break;
+                    }
+                }
+
+                if (targetAssignment != null) {
+                    assignment = targetAssignment;
+                    setupUI();
+                } else {
+                    Toast.makeText(SubmitAssignmentActivity.this, "Assignment not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                showLoading(false);
+                Toast.makeText(SubmitAssignmentActivity.this, "Failed to load assignment: " + message, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+    }
+
+    private void setupUI() {
+        if (assignment == null) return;
+
+        titleTextView.setText(assignment.getTitle());
+        descriptionTextView.setText(assignment.getDescription());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        String dueDateText = "Due: " + dateFormat.format(new Date(assignment.getCreatedAt() + (7 * 24 * 60 * 60 * 1000)));
+        dueDateTextView.setText(dueDateText);
+
+        maxScoreTextView.setText("Max Score: " + (int) assignment.getScore());
+
+        if (assignment.getTags() != null && !assignment.getTags().isEmpty()) {
+            String tagsText = "Tags: " + String.join(", ", assignment.getTags());
+            tagsTextView.setText(tagsText);
+            tagsTextView.setVisibility(View.VISIBLE);
+        } else {
+            tagsTextView.setVisibility(View.GONE);
+        }
+
+        if (assignment.getCategories() != null && !assignment.getCategories().isEmpty()) {
+            String categoriesText = "Categories: " + String.join(", ", assignment.getCategories());
+            categoriesTextView.setText(categoriesText);
+            categoriesTextView.setVisibility(View.VISIBLE);
+        } else {
+            categoriesTextView.setVisibility(View.GONE);
+        }
+
+        loadAssignmentImages();
+        updateUIState();
+        statusTextView.setText("Status: Not Started");
+    }
+
+    private void loadAssignmentImages() {
+        if (assignment.getBase64Images() == null || assignment.getBase64Images().isEmpty()) {
+            assignmentImagesContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        assignmentImagesContainer.setVisibility(View.VISIBLE);
+        assignmentImagesContainer.removeAllViews();
+
+        for (String base64Image : assignment.getBase64Images()) {
+            try {
+                byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
+                if (bitmap != null) {
+                    ImageView imageView = new ImageView(this);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            400
+                    );
+                    params.setMargins(0, 0, 0, 16);
+                    imageView.setLayoutParams(params);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    imageView.setImageBitmap(bitmap);
+
+                    assignmentImagesContainer.addView(imageView);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error loading assignment image", e);
+            }
+        }
     }
 
     private void openImagePicker() {
@@ -167,18 +257,15 @@ public class AssignmentActivity extends AppCompatActivity {
         selectedImageUris.clear();
 
         if (data.getClipData() != null) {
-            // Multiple images selected
             int count = data.getClipData().getItemCount();
             for (int i = 0; i < count; i++) {
                 Uri imageUri = data.getClipData().getItemAt(i).getUri();
                 selectedImageUris.add(imageUri);
             }
         } else if (data.getData() != null) {
-            // Single image selected
             selectedImageUris.add(data.getData());
         }
 
-        // Update UI
         selectedImagesAdapter.notifyDataSetChanged();
         updateUIState();
 
@@ -189,11 +276,8 @@ public class AssignmentActivity extends AppCompatActivity {
     private void updateUIState() {
         boolean hasImages = !selectedImageUris.isEmpty();
 
-        // Update submit button
         submitButton.setEnabled(hasImages);
         submitButton.setAlpha(hasImages ? 1.0f : 0.5f);
-
-        // Show/hide selected images container
         selectedImagesContainer.setVisibility(hasImages ? View.VISIBLE : View.GONE);
     }
 
@@ -241,14 +325,9 @@ public class AssignmentActivity extends AppCompatActivity {
                     throw new IOException("Cannot decode image");
                 }
 
-                // Resize if needed
                 bitmap = resizeBitmapIfNeeded(bitmap);
-
-                // Convert to base64
                 String base64String = bitmapToBase64(bitmap);
                 base64Images.add(base64String);
-
-                // Clean up
                 bitmap.recycle();
             }
         }
@@ -289,49 +368,51 @@ public class AssignmentActivity extends AppCompatActivity {
     }
 
     private void submitToFirestore(List<String> base64Images) {
-        String email = firebaseAuth.getCurrentUser().getEmail();
-        if (email == null) {
-            Toast.makeText(this, "User email not found", Toast.LENGTH_SHORT).show();
-            showLoading(false);
-            return;
-        }
+        // Create AssignmentAttempt object with all necessary data
+        AssignmentAttempt attemptData = createAssignmentAttempt(base64Images);
 
-        Map<String, Object> submissionData = createSubmissionData(base64Images);
+        userRepository.submitAssignmentAttempt(
+                attemptData,
+                new UserRepository.AssignmentAttemptCallback() {
+                    @Override
+                    public void onSuccess(AssignmentAttempt attempt) {
+                        handleSubmissionSuccess();
+                    }
 
-        // Update user assignments array
-        firestore.collection("User")
-                .document(email)
-                .update("assignments", FieldValue.arrayUnion(assignment.getId()))
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "User assignments updated"))
-                .addOnFailureListener(e -> Log.e(TAG, "Error updating user assignments", e));
-
-        // Submit assignment progress
-        firestore.collection("User/" + email + "/AssignmentProgress")
-                .document(String.valueOf(assignment.getId()))
-                .set(submissionData)
-                .addOnSuccessListener(aVoid -> handleSubmissionSuccess())
-                .addOnFailureListener(this::handleSubmissionFailure);
+                    @Override
+                    public void onFailure(String message) {
+                        handleSubmissionFailure(new Exception(message));
+                    }
+                }
+        );
     }
 
-    private Map<String, Object> createSubmissionData(List<String> base64Images) {
-        Map<String, Object> submissionData = new HashMap<>();
-        submissionData.put("assignmentId", assignment.getId());
-        submissionData.put("submittedImages", base64Images);
-        submissionData.put("submissionTimestamp", System.currentTimeMillis());
-        submissionData.put("score", 0);
-        submissionData.put("checked", false);
-        submissionData.put("status", "Submitted");
-        return submissionData;
+    private AssignmentAttempt createAssignmentAttempt(List<String> base64Images) {
+        long currentTime = System.currentTimeMillis();
+        String attemptId = assignmentId + "_" + currentTime;
+
+        AssignmentAttempt attempt = new AssignmentAttempt();
+        attempt.setAttemptId(attemptId);
+        attempt.setAssignmentId(assignmentId);
+        attempt.setAssignmentTitle(assignment.getTitle());
+        attempt.setCourseId(courseId);
+        attempt.setChecked(false);
+        attempt.setMaxScore((int) assignment.getScore());
+        attempt.setScore(0); // Initial score
+        attempt.setStatus("Submitted");
+        attempt.setSubmissionTimestamp(currentTime);
+        attempt.setSubmittedImages(base64Images);
+        attempt.setFeedback("");
+        attempt.setGradedAt(0);
+
+        return attempt;
     }
 
     private void handleSubmissionSuccess() {
         showLoading(false);
         Toast.makeText(this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show();
 
-        // Update UI
         statusTextView.setText("Status: Submitted");
-
-        // Hide submission controls
         selectImagesButton.setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
         selectedImagesContainer.setVisibility(View.GONE);
@@ -405,7 +486,7 @@ public class AssignmentActivity extends AppCompatActivity {
                     updateUIState();
 
                     String message = "Image removed. " + selectedImageUris.size() + " remaining";
-                    Toast.makeText(AssignmentActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubmitAssignmentActivity.this, message, Toast.LENGTH_SHORT).show();
                 });
             }
         }

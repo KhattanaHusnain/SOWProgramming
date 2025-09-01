@@ -14,11 +14,11 @@ public class User {
     private String semester;
     private String role;
 
-    public boolean getVerified() {
+    public boolean getIsVerified() {
         return isVerified;
     }
 
-    public void setVerified(boolean verified) {
+    public void setIsVerified(boolean verified) {
         isVerified = verified;
     }
 

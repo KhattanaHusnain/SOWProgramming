@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".presenters.activities.AssignmentActivity">
+    tools:context=".presenters.activities.SubmitAssignmentActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,6 +77,28 @@
 
                 </LinearLayout>
 
+                <!-- Tags -->
+                <TextView
+                    android:id="@+id/tagsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tags: programming, java, android"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="4dp"
+                    android:visibility="gone" />
+
+                <!-- Categories -->
+                <TextView
+                    android:id="@+id/categoriesTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Categories: mobile development, programming"
+                    android:textColor="@color/secondary_text_color"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone" />
+
                 <!-- Status -->
                 <TextView
                     android:id="@+id/statusTextView"
@@ -93,7 +115,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Assignment Image (if available) -->
+        <!-- Assignment Images Card (if available) -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,13 +123,36 @@
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp">
 
-            <ImageView
-                android:id="@+id/assignmentImageView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                android:contentDescription="Assignment Image"
-                android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Assignment Images"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="500dp">
+
+                    <LinearLayout
+                        android:id="@+id/assignmentImagesContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+
+                </ScrollView>
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 

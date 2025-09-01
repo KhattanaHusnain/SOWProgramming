@@ -6,13 +6,12 @@ import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.sowp.user.models.AssignmentAttempt;
 import com.sowp.user.models.QuizAttempt;
 import com.sowp.user.models.User;
 import com.sowp.user.utils.UserAuthenticationUtils;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -622,6 +621,63 @@ public class UserRepository {
                 .addOnFailureListener(e -> callback.onFailure("Failed to retrieve assignment attempts: " + e.getMessage()));
     }
 
+    // Enhanced submit assignment attempt method
+    public void submitAssignmentAttempt(AssignmentAttempt attemptData, AssignmentAttemptCallback callback) {
+        String email = userAuthenticationUtils.getCurrentUserEmail();
+        if (email == null) {
+            callback.onFailure("No user is logged in");
+            return;
+        }
+
+        // First, save to user's assignment progress
+        firestore.collection("User")
+                .document(email)
+                .collection("AssignmentProgress")
+                .document(attemptData.getAttemptId())
+                .set(attemptData)
+                .addOnSuccessListener(aVoid -> {
+                    // Then add to unchecked assignments collection
+                    addToUncheckedAssignments(attemptData, email, callback);
+                })
+                .addOnFailureListener(e -> callback.onFailure("Failed to submit assignment: " + e.getMessage()));
+    }
+
+    // Helper method to add assignment to unchecked collection
+    private void addToUncheckedAssignments(AssignmentAttempt attemptData, String userEmail, AssignmentAttemptCallback callback) {
+        // Create document ID using timestamp
+        String uncheckedDocId = String.valueOf(System.currentTimeMillis());
+
+        // Create unchecked assignment data with reference
+        Map<String, Object> uncheckedData = new HashMap<>();
+        uncheckedData.put("userEmail", userEmail);
+        uncheckedData.put("assignmentTitle", attemptData.getAssignmentTitle());
+        uncheckedData.put("createdAt", System.currentTimeMillis());
+
+        // Reference to the actual assignment attempt document
+        DocumentReference attemptRef = firestore.collection("User")
+                .document(userEmail)
+                .collection("AssignmentProgress")
+                .document(attemptData.getAttemptId());
+
+        uncheckedData.put("assignmentAttemptRef", attemptRef);
+
+        // Add to uncheckedAssignments collection
+        firestore.collection("uncheckedAssignments")
+                .document(uncheckedDocId)
+                .set(uncheckedData)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Assignment added to unchecked assignments collection");
+                    callback.onSuccess(attemptData);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to add to unchecked assignments", e);
+                    // Even if unchecked assignment creation fails, the main submission succeeded
+                    // So we still call onSuccess but log the error
+                    callback.onSuccess(attemptData);
+                });
+    }
+
+    // Enhanced method to get assignment attempt details (updated to handle new structure)
     public void getAssignmentAttemptDetails(String attemptId, AssignmentAttemptCallback callback) {
         String email = userAuthenticationUtils.getCurrentUserEmail();
         if (email == null) {
@@ -636,65 +692,23 @@ public class UserRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        AssignmentAttempt attempt = documentSnapshot.toObject(AssignmentAttempt.class);
-                        if (attempt != null) {
-                            attempt.setAttemptId(documentSnapshot.getId());
-                            callback.onSuccess(attempt);
-                        } else {
-                            callback.onFailure("Failed to parse assignment attempt data");
+                        try {
+                            AssignmentAttempt attempt = documentSnapshot.toObject(AssignmentAttempt.class);
+                            if (attempt != null) {
+                                attempt.setAttemptId(documentSnapshot.getId());
+                                callback.onSuccess(attempt);
+                            } else {
+                                callback.onFailure("Failed to parse assignment attempt data");
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing assignment attempt", e);
+                            callback.onFailure("Failed to parse assignment attempt: " + e.getMessage());
                         }
                     } else {
                         callback.onFailure("Assignment attempt not found");
                     }
                 })
                 .addOnFailureListener(e -> callback.onFailure("Failed to retrieve assignment details: " + e.getMessage()));
-    }
-
-    public void submitAssignmentAttempt(int assignmentId, int maxScore, int score, String status,
-                                        List<String> submittedImages, UserCallback callback) {
-        String email = userAuthenticationUtils.getCurrentUserEmail();
-        if (email == null) {
-            callback.onFailure("No user is logged in");
-            return;
-        }
-
-        String attemptId = assignmentId + "_" + System.currentTimeMillis();
-        Map<String, Object> attemptData = new HashMap<>();
-        attemptData.put("assignmentId", assignmentId);
-        attemptData.put("checked", false);
-        attemptData.put("maxScore", maxScore);
-        attemptData.put("score", score);
-        attemptData.put("status", status);
-        attemptData.put("submissionTimestamp", System.currentTimeMillis());
-        attemptData.put("submittedImages", submittedImages);
-
-        firestore.collection("User")
-                .document(email)
-                .collection("AssignmentProgress")
-                .document(attemptId)
-                .set(attemptData)
-                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
-                .addOnFailureListener(e -> callback.onFailure("Failed to submit assignment: " + e.getMessage()));
-    }
-
-    public void updateAssignmentAttempt(String attemptId, int score, boolean checked, UserCallback callback) {
-        String email = userAuthenticationUtils.getCurrentUserEmail();
-        if (email == null) {
-            callback.onFailure("No user is logged in");
-            return;
-        }
-
-        Map<String, Object> updateData = new HashMap<>();
-        updateData.put("score", score);
-        updateData.put("checked", checked);
-
-        firestore.collection("User")
-                .document(email)
-                .collection("AssignmentProgress")
-                .document(attemptId)
-                .update(updateData)
-                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
-                .addOnFailureListener(e -> callback.onFailure("Failed to update assignment: " + e.getMessage()));
     }
 
     public void updateAssignmentAverage(UserCallback callback) {

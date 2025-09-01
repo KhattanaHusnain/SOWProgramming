@@ -91,7 +91,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             setRoleBackground(user.getRole());
 
             // Set verification status
-            if (user.isEmailVerified()) {
+            if (user.getIsVerified()) {
                 ivVerificationStatus.setVisibility(View.VISIBLE);
                 ivVerificationStatus.setImageResource(R.drawable.ic_verified);
             } else {

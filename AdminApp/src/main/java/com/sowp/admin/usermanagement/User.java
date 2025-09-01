@@ -28,7 +28,7 @@ public class User {
     private String role;
     private String semester;
     private String userId;
-    private boolean emailVerified; // This will be fetched from Firebase Auth
+    private boolean isVerified; // This will be fetched from Firebase Auth
 
     public User() {
         // Default constructor required for Firestore
@@ -61,7 +61,7 @@ public class User {
         this.role = role;
         this.semester = semester;
         this.userId = userId;
-        this.emailVerified = false; // Default value
+        this.isVerified = false; // Default value
     }
 
     // Static method to create User from Firestore document
@@ -294,11 +294,11 @@ public class User {
         this.userId = userId;
     }
 
-    public boolean isEmailVerified() {
-        return emailVerified;
+    public boolean getIsVerified() {
+        return isVerified;
     }
 
-    public void setEmailVerified(boolean emailVerified) {
-        this.emailVerified = emailVerified;
+    public void setIsVerified(boolean isVerified) {
+        this.isVerified = isVerified;
     }
 }

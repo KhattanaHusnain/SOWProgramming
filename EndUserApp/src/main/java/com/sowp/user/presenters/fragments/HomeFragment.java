@@ -28,6 +28,7 @@ import com.sowp.user.models.Assignment;
 import com.sowp.user.models.Course;
 import com.sowp.user.models.User;
 
+import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
 import com.sowp.user.presenters.activities.Description;
 import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.presenters.activities.QuizHistoryActivity;
@@ -489,7 +490,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void navigateToAssignmentHistory() {
-        // Navigate to assignment history screen
+        Intent intent = new Intent(getContext(), AssignmentHistoryActivity.class);
+        startActivity(intent);
     }
 
     private void openCourse(Course course) {

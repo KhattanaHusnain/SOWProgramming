@@ -75,17 +75,20 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
     public class AssignmentViewHolder extends RecyclerView.ViewHolder {
 
         // UI Components
+        private TextView tvAssignmentTitle;
         private TextView tvAssignmentId;
         private TextView tvScore;
         private TextView tvPercentage;
         private TextView tvImageCount;
         private TextView tvCheckedStatus;
         private TextView tvSubmissionTime;
+        private TextView tvFeedback;
         private Chip chipStatus;
         private ImageView ivCheckedIcon;
         private MaterialButton btnViewDetails;
         private LinearLayout imageCountLayout;
         private LinearLayout checkedStatusLayout;
+        private LinearLayout feedbackLayout;
 
         public AssignmentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +96,7 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
         }
 
         private void initViews() {
+            tvAssignmentTitle = itemView.findViewById(R.id.tvAssignmentTitle);
             tvAssignmentId = itemView.findViewById(R.id.tvAssignmentId);
             tvScore = itemView.findViewById(R.id.tvScore);
             tvPercentage = itemView.findViewById(R.id.tvPercentage);
@@ -109,8 +113,8 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
         public void bind(AssignmentAttempt attempt) {
             if (attempt == null) return;
 
-            // Set assignment ID with formatting
-            setAssignmentId(attempt.getAssignmentId());
+            // Set assignment title and ID
+            setAssignmentInfo(attempt);
 
             // Set score and percentage
             setScoreAndPercentage(attempt);
@@ -127,13 +131,28 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
             // Set checked status
             setCheckedStatus(attempt.isChecked());
 
+            // Set feedback
+            setFeedback(attempt);
+
             // Set click listener for view details
             setViewDetailsClickListener(attempt);
         }
 
-        private void setAssignmentId(String assignmentId) {
+        private void setAssignmentInfo(AssignmentAttempt attempt) {
+            // Set assignment title if available
+            if (tvAssignmentTitle != null) {
+                String title = attempt.getAssignmentTitle();
+                if (title != null && !title.trim().isEmpty()) {
+                    tvAssignmentTitle.setText(title);
+                    tvAssignmentTitle.setVisibility(View.VISIBLE);
+                } else {
+                    tvAssignmentTitle.setVisibility(View.GONE);
+                }
+            }
+
+            // Set assignment ID
             if (tvAssignmentId != null) {
-                String formattedId = formatAssignmentId(assignmentId);
+                String formattedId = formatAssignmentId(attempt.getAssignmentId());
                 tvAssignmentId.setText(formattedId);
             }
         }
@@ -196,18 +215,29 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
         private void setCheckedStatus(boolean isChecked) {
             if (tvCheckedStatus != null && ivCheckedIcon != null) {
                 if (isChecked) {
-                    tvCheckedStatus.setText("Checked");
+                    tvCheckedStatus.setText("Graded");
                     tvCheckedStatus.setTextColor(ContextCompat.getColor(context, R.color.success_color));
                     ivCheckedIcon.setImageResource(R.drawable.ic_checked);
                     ivCheckedIcon.setColorFilter(ContextCompat.getColor(context, R.color.success_color));
                 } else {
-                    tvCheckedStatus.setText("Not Checked");
+                    tvCheckedStatus.setText("Pending Grade");
                     tvCheckedStatus.setTextColor(ContextCompat.getColor(context, R.color.warning_color));
                     ivCheckedIcon.setImageResource(R.drawable.ic_pending);
                     ivCheckedIcon.setColorFilter(ContextCompat.getColor(context, R.color.warning_color));
                 }
 
                 showCheckedStatusLayout(true);
+            }
+        }
+
+        private void setFeedback(AssignmentAttempt attempt) {
+            if (tvFeedback != null && feedbackLayout != null) {
+                if (attempt.hasFeedback()) {
+                    tvFeedback.setText(attempt.getFeedback());
+                    feedbackLayout.setVisibility(View.VISIBLE);
+                } else {
+                    feedbackLayout.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -223,28 +253,23 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
                     Intent intent = new Intent(context, AssignmentDetailActivity.class);
                     intent.putExtra("attemptId", attempt.getAttemptId());
                     intent.putExtra("assignmentId", attempt.getAssignmentId());
+                    intent.putExtra("courseId", attempt.getCourseId());
                     context.startActivity(intent);
                 });
             }
+
+            // Also make the entire item clickable
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, AssignmentDetailActivity.class);
+                intent.putExtra("attemptId", attempt.getAttemptId());
+                intent.putExtra("assignmentId", attempt.getAssignmentId());
+                intent.putExtra("courseId", attempt.getCourseId());
+                context.startActivity(intent);
+            });
         }
 
-        private String formatAssignmentId(String assignmentId) {
-            if (assignmentId == null || assignmentId.isEmpty()) {
-                return "Unknown Assignment";
-            }
-
-            // Convert "assignment1" to "Assignment 1"
-            if (assignmentId.toLowerCase().startsWith("assignment")) {
-                try {
-                    String number = assignmentId.substring(10); // Remove "assignment"
-                    return "Assignment " + number;
-                } catch (StringIndexOutOfBoundsException e) {
-                    return assignmentId;
-                }
-            }
-
-            // Handle other formats - capitalize first letter
-            return assignmentId.substring(0, 1).toUpperCase() + assignmentId.substring(1);
+        private String formatAssignmentId(int assignmentId) {
+            return "Assignment #" + assignmentId;
         }
 
         private StatusColors getStatusColors(String status) {
@@ -253,17 +278,17 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
                     return new StatusColors(R.color.status_submitted_bg, R.color.status_submitted_text);
                 case "graded":
                     return new StatusColors(R.color.status_graded_bg, R.color.status_graded_text);
+                case "failed":
+                    return new StatusColors(R.color.status_late_bg, R.color.status_late_text);
                 case "pending":
                     return new StatusColors(R.color.status_pending_bg, R.color.status_pending_text);
-                case "late":
-                    return new StatusColors(R.color.status_late_bg, R.color.status_late_text);
                 default:
                     return new StatusColors(R.color.status_default_bg, R.color.status_default_text);
             }
         }
 
         private void setScoreColor(double percentage) {
-            if (tvScore == null) return;
+            if (tvScore == null || tvPercentage == null) return;
 
             int colorRes;
             if (percentage >= 80) {
@@ -275,6 +300,7 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
             }
 
             tvScore.setTextColor(ContextCompat.getColor(context, colorRes));
+            tvPercentage.setTextColor(ContextCompat.getColor(context, colorRes));
         }
     }
 
