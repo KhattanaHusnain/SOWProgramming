@@ -7,8 +7,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -32,11 +34,11 @@ import java.util.List;
 public class ViewAssignmentsActivity extends AppCompatActivity implements AssignmentAdapter.OnAssignmentClickListener {
 
     // UI Components
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private TextView tvCourseTitle, tvCourseCode, tvAssignmentCount, tvPageInfo;
     private MaterialButton btnAddAssignment;
     private TextInputEditText etSearch;
-    private Spinner spinnerFilter;
+    private AutoCompleteTextView spinnerFilter;
     private RecyclerView recyclerViewAssignments;
     private LinearLayout layoutEmptyState, layoutPagination;
     private ProgressBar progressBar;
@@ -117,7 +119,7 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
 
     private void setupSpinner() {
         ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, filterOptions);
+                android.R.layout.simple_dropdown_item_1line, filterOptions);
         filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFilter.setAdapter(filterAdapter);
 
