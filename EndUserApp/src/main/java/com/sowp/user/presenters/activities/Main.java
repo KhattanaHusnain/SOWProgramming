@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.sowp.user.presenters.fragments.ProfileFragment;
-import com.sowp.user.presenters.fragments.AssessmentFragment;
+//import com.sowp.user.presenters.fragments.AssessmentFragment;
 import com.sowp.user.R;
 import com.sowp.user.presenters.fragments.ChatFragment;
 import com.sowp.user.presenters.fragments.CoursesFragment;
@@ -62,7 +62,7 @@ public class Main extends AppCompatActivity {
         fragmentMap.put(R.id.nav_home, new HomeFragment());
         fragmentMap.put(R.id.nav_courses, new CoursesFragment());
         fragmentMap.put(R.id.nav_chat, new ChatFragment());
-        fragmentMap.put(R.id.nav_quizzes, new AssessmentFragment());
+        //fragmentMap.put(R.id.nav_quizzes, new AssessmentFragment());
         fragmentMap.put(R.id.nav_profile, new ProfileFragment());
         // Load Home Fragment by default
         if (savedInstanceState == null) {

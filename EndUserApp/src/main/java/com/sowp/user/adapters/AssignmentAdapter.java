@@ -4,33 +4,35 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton;
+
+import com.google.android.material.card.MaterialCardView;
 import com.sowp.user.R;
 import com.sowp.user.models.Assignment;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder> {
 
     private Context context;
     private List<Assignment> assignmentList;
-    private OnAssignmentItemClickListener onAssignmentItemClickListener;
+    private OnAssignmentClickListener listener;
 
-    public interface OnAssignmentItemClickListener {
-        void onAssignmentItemClick(Assignment assignment);
+    public interface OnAssignmentClickListener {
+        void onAssignmentClick(Assignment assignment);
     }
 
-    public AssignmentAdapter(Context context, List<Assignment> assignmentList) {
+    public AssignmentAdapter(Context context, List<Assignment> assignmentList, OnAssignmentClickListener listener) {
         this.context = context;
         this.assignmentList = assignmentList;
-    }
-
-    public void setOnAssignmentItemClickListener(OnAssignmentItemClickListener listener) {
-        this.onAssignmentItemClickListener = listener;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,7 +45,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         Assignment assignment = assignmentList.get(position);
-        holder.bind(assignment);
+        holder.bind(assignment, listener);
     }
 
     @Override
@@ -51,112 +53,70 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         return assignmentList != null ? assignmentList.size() : 0;
     }
 
-    public void updateAssignments(List<Assignment> newAssignmentList) {
-        this.assignmentList = newAssignmentList;
+    public void updateData(List<Assignment> newAssignmentList) {
+        this.assignmentList.clear();
+        this.assignmentList.addAll(newAssignmentList);
         notifyDataSetChanged();
     }
 
-    public class AssignmentViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView titleTextView;
-        private TextView descriptionTextView;
-        private TextView dueDateTextView;
-        private TextView statusTextView;
-        private MaterialButton viewAssignmentButton;
+    public static class AssignmentViewHolder extends RecyclerView.ViewHolder {
+        private final TextView tvAssignmentNumber;
+        private final TextView tvAssignmentTitle;
+        private final TextView tvSemester;
+        private final TextView tvAssignmentDescription;
+        private final TextView tvTotalScore;
+        private final TextView tvPassingScore;
+        private final TextView tvCreatedDate;
+        private final ImageView ivHasImages;
+        private final TextView tvImageCount;
+        private final CardView assignmentCardView;
 
         public AssignmentViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            titleTextView = itemView.findViewById(R.id.titleTextView);
-            descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
-            dueDateTextView = itemView.findViewById(R.id.dueDateTextView);
-            statusTextView = itemView.findViewById(R.id.statusTextView);
-            viewAssignmentButton = itemView.findViewById(R.id.viewAssignmentButton);
+            tvAssignmentNumber = itemView.findViewById(R.id.tvAssignmentNumber);
+            tvAssignmentTitle = itemView.findViewById(R.id.tvAssignmentTitle);
+            tvSemester = itemView.findViewById(R.id.tvSemester);
+            tvAssignmentDescription = itemView.findViewById(R.id.tvAssignmentDescription);
+            tvTotalScore = itemView.findViewById(R.id.tvTotalScore);
+            tvPassingScore = itemView.findViewById(R.id.tvPassingScore);
+            tvCreatedDate = itemView.findViewById(R.id.tvCreatedDate);
+            ivHasImages = itemView.findViewById(R.id.ivHasImages);
+            tvImageCount = itemView.findViewById(R.id.tvImageCount);
+            assignmentCardView = itemView.findViewById(R.id.assignmentCardView);
         }
 
-        public void bind(Assignment assignment) {
-            // Set title
-            titleTextView.setText(assignment.getTitle() != null ? assignment.getTitle() : "Untitled Assignment");
+        void bind(Assignment assignment, OnAssignmentClickListener listener) {
+            if (assignment == null) return;
 
-            // Set description
-            descriptionTextView.setText(assignment.getDescription() != null ? assignment.getDescription() : "No description available");
+            // Populate assignment data
+            tvAssignmentNumber.setText(String.valueOf(assignment.getOrderIndex()));
+            tvAssignmentTitle.setText(assignment.getTitle() != null ? assignment.getTitle() : "Untitled Assignment");
+            tvSemester.setText(assignment.getSemester() != null ? assignment.getSemester() : "N/A");
+            tvAssignmentDescription.setText(assignment.getDescription() != null ? assignment.getDescription() : "No description available");
+            tvTotalScore.setText(String.valueOf(assignment.getScore()));
+            tvPassingScore.setText(String.valueOf(assignment.getPassingScore()));
 
+            // Set created date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            tvCreatedDate.setText(dateFormat.format(new Date(assignment.getCreatedAt())));
 
-                dueDateTextView.setText("No due date");
-
-            // Set status and update UI accordingly
-            updateStatusAndButton(assignment);
-
-            // Set click listeners
-            viewAssignmentButton.setOnClickListener(v -> {
-                if (onAssignmentItemClickListener != null) {
-                    onAssignmentItemClickListener.onAssignmentItemClick(assignment);
-                }
-            });
-
-            // Set item click listener for the entire card
-            itemView.setOnClickListener(v -> {
-                if (onAssignmentItemClickListener != null) {
-                    onAssignmentItemClickListener.onAssignmentItemClick(assignment);
-                }
-            });
-        }
-
-        private void updateStatusAndButton(Assignment assignment) {
-            String status = getAssignmentStatus(assignment);
-            statusTextView.setText(status);
-
-            // Update status text color based on status
-            switch (status) {
-                case "Submitted":
-                    statusTextView.setTextColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
-                    viewAssignmentButton.setText("View Submission");
-                    break;
-                case "Overdue":
-                    statusTextView.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
-                    viewAssignmentButton.setText("View Assignment");
-                    break;
-                case "In Progress":
-                    statusTextView.setTextColor(ContextCompat.getColor(context, android.R.color.holo_orange_dark));
-                    viewAssignmentButton.setText("Continue");
-                    break;
-                case "Graded":
-                    statusTextView.setTextColor(ContextCompat.getColor(context, android.R.color.holo_blue_dark));
-                    viewAssignmentButton.setText("View Grade");
-                    break;
-                default: // "Not Started"
-                    statusTextView.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray));
-                    viewAssignmentButton.setText("Start Assignment");
-                    break;
+            // Handle images
+            if (assignment.getBase64Images() != null && !assignment.getBase64Images().isEmpty()) {
+                ivHasImages.setVisibility(View.VISIBLE);
+                tvImageCount.setVisibility(View.VISIBLE);
+                tvImageCount.setText(assignment.getBase64Images().size() + " images");
+            } else {
+                ivHasImages.setVisibility(View.GONE);
+                tvImageCount.setVisibility(View.GONE);
             }
+
+            // Set click listener
+            assignmentCardView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onAssignmentClick(assignment);
+                }
+            });
         }
-
-        private String getAssignmentStatus(Assignment assignment) {
-            // Check if assignment has a submission status
-//            if (assignment.getSubmissionStatus() != null) {
-//                switch (assignment.getSubmissionStatus()) {
-//                    case "submitted":
-//                        return assignment.getGrade() != null ? "Graded" : "Submitted";
-//                    case "in_progress":
-//                        return "In Progress";
-//                    case "graded":
-//                        return "Graded";
-//                    default:
-//                        break;
-//                }
-//            }
-//
-//            // Check if assignment is overdue
-//            if (assignment.getDueDate() != null) {
-//                Date currentDate = new Date();
-//                if (assignment.getDueDate().before(currentDate)) {
-//                    return "Overdue";
-//                }
-//            }
-
-            // Default status
-            return "Not Started";
-        }
-
     }
 }

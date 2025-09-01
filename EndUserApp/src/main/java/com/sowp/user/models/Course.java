@@ -20,10 +20,10 @@ public class Course {
     @ColumnInfo(name = "title")
     private String title;
 
-    @ColumnInfo(name = "short_title")
+    @ColumnInfo(name = "shortTitle")
     private String shortTitle;
 
-    @ColumnInfo(name = "course_code")
+    @ColumnInfo(name = "courseCode")
     private String courseCode;
 
     @ColumnInfo(name = "instructor")
@@ -38,10 +38,10 @@ public class Course {
     @ColumnInfo(name = "duration")
     private String duration;
 
-    @ColumnInfo(name = "category_array")
+    @ColumnInfo(name = "categoryArray")
     private List<String> categoryArray;
 
-    @ColumnInfo(name = "department_array")
+    @ColumnInfo(name = "departmentArray")
     private List<String> departmentArray;
 
     @ColumnInfo(name = "outline")
@@ -68,37 +68,37 @@ public class Course {
     @ColumnInfo(name = "tags")
     private List<String> tags;
 
-    @ColumnInfo(name = "pre_requisite")
+    @ColumnInfo(name = "preRequisite")
     private List<String> preRequisite;
 
-    @ColumnInfo(name = "follow_up")
+    @ColumnInfo(name = "followUp")
     private List<String> followUp;
 
-    @ColumnInfo(name = "credit_hours")
+    @ColumnInfo(name = "creditHours")
     private int creditHours;
 
-    @ColumnInfo(name = "is_lab")
+    @ColumnInfo(name = "isLab")
     private boolean isLab; // true for lab, false for theoretical
 
-    @ColumnInfo(name = "is_computer")
+    @ColumnInfo(name = "isComputer")
     private boolean isComputer; // true for computer-based, false for non-computer
 
     @ColumnInfo(name = "language")
     private String language;
 
-    @ColumnInfo(name = "no_of_quizzes")
+    @ColumnInfo(name = "noOfQuizzes")
     private int noOfQuizzes;
 
-    @ColumnInfo(name = "no_of_assignments")
+    @ColumnInfo(name = "noOfAssignments")
     private int noOfAssignments;
 
     @ColumnInfo(name = "level")
     private String level; // e.g., "Beginner", "Intermediate", "Advanced"
 
-    @ColumnInfo(name = "is_paid")
+    @ColumnInfo(name = "isPaid")
     private boolean isPaid;
 
-    @ColumnInfo(name = "avg_course_rating")
+    @ColumnInfo(name = "avgCourseRating")
     private double avgCourseRating;
 
     // Default constructor

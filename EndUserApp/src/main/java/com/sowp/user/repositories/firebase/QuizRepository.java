@@ -16,6 +16,7 @@ public class QuizRepository {
     private FirebaseFirestore db;
     Context context;
     private static final int PAGE_SIZE = 10;
+    private static final String TAG = "QuizRepository";
 
     public QuizRepository(Context context) {
         this.context = context;
@@ -33,59 +34,172 @@ public class QuizRepository {
     }
 
     public void loadRecentQuizzes(Callback callback) {
-        db.collection("quizzes")
-                .limit(2)
-                .whereEqualTo("active", true)
+        // First get all courses to then fetch their quizzes
+        db.collection("Course")
+                .limit(5) // Limit courses to search through
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Quiz> quizzes = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Quiz quiz = document.toObject(Quiz.class);
-                        quiz.setQuizId(Integer.parseInt(document.getId())); // Set document ID
-                        quizzes.add(quiz);
+                .addOnSuccessListener(courseSnapshots -> {
+                    List<Quiz> allQuizzes = new ArrayList<>();
+                    int[] pendingQueries = {courseSnapshots.size()};
+
+                    if (courseSnapshots.isEmpty()) {
+                        callback.onSuccess(allQuizzes);
+                        return;
                     }
-                    callback.onSuccess(quizzes);
+
+                    for (QueryDocumentSnapshot courseDoc : courseSnapshots) {
+                        String courseId = courseDoc.getId();
+
+                        // Fetch quizzes for this course
+                        db.collection("Course")
+                                .document(courseId)
+                                .collection("Quizzes")
+                                .whereEqualTo("active", true)
+                                .limit(1) // Get only 1 recent quiz per course
+                                .get()
+                                .addOnSuccessListener(quizSnapshots -> {
+                                    for (QueryDocumentSnapshot quizDoc : quizSnapshots) {
+                                        try {
+                                            Quiz quiz = quizDoc.toObject(Quiz.class);
+                                            quiz.setQuizId(Integer.parseInt(quizDoc.getId()));
+                                            quiz.setCourseId(Integer.parseInt(courseId));
+                                            allQuizzes.add(quiz);
+                                        } catch (NumberFormatException e) {
+                                            Log.e(TAG, "Error parsing quiz ID: " + quizDoc.getId(), e);
+                                        }
+                                    }
+
+                                    pendingQueries[0]--;
+                                    if (pendingQueries[0] == 0) {
+                                        // Sort by creation date and take only 2 most recent
+                                        allQuizzes.sort((q1, q2) -> Long.compare(q2.getCreatedAt(), q1.getCreatedAt()));
+                                        List<Quiz> recentQuizzes = allQuizzes.size() > 2 ?
+                                                allQuizzes.subList(0, 2) : allQuizzes;
+                                        callback.onSuccess(recentQuizzes);
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error loading quizzes for course " + courseId, e);
+                                    pendingQueries[0]--;
+                                    if (pendingQueries[0] == 0) {
+                                        allQuizzes.sort((q1, q2) -> Long.compare(q2.getCreatedAt(), q1.getCreatedAt()));
+                                        List<Quiz> recentQuizzes = allQuizzes.size() > 2 ?
+                                                allQuizzes.subList(0, 2) : allQuizzes;
+                                        callback.onSuccess(recentQuizzes);
+                                    }
+                                });
+                    }
                 })
                 .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading courses", e);
                     callback.onFailure("Error loading quizzes");
                 });
     }
 
-    public void loadQuizzesWithPagination(List<Integer> courses, DocumentSnapshot lastDocument, PaginatedCallback callback) {
-        Query query = db.collection("quizzes")
+    public void loadQuizzesForCourse(int courseId, Callback callback) {
+        db.collection("Course")
+                .document(String.valueOf(courseId))
+                .collection("Quizzes")
                 .whereEqualTo("active", true)
-                .limit(PAGE_SIZE);
-
-        if (courses != null && !courses.isEmpty()) {
-            query = query.whereIn("course", courses);
-        }
-
-        if (lastDocument != null) {
-            query = query.startAfter(lastDocument);
-        }
-
-        query.get()
+                .orderBy("orderIndex", Query.Direction.ASCENDING)
+                .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Quiz> quizzes = new ArrayList<>();
-                    DocumentSnapshot lastDoc = null;
-
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Quiz quiz = document.toObject(Quiz.class);
-                        quiz.setQuizId(Integer.parseInt(document.getId()));
-                        quizzes.add(quiz);
-                        lastDoc = document;
+                        try {
+                            Quiz quiz = document.toObject(Quiz.class);
+                            quiz.setQuizId(Integer.parseInt(document.getId()));
+                            quiz.setCourseId(courseId);
+                            quizzes.add(quiz);
+                        } catch (NumberFormatException e) {
+                            Log.e(TAG, "Error parsing quiz ID: " + document.getId(), e);
+                        }
                     }
-
-                    boolean hasMore = queryDocumentSnapshots.size() == PAGE_SIZE;
-                    callback.onSuccess(quizzes, lastDoc, hasMore);
+                    callback.onSuccess(quizzes);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("QuizRepository", "Error loading quizzes", e);
-                    callback.onFailure("Error loading quizzes: " + e.getMessage());
+                    Log.e(TAG, "Error loading quizzes for course " + courseId, e);
+                    callback.onFailure("Error loading quizzes for course");
                 });
     }
 
-    public void loadFirstPageQuizzes(List<Integer> courses, PaginatedCallback callback) {
-        loadQuizzesWithPagination(courses, null, callback);
+    public void loadQuizzesWithPagination(List<Integer> courseIds, DocumentSnapshot lastDocument, PaginatedCallback callback) {
+        if (courseIds == null || courseIds.isEmpty()) {
+            callback.onSuccess(new ArrayList<>(), null, false);
+            return;
+        }
+
+        // For pagination across multiple courses, we'll need to implement a more complex solution
+        // For now, let's implement a simplified version that gets quizzes from all specified courses
+        List<Quiz> allQuizzes = new ArrayList<>();
+        int[] pendingQueries = {courseIds.size()};
+
+        for (Integer courseId : courseIds) {
+            Query query = db.collection("Course")
+                    .document(String.valueOf(courseId))
+                    .collection("Quizzes")
+                    .whereEqualTo("active", true)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+                    .limit(PAGE_SIZE);
+
+            query.get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            try {
+                                Quiz quiz = document.toObject(Quiz.class);
+                                quiz.setQuizId(Integer.parseInt(document.getId()));
+                                quiz.setCourseId(courseId);
+                                allQuizzes.add(quiz);
+                            } catch (NumberFormatException e) {
+                                Log.e(TAG, "Error parsing quiz ID: " + document.getId(), e);
+                            }
+                        }
+
+                        pendingQueries[0]--;
+                        if (pendingQueries[0] == 0) {
+                            // Sort all quizzes by creation date
+                            allQuizzes.sort((q1, q2) -> Long.compare(q2.getCreatedAt(), q1.getCreatedAt()));
+
+                            // Apply pagination
+                            int startIndex = 0;
+                            if (lastDocument != null) {
+                                // Find the position of the last document
+                                for (int i = 0; i < allQuizzes.size(); i++) {
+                                    if (allQuizzes.get(i).getCreatedAt() < lastDocument.getLong("createdAt")) {
+                                        startIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            int endIndex = Math.min(startIndex + PAGE_SIZE, allQuizzes.size());
+                            List<Quiz> pageQuizzes = allQuizzes.subList(startIndex, endIndex);
+
+                            DocumentSnapshot newLastDoc = pageQuizzes.isEmpty() ? null :
+                                    createMockDocumentSnapshot(pageQuizzes.get(pageQuizzes.size() - 1));
+                            boolean hasMore = endIndex < allQuizzes.size();
+
+                            callback.onSuccess(pageQuizzes, newLastDoc, hasMore);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error loading quizzes for course " + courseId, e);
+                        pendingQueries[0]--;
+                        if (pendingQueries[0] == 0) {
+                            allQuizzes.sort((q1, q2) -> Long.compare(q2.getCreatedAt(), q1.getCreatedAt()));
+                            callback.onSuccess(allQuizzes, null, false);
+                        }
+                    });
+        }
+    }
+
+    public void loadFirstPageQuizzes(List<Integer> courseIds, PaginatedCallback callback) {
+        loadQuizzesWithPagination(courseIds, null, callback);
+    }
+
+    private DocumentSnapshot createMockDocumentSnapshot(Quiz quiz) {
+        // This is a simplified approach - in a real implementation, you might want to
+        // store the actual DocumentSnapshot references or implement a different pagination strategy
+        return null;
     }
 }

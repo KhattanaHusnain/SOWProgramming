@@ -52,9 +52,9 @@ public class SplashScreen extends AppCompatActivity {
     private void goToNextScreen() {
         // Only proceed if we haven't already navigated away
         if(!NetworkUtils.isNetworkAvailable(this)) {
-            Intent intent = new Intent(this, OfflineCourseActivity.class);
-            startActivity(intent);
-            finish();
+//            Intent intent = new Intent(this, OfflineCourseActivity.class);
+//            startActivity(intent);
+//            finish();
         } else {
             Intent intent = userAuthenticationUtils.isUserLoggedIn()
                     ? new Intent(this, Main.class)

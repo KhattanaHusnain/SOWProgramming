@@ -33,7 +33,7 @@
             android:clipToPadding="false"
             android:padding="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/topic_item" />
+            tools:listitem="@layout/item_topic" />
 
         <include
             android:id="@+id/empty_view"

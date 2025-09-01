@@ -19,7 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.sowp.user.R;
 import com.sowp.user.models.User;
-import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
+//import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
 import com.sowp.user.presenters.activities.Login;
 import com.sowp.user.presenters.activities.QuizHistoryActivity;
 import com.sowp.user.repositories.firebase.UserRepository;
@@ -236,13 +236,13 @@ public class ProfileFragment extends Fragment {
     private void setupClickListeners() {
 
         assignmentHistory.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), AssignmentHistoryActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getContext(), AssignmentHistoryActivity.class);
+//            startActivity(intent);
         });
 
         quizeHistory.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), QuizHistoryActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getContext(), QuizHistoryActivity.class);
+//            startActivity(intent);
         });
         // Notification switch listener
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
