@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -36,7 +37,7 @@ import java.util.Map;
 public class EditQuizActivity extends AppCompatActivity {
 
     // UI Components
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private ProgressBar progressBar;
     private ScrollView scrollViewContent;
     private LinearLayout layoutActionButtons;
