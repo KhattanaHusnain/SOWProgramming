@@ -1,324 +1,316 @@
-//package com.sowp.user.presenters.fragments;
-//
-//import android.os.Bundle;
-//import androidx.annotation.NonNull;
-//import androidx.fragment.app.Fragment;
-//import androidx.viewpager2.adapter.FragmentStateAdapter;
-//import androidx.viewpager2.widget.ViewPager2;
-//import android.util.Log;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.ProgressBar;
-//import android.widget.Toast;
-//
-//import com.sowp.user.R;
-//import com.sowp.user.models.Assignment;
-//import com.sowp.user.models.Quiz;
-//import com.sowp.user.repositories.firebase.QuizRepository;
-//import com.sowp.user.repositories.firebase.AssignmentRepository;
-//import com.sowp.user.utils.UserAuthenticationUtils;
-//import com.google.android.material.tabs.TabLayout;
-//import com.google.android.material.tabs.TabLayoutMediator;
-//import com.google.firebase.firestore.DocumentSnapshot;
-//import com.google.firebase.firestore.FirebaseFirestore;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class AssessmentFragment extends Fragment {
-//
-//    private static final String TAG = "AssessmentFragment";
-//    private static final String[] TAB_TITLES = new String[]{"Quizzes", "Assignments"};
-//
-//    private ViewPager2 viewPager;
-//    private TabLayout tabLayout;
-//    private ProgressBar progressBar;
-//
-//    private List<Quiz> quizList = new ArrayList<>();
-//    private List<Assignment> assignmentList = new ArrayList<>();
-//    private List<Integer> courses = new ArrayList<>();
-//    private DocumentSnapshot lastQuizDocument = null;
-//    private DocumentSnapshot lastAssignmentDocument = null;
-//    private boolean hasMoreQuizzes = false;
-//    private boolean hasMoreAssignments = false;
-//
-//    private FirebaseFirestore db;
-//    private UserAuthenticationUtils userAuthenticationUtils;
-//    private QuizRepository quizRepository;
-//    private AssignmentRepository assignmentRepository;
-//    private PagerAdapter pagerAdapter;
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_assessment, container, false);
-//
-//        // Initialize views
-//        viewPager = view.findViewById(R.id.viewPager);
-//        tabLayout = view.findViewById(R.id.tabLayout);
-//        progressBar = view.findViewById(R.id.progressBar);
-//        userAuthenticationUtils = new UserAuthenticationUtils(getContext());
-//
-//        // Initialize Firestore and Repository
-//        db = FirebaseFirestore.getInstance();
-//        quizRepository = new QuizRepository(getContext());
-//        assignmentRepository = new AssignmentRepository(getContext());
-//
-//        // Load data from Firestore
-//        loadData();
-//
-//        return view;
-//    }
-//
-//    private void loadData() {
-//        progressBar.setVisibility(View.VISIBLE);
-//        db.collection("User").document(userAuthenticationUtils.getCurrentUserEmail()).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                courses = (List<Integer>) task.getResult().get("enrolledCourses");
-//                if (courses == null) {
-//                    Toast.makeText(getContext(),"Join a course to view it's quizzes", Toast.LENGTH_SHORT).show();
-//                    loadAssignmentsFirstPage(); // Still load assignments
-//                } else {
-//                    loadQuizzesFirstPage();
-//                }
-//            } else {
-//                Log.e(TAG, "Error loading user courses", task.getException());
-//                loadAssignmentsFirstPage(); // Still try to load assignments
-//            }
-//        });
-//    }
-//
-//    private void loadQuizzesFirstPage() {
-//        quizRepository.loadFirstPageQuizzes(courses, new QuizRepository.PaginatedCallback() {
-//            @Override
-//            public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
-//                quizList.clear();
-//                quizList.addAll(quizzes);
-//                lastQuizDocument = lastDocument;
-//                hasMoreQuizzes = hasMore;
-//                Log.d(TAG, "Loaded " + quizList.size() + " quizzes (first page)");
-//                loadAssignmentsFirstPage();
-//            }
-//
-//            @Override
-//            public void onFailure(String message) {
-//                Log.e(TAG, "Error loading quizzes: " + message);
-//                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//                loadAssignmentsFirstPage(); // Still try to load assignments
-//            }
-//        });
-//    }
-//
-//    public void loadMoreQuizzes(QuizRepository.PaginatedCallback callback) {
-//        if (!hasMoreQuizzes) {
-//            callback.onSuccess(new ArrayList<>(), null, false);
-//            return;
-//        }
-//
-//        quizRepository.loadQuizzesWithPagination(courses, lastQuizDocument, new QuizRepository.PaginatedCallback() {
-//            @Override
-//            public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
-//                quizList.addAll(quizzes);
-//                lastQuizDocument = lastDocument;
-//                hasMoreQuizzes = hasMore;
-//                Log.d(TAG, "Loaded " + quizzes.size() + " more quizzes. Total: " + quizList.size());
-//                callback.onSuccess(quizzes, lastDocument, hasMore);
-//            }
-//
-//            @Override
-//            public void onFailure(String message) {
-//                Log.e(TAG, "Error loading more quizzes: " + message);
-//                callback.onFailure(message);
-//            }
-//        });
-//    }
-//
-//    public void refreshQuizzes(QuizRepository.PaginatedCallback callback) {
-//        // Reset pagination state
-//        lastQuizDocument = null;
-//        hasMoreQuizzes = false;
-//
-//        quizRepository.loadFirstPageQuizzes(courses, new QuizRepository.PaginatedCallback() {
-//            @Override
-//            public void onSuccess(List<Quiz> quizzes, DocumentSnapshot lastDocument, boolean hasMore) {
-//                quizList.clear();
-//                quizList.addAll(quizzes);
-//                lastQuizDocument = lastDocument;
-//                hasMoreQuizzes = hasMore;
-//                Log.d(TAG, "Refreshed quizzes. Loaded: " + quizList.size());
-//                callback.onSuccess(quizzes, lastDocument, hasMore);
-//            }
-//
-//            @Override
-//            public void onFailure(String message) {
-//                Log.e(TAG, "Error refreshing quizzes: " + message);
-//                callback.onFailure(message);
-//            }
-//        });
-//    }
-//
-////    public void loadMoreAssignments(AssignmentRepository.PaginatedCallback callback) {
-////        if (!hasMoreAssignments) {
-////            callback.onSuccess(new ArrayList<>(), null, false);
-////            return;
-////        }
-////
-////        assignmentRepository.loadAssignmentsWithPagination(lastAssignmentDocument, new AssignmentRepository.PaginatedCallback() {
-////            @Override
-////            public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
-////                // Load progress first, then filter
-////                loadAssignmentProgressAndFilter(assignments, (filteredAssignments) -> {
-////                    assignmentList.addAll(filteredAssignments);
-////                    lastAssignmentDocument = lastDocument;
-////                    hasMoreAssignments = hasMore;
-////                    Log.d(TAG, "Loaded " + filteredAssignments.size() + " more assignments (filtered). Total: " + assignmentList.size());
-////                    callback.onSuccess(filteredAssignments, lastDocument, hasMore);
-////                });
-////            }
-////
-////            @Override
-////            public void onFailure(String message) {
-////                Log.e(TAG, "Error loading more assignments: " + message);
-////                callback.onFailure(message);
-////            }
-////        });
-////    }
-////
-////    public void refreshAssignments(AssignmentRepository.PaginatedCallback callback) {
-////        // Reset pagination state
-////        lastAssignmentDocument = null;
-////        hasMoreAssignments = false;
-////
-////        assignmentRepository.loadFirstPageAssignments(new AssignmentRepository.PaginatedCallback() {
-////            @Override
-////            public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
-////                assignmentList.clear();
-////
-////                // Load assignment progress and filter out submitted assignments
-////                loadAssignmentProgressAndFilter(assignments, (filteredAssignments) -> {
-////                    assignmentList.addAll(filteredAssignments);
-////                    lastAssignmentDocument = lastDocument;
-////                    hasMoreAssignments = hasMore;
-////                    Log.d(TAG, "Refreshed assignments. Loaded: " + filteredAssignments.size() + " (filtered out submitted)");
-////
-////                    if (callback != null) {
-////                        callback.onSuccess(filteredAssignments, lastDocument, hasMore);
-////                    }
-////                });
-////            }
-////
-////            @Override
-////            public void onFailure(String message) {
-////                Log.e(TAG, "Error refreshing assignments: " + message);
-////                if (callback != null) {
-////                    callback.onFailure(message);
-////                }
-////            }
-////        });
-////    }
-////
-////    private void loadAssignmentsFirstPage() {
-////        assignmentRepository.loadFirstPageAssignments(new AssignmentRepository.PaginatedCallback() {
-////            @Override
-////            public void onSuccess(List<Assignment> assignments, DocumentSnapshot lastDocument, boolean hasMore) {
-////                assignmentList.clear();
-////
-////                // Load assignment progress and filter out submitted assignments
-////                loadAssignmentProgressAndFilter(assignments, (filteredAssignments) -> {
-////                    assignmentList.addAll(filteredAssignments);
-////                    lastAssignmentDocument = lastDocument;
-////                    hasMoreAssignments = hasMore;
-////                    Log.d(TAG, "Loaded " + filteredAssignments.size() + " assignments (first page, filtered out submitted)");
-////                    checkDataLoaded();
-////                });
-////            }
-////
-////            @Override
-////            public void onFailure(String message) {
-////                Log.e(TAG, "Error loading assignments: " + message);
-////                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-////                checkDataLoaded(); // Still setup UI even if assignments fail
-////            }
-////        });
-////    }
-//
-//    private void loadAssignmentProgressAndFilter(List<Assignment> assignments, FilterCallback callback) {
-//        if (assignments.isEmpty()) {
-//            callback.onFiltered(new ArrayList<>());
-//            return;
-//        }
-//
-//        int[] completedCount = {0}; // Array to allow modification in lambda
-//        List<Assignment> filteredAssignments = new ArrayList<>();
-//
-//        for (Assignment assignment : assignments) {
-//            db.collection("User/" + userAuthenticationUtils.getCurrentUserEmail() + "/AssignmentProgress")
-//                    .whereEqualTo("assignmentId", assignment.getId())
-//                    .get().addOnCompleteListener(task1 -> {
-//                        if (task1.isSuccessful()) {
-//                            if (!task1.getResult().isEmpty()) {
-//                                // Don't add submitted assignments to filtered list
-//                            } else {
-//                                filteredAssignments.add(assignment); // Only add non-submitted assignments
-//                            }
-//                        } else {
-//                            filteredAssignments.add(assignment); // Add if status check failed (assume not submitted)
-//                        }
-//
-//                        completedCount[0]++;
-//                        if (completedCount[0] == assignments.size()) {
-//                            // All assignment progress checked, return filtered list
-//                            callback.onFiltered(filteredAssignments);
-//                        }
-//                    });
-//        }
-//    }
-//
-//    // Interface for filtering callback
-//    private interface FilterCallback {
-//        void onFiltered(List<Assignment> filteredAssignments);
-//    }
-//
-//    private void checkDataLoaded() {
-//        // If both quizzes and assignments are loaded, set up the ViewPager
-//        if (quizList.size() >= 0 && assignmentList.size() >= 0) {
-//            setupViewPager();
-//            progressBar.setVisibility(View.GONE);
-//        }
-//    }
-//
-//    private void setupViewPager() {
-//        pagerAdapter = new PagerAdapter(this);
-//        viewPager.setAdapter(pagerAdapter);
-//
-//        // Connect TabLayout with ViewPager2
-//        new TabLayoutMediator(tabLayout, viewPager,
-//                (tab, position) -> tab.setText(TAB_TITLES[position])
-//        ).attach();
-//    }
-//
-//    // ViewPager2 adapter
-//    private class PagerAdapter extends FragmentStateAdapter {
-//
-//        public PagerAdapter(Fragment fragment) {
-//            super(fragment);
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Fragment createFragment(int position) {
-//            // Return the appropriate fragment for each tab
-//            if (position == 0) {
-//                return QuizListFragment.newInstance(quizList, AssessmentFragment.this);
-//            } else {
-//                return AssignmentListFragment.newInstance(assignmentList, AssessmentFragment.this);
-//            }
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return TAB_TITLES.length;
-//        }
-//    }
-//}
+package com.sowp.user.presenters.fragments;
+
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.sowp.user.R;
+import com.sowp.user.adapters.CourseAdapter;
+import com.sowp.user.models.Course;
+import com.sowp.user.models.User;
+import com.sowp.user.presenters.activities.ViewAssignmentsActivity;
+import com.sowp.user.presenters.activities.ViewQuizzesActivity;
+import com.sowp.user.repositories.firebase.CourseRepository;
+import com.sowp.user.repositories.firebase.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class AssessmentFragment extends Fragment implements CourseAdapter.OnCourseClickListener {
+    private static final String TAG = "AssessmentFragment";
+    private static final int PAGE_SIZE = 10;
+
+    // Views
+    private TextView quizAvgTextView;
+    private TextView assignmentAvgTextView;
+    private TextView totalCoursesTextView;
+    private RecyclerView coursesRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar loadingProgressBar;
+    private TextView emptyStateTextView;
+
+    // Data and repositories
+    private UserRepository userRepository;
+    private CourseRepository courseRepository;
+    private CourseAdapter courseAdapter;
+    private List<Course> allCourses;
+    private List<Course> enrolledCourses;
+    private User currentUser;
+
+    // Pagination
+    private int currentPage = 0;
+    private boolean isLoading = false;
+    private boolean hasMoreData = true;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_assessment, container, false);
+        initViews(view);
+        initRepositories();
+        setupRecyclerView();
+        setupSwipeRefresh();
+        loadData();
+        return view;
+    }
+
+    private void initViews(View view) {
+        quizAvgTextView = view.findViewById(R.id.quizAvgTextView);
+        assignmentAvgTextView = view.findViewById(R.id.assignmentAvgTextView);
+        totalCoursesTextView = view.findViewById(R.id.totalCoursesTextView);
+        coursesRecyclerView = view.findViewById(R.id.coursesRecyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar);
+        emptyStateTextView = view.findViewById(R.id.emptyStateTextView);
+    }
+
+    private void initRepositories() {
+        userRepository = new UserRepository(getContext());
+        courseRepository = new CourseRepository(getContext());
+        allCourses = new ArrayList<>();
+        enrolledCourses = new ArrayList<>();
+    }
+
+    private void setupRecyclerView() {
+        courseAdapter = new CourseAdapter(getContext(), enrolledCourses, this);
+        coursesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        coursesRecyclerView.setAdapter(courseAdapter);
+
+        // Add pagination scroll listener
+        coursesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null && !isLoading && hasMoreData) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0) {
+                        loadMoreCourses();
+                    }
+                }
+            }
+        });
+    }
+
+    private void setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 0;
+            hasMoreData = true;
+            enrolledCourses.clear();
+            courseAdapter.notifyDataSetChanged();
+            loadData();
+        });
+    }
+
+    private void loadData() {
+        showLoading(true);
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        userRepository.loadUserData(new UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                currentUser = user;
+                updateUserPerformance(user);
+                loadAllCourses();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                showLoading(false);
+                showError("Failed to load user data: " + message);
+                Log.e(TAG, "Failed to load user data: " + message);
+            }
+        });
+    }
+
+    private void updateUserPerformance(User user) {
+        if (getContext() == null) return;
+
+        // Update quiz average
+        float quizAvg = user.getQuizzesAvg();
+        quizAvgTextView.setText(String.format(Locale.getDefault(), "%.1f%%", quizAvg));
+
+        // Update assignment average
+        float assignmentAvg = user.getAssignmentAvg();
+        assignmentAvgTextView.setText(String.format(Locale.getDefault(), "%.1f%%", assignmentAvg));
+
+        // Update total enrolled courses count
+        List<Integer> enrolledCourseIds = user.getEnrolledCourses();
+        int totalEnrolled = enrolledCourseIds != null ? enrolledCourseIds.size() : 0;
+        totalCoursesTextView.setText(String.valueOf(totalEnrolled));
+    }
+
+    private void loadAllCourses() {
+        courseRepository.loadCourses(new CourseRepository.Callback() {
+            @Override
+            public void onSuccess(List<Course> courses) {
+                allCourses.clear();
+                allCourses.addAll(courses);
+                filterEnrolledCourses();
+                loadMoreCourses();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                showLoading(false);
+                showError("Failed to load courses: " + message);
+                Log.e(TAG, "Failed to load courses: " + message);
+            }
+        });
+    }
+
+    private void filterEnrolledCourses() {
+        if (currentUser == null || currentUser.getEnrolledCourses() == null) {
+            showLoading(false);
+            showEmptyState(true);
+            return;
+        }
+
+        List<Integer> enrolledIds = currentUser.getEnrolledCourses();
+        List<Course> filteredCourses = new ArrayList<>();
+
+        for (Course course : allCourses) {
+            for (Integer enrolledId : enrolledIds) {
+                if (enrolledId == course.getId()) {
+                    filteredCourses.add(course);
+                    break;
+                }
+            }
+        }
+
+        allCourses.clear();
+        allCourses.addAll(filteredCourses);
+    }
+
+    private void loadMoreCourses() {
+        if (isLoading || !hasMoreData) return;
+
+        isLoading = true;
+
+        int startIndex = currentPage * PAGE_SIZE;
+        int endIndex = Math.min(startIndex + PAGE_SIZE, allCourses.size());
+
+        if (startIndex >= allCourses.size()) {
+            hasMoreData = false;
+            isLoading = false;
+            showLoading(false);
+            return;
+        }
+
+        List<Course> pageData = allCourses.subList(startIndex, endIndex);
+        enrolledCourses.addAll(pageData);
+
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                courseAdapter.notifyDataSetChanged();
+                currentPage++;
+                isLoading = false;
+                showLoading(false);
+                swipeRefreshLayout.setRefreshing(false);
+
+                // Check if we have more data
+                if (endIndex >= allCourses.size()) {
+                    hasMoreData = false;
+                }
+
+                // Show empty state if no courses
+                showEmptyState(enrolledCourses.isEmpty());
+            });
+        }
+    }
+
+    @Override
+    public void onCourseClick(Course course) {
+        showAssessmentTypeDialog(course);
+    }
+
+    private void showAssessmentTypeDialog(Course course) {
+        if (getContext() == null) return;
+
+        String[] options = {"Quizzes", "Assignments"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Choose Assessment Type");
+        builder.setItems(options, (dialog, which) -> {
+            Intent intent;
+            switch (which) {
+                case 0: // Quizzes
+                    intent = new Intent(getContext(), ViewQuizzesActivity.class);
+                    break;
+                case 1: // Assignments
+                    intent = new Intent(getContext(), ViewAssignmentsActivity.class);
+                    break;
+                default:
+                    return;
+            }
+            intent.putExtra("COURSE_ID", course.getId());
+            startActivity(intent);
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        builder.create().show();
+    }
+
+    private void showLoading(boolean show) {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            if (loadingProgressBar != null) {
+                loadingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    private void showEmptyState(boolean show) {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            if (emptyStateTextView != null) {
+                emptyStateTextView.setVisibility(show ? View.VISIBLE : View.GONE);
+                emptyStateTextView.setText("No enrolled courses found. Enroll in courses to view your assessments.");
+            }
+            if (coursesRecyclerView != null) {
+                coursesRecyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+    }
+
+    private void showError(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void refreshData() {
+        currentPage = 0;
+        hasMoreData = true;
+        enrolledCourses.clear();
+        if (courseAdapter != null) {
+            courseAdapter.notifyDataSetChanged();
+        }
+        loadData();
+    }
+}
