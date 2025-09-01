@@ -364,18 +364,19 @@ public class UserRepository {
                 .addOnFailureListener(e -> callback.onFailure("Failed to check enrollment status: " + e.getMessage()));
     }
 
-    public void submitQuizAttempt(String quizId, Map<String, Object> quizAttemptData, UserCallback callback) {
+    public void submitQuizAttempt(Map<String, Object> quizAttemptData, UserCallback callback) {
         String email = userAuthenticationUtils.getCurrentUserEmail();
-        String attemptId = quizId + "_" + System.currentTimeMillis();
+        String attemptId = quizAttemptData.get("attemptId").toString();
 
-        DocumentReference docRef = firestore
-                .collection("User")
+        firestore.collection("User")
                 .document(email)
                 .collection("QuizProgress")
-                .document(attemptId);
+                .document(attemptId)
+                .set(quizAttemptData, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
 
-        docRef.set(quizAttemptData, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                    callback.onSuccess(null);
+                })
                 .addOnFailureListener(e -> callback.onFailure(
                         e.getMessage() != null ? e.getMessage() : "Failed to submit quiz"));
     }
@@ -539,12 +540,11 @@ public class UserRepository {
 
     public void updateQuizAverage(UserCallback callback) {
         String email = userAuthenticationUtils.getCurrentUserEmail();
-        CollectionReference progressRef = firestore
+        firestore
                 .collection("User")
                 .document(email)
-                .collection("QuizProgress");
-
-        progressRef.get()
+                .collection("QuizProgress")
+                .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<DocumentSnapshot> docs = task.getResult().getDocuments();
@@ -555,13 +555,13 @@ public class UserRepository {
 
                         Map<String, Integer> bestScores = new HashMap<>();
                         for (DocumentSnapshot doc : docs) {
-                            String quizId = doc.getString("quizId");
+                            int quizId = Math.toIntExact(doc.getLong("quizId"));
                             Long score = doc.getLong("score");
 
-                            if (quizId != null && score != null) {
+                            if (score != null) {
                                 int currentScore = score.intValue();
-                                if (!bestScores.containsKey(quizId) || bestScores.get(quizId) < currentScore) {
-                                    bestScores.put(quizId, currentScore);
+                                if (!bestScores.containsKey(String.valueOf(quizId)) || bestScores.get(String.valueOf(quizId)) < currentScore) {
+                                    bestScores.put(String.valueOf(quizId), currentScore);
                                 }
                             }
                         }

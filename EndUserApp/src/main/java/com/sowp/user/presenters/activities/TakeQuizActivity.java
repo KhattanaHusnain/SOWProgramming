@@ -388,7 +388,7 @@ public class TakeQuizActivity extends AppCompatActivity {
         Map<String, Object> quizAttempt = createQuizAttemptData(score, passed, timeTaken);
 
         // Update user progress in Firestore with detailed information
-        userRepository.submitQuizAttempt(quizId, quizAttempt, new UserRepository.UserCallback() {
+        userRepository.submitQuizAttempt(quizAttempt, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
                 Toast.makeText(TakeQuizActivity.this,
@@ -424,7 +424,7 @@ public class TakeQuizActivity extends AppCompatActivity {
         Map<String, Object> attemptData = new HashMap<>();
 
         // Generate unique attempt ID
-        String attemptId = courseId+"_"+quizId;
+        String attemptId = courseId+"_"+quizId+"_"+System.currentTimeMillis();
 
         // Basic quiz information
         attemptData.put("attemptId", attemptId);
