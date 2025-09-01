@@ -1,4 +1,4 @@
-package com.sowp.admin.topicmanagement;
+package com.sowp.admin.quizmanagement;
 
 import java.util.List;
 

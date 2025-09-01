@@ -25,7 +25,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.sowp.admin.topicmanagement.Question;
 import com.sowp.admin.R;
 import com.sowp.admin.coursemanagement.Course;
 

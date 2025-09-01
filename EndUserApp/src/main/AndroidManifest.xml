@@ -73,7 +73,7 @@
             android:name=".presenters.activities.VideoPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".presenters.activities.QuizActivity"
+            android:name=".presenters.activities.TakeQuizActivity"
             android:exported="false" />
         <activity
             android:name=".presenters.activities.ForgotPassword"

@@ -82,6 +82,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Quiz History");
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
@@ -117,7 +118,9 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
                 runOnUiThread(() -> {
                     showLoading(false);
                     allAttempts.clear();
-                    allAttempts.addAll(attempts);
+                    if (attempts != null) {
+                        allAttempts.addAll(attempts);
+                    }
 
                     if (allAttempts.isEmpty()) {
                         showEmptyState();
@@ -126,7 +129,6 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
                         updateStats();
                         updateCurrentPage();
                         showContent();
-                        adapter.updateData(currentPageAttempts);
                     }
                 });
             }
@@ -164,15 +166,20 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         }
 
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.updateData(currentPageAttempts);
         }
         updatePaginationControls();
     }
 
     private void updatePaginationControls() {
-        previousButton.setEnabled(currentPage > 0);
-        nextButton.setEnabled(currentPage < totalPages - 1);
-        pageIndicator.setText(String.format("Page %d of %d", currentPage + 1, Math.max(totalPages, 1)));
+        if (totalPages <= 1) {
+            paginationLayout.setVisibility(View.GONE);
+        } else {
+            paginationLayout.setVisibility(View.VISIBLE);
+            previousButton.setEnabled(currentPage > 0);
+            nextButton.setEnabled(currentPage < totalPages - 1);
+            pageIndicator.setText(String.format("Page %d of %d", currentPage + 1, Math.max(totalPages, 1)));
+        }
     }
 
     private void updateStats() {
@@ -188,10 +195,12 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         double totalScore = 0;
 
         for (QuizAttempt attempt : allAttempts) {
-            if (attempt.isPassed()) {
-                passedCount++;
+            if (attempt != null) {
+                if (attempt.isPassed()) {
+                    passedCount++;
+                }
+                totalScore += attempt.getScore();
             }
-            totalScore += attempt.getScore();
         }
 
         double averageScore = totalAttempts > 0 ? totalScore / totalAttempts : 0;
@@ -211,6 +220,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         progressBar.setVisibility(View.GONE);
         contentLayout.setVisibility(View.GONE);
         emptyStateLayout.setVisibility(View.VISIBLE);
+        paginationLayout.setVisibility(View.GONE);
     }
 
     private void showContent() {
@@ -221,10 +231,13 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
 
     @Override
     public void onQuizAttemptClick(QuizAttempt quizAttempt) {
-        Intent intent = new Intent(this, QuizDetailActivity.class);
-        intent.putExtra("attemptId", quizAttempt.getAttemptId());
-        intent.putExtra("quizId", quizAttempt.getQuizId());
-        intent.putExtra("quizTitle", quizAttempt.getQuizTitle());
-        startActivity(intent);
+        if (quizAttempt != null) {
+            Intent intent = new Intent(this, QuizDetailActivity.class);
+            intent.putExtra("attemptId", quizAttempt.getAttemptId());
+            intent.putExtra("quizId", String.valueOf(quizAttempt.getQuizId()));
+            intent.putExtra("courseId", String.valueOf(quizAttempt.getCourseId()));
+            intent.putExtra("quizTitle", quizAttempt.getQuizTitle());
+            startActivity(intent);
+        }
     }
 }

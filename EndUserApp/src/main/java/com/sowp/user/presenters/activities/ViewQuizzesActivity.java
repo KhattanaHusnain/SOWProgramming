@@ -354,9 +354,9 @@ public class ViewQuizzesActivity extends AppCompatActivity implements QuizAdapte
     @Override
     public void onQuizClick(Quiz quiz) {
         // Navigate to QuizTakeActivity or QuizDetailsActivity for users
-        Intent intent = new Intent(this, QuizDetailActivity.class);
-        intent.putExtra("COURSE_ID", courseId);
-        intent.putExtra("QUIZ_ID", quiz.getQuizId());
+        Intent intent = new Intent(this, TakeQuizActivity.class);
+        intent.putExtra("COURSE_ID", String.valueOf(courseId));
+        intent.putExtra("QUIZ_ID", String.valueOf(quiz.getQuizId()));
         startActivity(intent);
     }
 

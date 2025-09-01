@@ -3,7 +3,7 @@ package com.sowp.user.models;
 import java.util.List;
 
 public class Question {
-    private String id;
+    private int id;
     private String text;
     private List<String> options;
     private String correctAnswer;
@@ -11,7 +11,7 @@ public class Question {
     // Required empty constructor for Firestore
     public Question() {}
 
-    public Question(String id, String text, List<String> options, String correctAnswer) {
+    public Question(int id, String text, List<String> options, String correctAnswer) {
         this.id = id;
         this.text = text;
         this.options = options;
@@ -19,11 +19,11 @@ public class Question {
     }
 
     // Getters and Setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

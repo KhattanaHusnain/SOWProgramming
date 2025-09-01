@@ -1,10 +1,13 @@
 package com.sowp.user.models;
 
+import com.google.firebase.database.PropertyName;
+
 import java.util.List;
 
 public class QuizAttempt {
     private String attemptId;
-    private String quizId;
+    private int quizId;           // Changed from String to int
+    private int courseId;         // Added courseId field
     private String quizTitle;
     private int score;
     private int correctAnswers;
@@ -21,13 +24,14 @@ public class QuizAttempt {
     // Empty constructor required for Firestore
     public QuizAttempt() {}
 
-    public QuizAttempt(String attemptId, String quizId, String quizTitle, int score,
-                       int correctAnswers, int totalQuestions, boolean passed,
+    public QuizAttempt(String attemptId, int quizId, int courseId, String quizTitle,
+                       int score, int correctAnswers, int totalQuestions, boolean passed,
                        double passingScore, boolean completed, long completedAt,
                        long timeTaken, long startTime, long endTime,
                        List<QuestionAttempt> answers) {
         this.attemptId = attemptId;
         this.quizId = quizId;
+        this.courseId = courseId;
         this.quizTitle = quizTitle;
         this.score = score;
         this.correctAnswers = correctAnswers;
@@ -51,12 +55,20 @@ public class QuizAttempt {
         this.attemptId = attemptId;
     }
 
-    public String getQuizId() {
+    public int getQuizId() {
         return quizId;
     }
 
-    public void setQuizId(String quizId) {
+    public void setQuizId(int quizId) {
         this.quizId = quizId;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public String getQuizTitle() {
@@ -178,20 +190,43 @@ public class QuizAttempt {
         return score + "%";
     }
 
+    /**
+     * Helper method to get attempt identifier from courseId and quizId
+     */
+    public String getAttemptIdentifier() {
+        return courseId + "_" + quizId;
+    }
+
+    /**
+     * Helper method to check if quiz was completed within time limit
+     */
+    public boolean isCompletedWithinTimeLimit(long maxTimeAllowed) {
+        return timeTaken <= maxTimeAllowed;
+    }
+
+    /**
+     * Helper method to get completion date as formatted string
+     */
+    public String getFormattedCompletionDate() {
+        return new java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
+                .format(new java.util.Date(completedAt));
+    }
+
     // Inner class for individual question attempts
     public static class QuestionAttempt {
-        private String questionId;
+        private int questionId;
         private String questionText;
         private int questionNumber;
         private String userAnswer;
         private String correctAnswer;
+        @PropertyName("isCorrect")
         private boolean isCorrect;
         private List<String> options;
 
         // Empty constructor required for Firestore
         public QuestionAttempt() {}
 
-        public QuestionAttempt(String questionId, String questionText, int questionNumber,
+        public QuestionAttempt(int questionId, String questionText, int questionNumber,
                                String userAnswer, String correctAnswer, boolean isCorrect,
                                List<String> options) {
             this.questionId = questionId;
@@ -204,11 +239,11 @@ public class QuizAttempt {
         }
 
         // Getters and Setters
-        public String getQuestionId() {
+        public int getQuestionId() {
             return questionId;
         }
 
-        public void setQuestionId(String questionId) {
+        public void setQuestionId(int questionId) {
             this.questionId = questionId;
         }
 
@@ -244,12 +279,14 @@ public class QuizAttempt {
             this.correctAnswer = correctAnswer;
         }
 
+        @PropertyName("isCorrect")
         public boolean isCorrect() {
             return isCorrect;
         }
 
-        public void setCorrect(boolean correct) {
-            isCorrect = correct;
+        @PropertyName("isCorrect")
+        public void setIsCorrect(boolean isCorrect) {
+            this.isCorrect = isCorrect;
         }
 
         public List<String> getOptions() {
@@ -275,6 +312,26 @@ public class QuizAttempt {
                 return "NOT ANSWERED";
             }
             return isCorrect ? "CORRECT" : "INCORRECT";
+        }
+
+        /**
+         * Helper method to get result status with color indicator
+         */
+        public String getResultStatusWithIcon() {
+            if (!wasAnswered()) {
+                return "⚪ NOT ANSWERED";
+            }
+            return isCorrect ? "✅ CORRECT" : "❌ INCORRECT";
+        }
+
+        /**
+         * Helper method to check if answer matches any of the options
+         */
+        public boolean isValidAnswer() {
+            if (options == null || options.isEmpty() || userAnswer == null) {
+                return false;
+            }
+            return options.contains(userAnswer);
         }
     }
 }
