@@ -55,13 +55,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddQuiz"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="Add Quiz"
+            android:text="Add"
+            android:textColor="@android:color/white"
             android:textSize="12sp"
-            app:cornerRadius="20dp"
-            android:textColor="@color/primary"
-            app:backgroundTint="@color/white"
+            app:strokeColor="@android:color/white"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@android:color/white"
+            app:iconSize="16dp"
             android:layout_gravity="center_vertical" />
 
     </LinearLayout>

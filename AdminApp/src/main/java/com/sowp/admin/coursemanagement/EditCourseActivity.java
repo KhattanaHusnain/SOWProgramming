@@ -234,7 +234,7 @@ public class EditCourseActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        ivBack.setOnClickListener(v -> finish());
+        ivBack.setOnClickListener(v -> onBackPressed());
 
         btnSaveCourse.setOnClickListener(v -> {
             if (isEditMode) {

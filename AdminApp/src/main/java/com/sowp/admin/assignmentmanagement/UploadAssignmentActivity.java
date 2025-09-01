@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -43,7 +44,7 @@ public class UploadAssignmentActivity extends AppCompatActivity {
 
     // UI Components
     private ImageView btnBack;
-    private Spinner spinnerCourse;
+    private AutoCompleteTextView spinnerCourse;
     private TextInputEditText etAssignmentTitle, etDescription, etScore, etPassingScore;
     private ChipGroup chipGroupCategories, chipGroupTags;
     private MaterialButton btnAddImage, btnUploadAssignment, btnAddTag;
@@ -140,7 +141,7 @@ public class UploadAssignmentActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, courseNames);
+                android.R.layout.simple_dropdown_item_1line, courseNames);
         courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCourse.setAdapter(courseAdapter);
 
