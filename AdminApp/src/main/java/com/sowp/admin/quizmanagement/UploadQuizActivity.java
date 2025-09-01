@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,11 +35,11 @@ import java.util.Map;
 public class UploadQuizActivity extends AppCompatActivity {
 
     // UI Components
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private Spinner spinnerCourse, spinnerSemester, spinnerLevel;
     private TextInputEditText etQuizTitle, etDescription, etPassingScore, etTotalQuestions;
     private ChipGroup chipGroupCategories;
-    private MaterialButton btnAddQuestion, btnSaveDraft, btnUploadQuiz;
+    private MaterialButton btnAddQuestion, btnUploadQuiz;
     private LinearLayout questionsContainer;
 
     // Data structures
@@ -92,20 +93,16 @@ public class UploadQuizActivity extends AppCompatActivity {
         etTotalQuestions = findViewById(R.id.etTotalQuestions);
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         btnAddQuestion = findViewById(R.id.btnAddQuestion);
-        btnSaveDraft = findViewById(R.id.btnSaveDraft);
         btnUploadQuiz = findViewById(R.id.btnUploadQuiz);
         questionsContainer = findViewById(R.id.questionsContainer);
     }
 
     private void setClickListeners() {
         // Back button
-        btnBack.setOnClickListener(v -> onBackPressed());
+        btnBack.setOnClickListener(v -> finish());
 
         // Add question button
         btnAddQuestion.setOnClickListener(v -> showAddQuestionDialog());
-
-        // Save draft button
-        btnSaveDraft.setOnClickListener(v -> saveDraft());
 
         // Upload quiz button
         btnUploadQuiz.setOnClickListener(v -> uploadQuiz());

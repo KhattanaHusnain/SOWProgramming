@@ -14,16 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:background="@color/white"
+        android:background="@color/primary"
         android:elevation="4dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_back"
+            android:layout_marginEnd="16dp"
+            app:tint="@color/white"
             android:layout_gravity="center_vertical" />
 
         <LinearLayout
@@ -40,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:text="Course Quizzes"
                 android:textSize="20sp"
-                android:fontFamily="@font/poppins_bold"
-                android:textColor="@color/black" />
+                android:textStyle="bold"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvCourseCode"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="Loading..."
                 android:textSize="14sp"
-                android:textColor="#666666" />
+                android:textColor="@color/badge_silver" />
 
         </LinearLayout>
 
@@ -60,12 +60,8 @@
             android:text="Add Quiz"
             android:textSize="12sp"
             app:cornerRadius="20dp"
-            android:textColor="#FFFFFF"
-            app:backgroundTint="@color/primary"
-            android:drawableStart="@drawable/ic_add"
-            android:drawablePadding="4dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:textColor="@color/primary"
+            app:backgroundTint="@color/white"
             android:layout_gravity="center_vertical" />
 
     </LinearLayout>
@@ -85,6 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
             android:hint="Search quizzes..."
             app:startIconDrawable="@drawable/ic_search"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">

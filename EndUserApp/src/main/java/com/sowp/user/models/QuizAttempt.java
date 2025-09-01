@@ -1,5 +1,7 @@
 package com.sowp.user.models;
 
+import com.google.firebase.database.PropertyName;
+
 import java.util.List;
 
 public class QuizAttempt {
@@ -217,6 +219,7 @@ public class QuizAttempt {
         private int questionNumber;
         private String userAnswer;
         private String correctAnswer;
+        @PropertyName("isCorrect")
         private boolean isCorrect;
         private List<String> options;
 
@@ -276,12 +279,14 @@ public class QuizAttempt {
             this.correctAnswer = correctAnswer;
         }
 
+        @PropertyName("isCorrect")
         public boolean isCorrect() {
             return isCorrect;
         }
 
-        public void setCorrect(boolean correct) {
-            isCorrect = correct;
+        @PropertyName("isCorrect")
+        public void setIsCorrect(boolean isCorrect) {
+            this.isCorrect = isCorrect;
         }
 
         public List<String> getOptions() {

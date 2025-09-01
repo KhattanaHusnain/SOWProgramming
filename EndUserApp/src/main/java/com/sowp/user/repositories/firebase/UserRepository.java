@@ -406,10 +406,16 @@ public class UserRepository {
                 .addOnFailureListener(e -> callback.onFailure("Failed to retrieve quiz attempts: " + e.getMessage()));
     }
 
+    // Add this to your UserRepository.getQuizAttemptDetails method
     public void getQuizAttemptDetails(String attemptId, QuizAttemptCallback callback) {
         String email = userAuthenticationUtils.getCurrentUserEmail();
         if (email == null) {
             callback.onFailure("No user is logged in");
+            return;
+        }
+
+        if (attemptId == null || attemptId.trim().isEmpty()) {
+            callback.onFailure("Invalid attempt ID");
             return;
         }
 
@@ -420,18 +426,115 @@ public class UserRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        QuizAttempt attempt = documentSnapshot.toObject(QuizAttempt.class);
-                        if (attempt != null) {
+                        try {
+                            // Log the raw data first
+                            Log.d("UserRepository", "Raw document data: " + documentSnapshot.getData());
+
+                            // Create QuizAttempt object and populate it manually
+                            QuizAttempt attempt = new QuizAttempt();
+
+                            // Set basic fields
                             attempt.setAttemptId(documentSnapshot.getId());
+                            attempt.setQuizId(documentSnapshot.getLong("quizId") != null ?
+                                    documentSnapshot.getLong("quizId").intValue() : 0);
+                            attempt.setCourseId(documentSnapshot.getLong("courseId") != null ?
+                                    documentSnapshot.getLong("courseId").intValue() : 0);
+                            attempt.setQuizTitle(documentSnapshot.getString("quizTitle"));
+                            attempt.setScore(documentSnapshot.getLong("score") != null ?
+                                    documentSnapshot.getLong("score").intValue() : 0);
+                            attempt.setCorrectAnswers(documentSnapshot.getLong("correctAnswers") != null ?
+                                    documentSnapshot.getLong("correctAnswers").intValue() : 0);
+                            attempt.setTotalQuestions(documentSnapshot.getLong("totalQuestions") != null ?
+                                    documentSnapshot.getLong("totalQuestions").intValue() : 0);
+                            attempt.setPassed(documentSnapshot.getBoolean("passed") != null ?
+                                    documentSnapshot.getBoolean("passed") : false);
+                            attempt.setPassingScore(documentSnapshot.getDouble("passingScore") != null ?
+                                    documentSnapshot.getDouble("passingScore") : 0.0);
+                            attempt.setCompleted(documentSnapshot.getBoolean("completed") != null ?
+                                    documentSnapshot.getBoolean("completed") : false);
+                            attempt.setCompletedAt(documentSnapshot.getLong("completedAt") != null ?
+                                    documentSnapshot.getLong("completedAt") : 0L);
+                            attempt.setTimeTaken(documentSnapshot.getLong("timeTaken") != null ?
+                                    documentSnapshot.getLong("timeTaken") : 0L);
+                            attempt.setStartTime(documentSnapshot.getLong("startTime") != null ?
+                                    documentSnapshot.getLong("startTime") : 0L);
+                            attempt.setEndTime(documentSnapshot.getLong("endTime") != null ?
+                                    documentSnapshot.getLong("endTime") : 0L);
+
+                            // Parse answers array
+                            List<Object> answersData = (List<Object>) documentSnapshot.get("answers");
+                            if (answersData != null && !answersData.isEmpty()) {
+                                List<QuizAttempt.QuestionAttempt> questionAttempts = new ArrayList<>();
+
+                                for (Object answerObj : answersData) {
+                                    if (answerObj instanceof Map) {
+                                        Map<String, Object> answerMap = (Map<String, Object>) answerObj;
+
+                                        QuizAttempt.QuestionAttempt questionAttempt = new QuizAttempt.QuestionAttempt();
+
+                                        // Set question attempt fields
+                                        questionAttempt.setQuestionId(answerMap.get("questionId") instanceof Long ?
+                                                ((Long) answerMap.get("questionId")).intValue() : 0);
+                                        questionAttempt.setQuestionText((String) answerMap.get("questionText"));
+                                        questionAttempt.setQuestionNumber(answerMap.get("questionNumber") instanceof Long ?
+                                                ((Long) answerMap.get("questionNumber")).intValue() : 0);
+                                        questionAttempt.setUserAnswer((String) answerMap.get("userAnswer"));
+                                        questionAttempt.setCorrectAnswer((String) answerMap.get("correctAnswer"));
+                                        questionAttempt.setIsCorrect(answerMap.get("isCorrect") instanceof Boolean ?
+                                                (Boolean) answerMap.get("isCorrect") : false);
+
+                                        // Parse options array
+                                        List<Object> optionsData = (List<Object>) answerMap.get("options");
+                                        if (optionsData != null) {
+                                            List<String> options = new ArrayList<>();
+                                            for (Object option : optionsData) {
+                                                if (option instanceof String) {
+                                                    options.add((String) option);
+                                                }
+                                            }
+                                            questionAttempt.setOptions(options);
+                                        }
+
+                                        questionAttempts.add(questionAttempt);
+                                    }
+                                }
+
+                                attempt.setAnswers(questionAttempts);
+                            }
+
+                            // Log the parsed attempt data
+                            Log.d("UserRepository", "Parsed QuizAttempt - answers size: " +
+                                    (attempt.getAnswers() != null ? attempt.getAnswers().size() : "null"));
+                            Log.d("UserRepository", "Quiz details - ID: " + attempt.getQuizId() +
+                                    ", Course: " + attempt.getCourseId() +
+                                    ", Score: " + attempt.getScore() + "%" +
+                                    ", Passed: " + attempt.isPassed());
+
+                            if (attempt.getAnswers() != null) {
+                                for (int i = 0; i < attempt.getAnswers().size(); i++) {
+                                    QuizAttempt.QuestionAttempt qa = attempt.getAnswers().get(i);
+                                    Log.d("UserRepository", "Question " + (i+1) +
+                                            " - isCorrect: " + qa.isCorrect() +
+                                            " - userAnswer: '" + qa.getUserAnswer() + "'" +
+                                            " - correctAnswer: '" + qa.getCorrectAnswer() + "'" +
+                                            " - questionId: " + qa.getQuestionId());
+                                }
+                            }
+
                             callback.onSuccess(attempt);
-                        } else {
-                            callback.onFailure("Failed to parse quiz attempt data");
+
+                        } catch (Exception e) {
+                            Log.e("UserRepository", "Error parsing quiz attempt data", e);
+                            callback.onFailure("Failed to parse quiz attempt data: " + e.getMessage());
                         }
                     } else {
                         callback.onFailure("Quiz attempt not found");
                     }
                 })
-                .addOnFailureListener(e -> callback.onFailure("Failed to retrieve quiz details: " + e.getMessage()));
+                .addOnFailureListener(e -> {
+                    Log.e("UserRepository", "Failed to retrieve quiz details", e);
+                    callback.onFailure("Failed to retrieve quiz details: " + e.getMessage());
+                });
     }
 
     public void updateQuizAverage(UserCallback callback) {

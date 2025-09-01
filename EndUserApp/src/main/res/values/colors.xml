@@ -247,4 +247,27 @@
     <color name="option_unselected">#FFFFFF</color>
     <color name="option_border">#E0E0E0</color>
     <color name="radio_button_tint">#2196F3</color>
+
+    <!-- Status Colors -->
+    <color name="status_passed">#4CAF50</color>
+    <color name="status_failed">#F44336</color>
+
+    <!-- Score Colors -->
+    <color name="score_passed">#2E7D32</color>
+    <color name="score_failed">#C62828</color>
+
+
+
+    <!-- Background Colors -->
+    <color name="background_white">#FFFFFF</color>
+
+    <!-- Item Background States -->
+    <color name="item_background_normal">#FFFFFF</color>
+    <color name="item_background_pressed">#F0F0F0</color>
+    <color name="item_background_selected">#E3F2FD</color>
+
+    <!-- Status Background Colors -->
+    <color name="status_background_passed">#4CAF50</color>
+    <color name="status_background_failed">#F44336</color>
+
 </resources>
