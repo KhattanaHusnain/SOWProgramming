@@ -94,8 +94,8 @@ public class CoursesManagementActivity extends AppCompatActivity {
     }
 
     private void loadActiveCourses() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Course")
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection("Course")
                 .whereEqualTo("isPublic", true)
                 .count()
                 .get(AggregateSource.SERVER)
