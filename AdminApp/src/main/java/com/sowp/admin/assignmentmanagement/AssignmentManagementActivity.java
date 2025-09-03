@@ -9,8 +9,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sowp.admin.R;
 import com.sowp.admin.coursemanagement.ViewCoursesActivity;
+
+import java.util.List;
 
 public class AssignmentManagementActivity extends AppCompatActivity {
 
@@ -18,8 +24,7 @@ public class AssignmentManagementActivity extends AppCompatActivity {
     private LinearLayout cardViewAssignments;
     private LinearLayout cardUploadAssignmenmt;
     private LinearLayout cardViewUncheckedAssignment;
-    private TextView txtTotalQuizzes;
-    private TextView txtActiveQuizzes;
+    private TextView txtTotalAssignments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,7 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         setClickListeners();
 
         // Load quiz statistics
-        loadQuizStatistics();
+        loadAssignments();
     }
 
     private void initializeViews() {
@@ -41,19 +46,13 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         cardViewAssignments = findViewById(R.id.cardViewAssignments);
         cardUploadAssignmenmt = findViewById(R.id.cardUploadAssignment);
         cardViewUncheckedAssignment = findViewById(R.id.cardViewUncheckedAssignment);
-        txtTotalQuizzes = findViewById(R.id.txtTotalQuizzes);
-        txtActiveQuizzes = findViewById(R.id.txtActiveQuizzes);
+        txtTotalAssignments = findViewById(R.id.txtTotalAssignments);
     }
 
     private void setClickListeners() {
 
         // Back button click listener
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        btnBack.setOnClickListener(v -> finish());
 
         // View Quizzes List card click listener
         cardViewAssignments.setOnClickListener(new View.OnClickListener() {
@@ -83,43 +82,31 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         });
     }
 
-    private void loadQuizStatistics() {
-        // This method would typically load data from a database or API
-        // For now, we'll use dummy data
+    private void loadAssignments() {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection("Course")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int TotalAssignment= 0;
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot document:documents){
+                            Long assignments=document.getLong("noOfAssignments");
+                            TotalAssignment += assignments.intValue();
+                        }
+                        txtTotalAssignments.setText(String.valueOf(TotalAssignment));
 
-        // Simulate loading quiz statistics
-        int totalQuizzes = getTotalQuizzesCount();
-        int activeQuizzes = getActiveQuizzesCount();
-
-        // Update UI with the statistics
-        txtTotalQuizzes.setText(String.valueOf(totalQuizzes));
-        txtActiveQuizzes.setText(String.valueOf(activeQuizzes));
+                    }
+                });
     }
 
-    // Simulate getting total quizzes count from database/API
-    private int getTotalQuizzesCount() {
-        // TODO: Replace with actual database query or API call
-        return 12; // Dummy data
-    }
-
-    // Simulate getting active quizzes count from database/API
-    private int getActiveQuizzesCount() {
-        // TODO: Replace with actual database query or API call
-        return 8; // Dummy data
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // Optional: Add custom back navigation logic here
-        finish();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         // Refresh statistics when returning to this activity
-        loadQuizStatistics();
+        loadAssignments();
     }
 
 }
