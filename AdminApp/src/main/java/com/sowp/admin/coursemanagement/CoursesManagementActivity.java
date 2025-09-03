@@ -15,7 +15,6 @@ import com.sowp.admin.R;
 public class CoursesManagementActivity extends AppCompatActivity {
     TextView tvTotalCourses;
     TextView tvActiveCourses;
-    TextView tvTotalTopics;
     CardView cardViewCourses, cardAddCourse;
     CardView cardManage, cardAnalytics, cardSetting;
 
@@ -33,8 +32,6 @@ public class CoursesManagementActivity extends AppCompatActivity {
         // TextViews - Fixed incorrect ID assignments
         tvTotalCourses = findViewById(R.id.tvTotalCourses);
         tvActiveCourses = findViewById(R.id.tvActiveCourses);
-        tvTotalTopics = findViewById(R.id.tvTotalTopics); // Fixed: was using tvTotalCourses ID
-
         // Course CardViews - Fixed duplicate ID assignments
         cardViewCourses = findViewById(R.id.cardViewCourses);
         cardAddCourse = findViewById(R.id.cardAddCourse); // Fixed: was using cardViewCourses ID
