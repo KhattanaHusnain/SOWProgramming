@@ -1,273 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
+    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#002B5B</color>
-    <color name="primary_variant">#001F42</color>
-    <color name="secondary">#00A6A6</color>
-    <color name="secondary_variant">#008585</color>
-    <color name="status_submitted">#4CAF50</color>
-    <color name="status_in_progress">#FF9800</color>
-    <color name="status_not_started">#757575</color>
-    <color name="status_overdue">#F44336</color>
-    <color name="status_text_color">#1976D2</color>
-    <color name="text_primary">@color/black</color>
-    <color name="text_secondary">#FF757575</color>
-    <color name="text_light">#FFF5F5F5</color>
-    <color name="background_light">#FFF5F5F5</color>
-    <color name="background_dark">@color/primary</color>
-    <color name="accent">#2196F3</color>
-    <color name="status_bar">@color/primary_variant</color>
-    <color name="navigation_bar">@color/primary</color>
-    <color name="colorPrimary">#4285F4</color>
-    <color name="colorPrimaryDark">#3367D6</color>
-    <color name="colorAccent">#00C853</color>
-    <color name="background_color">#F5F5F5</color>
-    <color name="divider_color">#E0E0E0</color>
-    <color name="error_color">#D32F2F</color>
-    <color name="text_color_primary">#212121</color>
-    <color name="text_color_secondary">#757575</color>
-    <color name="progress_color">#4CAF50</color>
-    <color name="primary_dark">#0D47A1</color>
-    <color name="primary_light">#42A5F5</color>
-    <color name="text_light_secondary">#B3FFFFFF</color> <!-- White with 70% opacity -->
-    <color name="divider">#BDBDBD</color>
-    <color name="ripple">#33000000</color>
-    <color name="text_dark">#333333</color>
-    <color name="md_primary">#006781</color>
-    <color name="md_primary_variant">#00485A</color>
-    <color name="md_on_primary">#FFFFFF</color>
-    <color name="md_secondary">#4D616C</color>
-    <color name="md_on_secondary">#FFFFFF</color>
-    <color name="md_surface">#FAFDFD</color>
-    <color name="md_surface_variant">#DCE4E9</color>
-    <color name="md_background">#F5F5F5</color>
-    <color name="md_outline">#72787E</color>
-    <color name="md_error">#BA1A1A</color>
-    <color name="md_on_error">#FFFFFF</color>
-    <color name="lesson_card_bg">#F0F7FF</color>
-    <color name="color_logout">#D32F2F</color>
-    <color name="badge_bronze">#CD7F32</color>
-    <color name="badge_silver">#C0C0C0</color>
-    <color name="badge_gold">#FFD700</color>
-    <color name="primary_color">#002B5B</color>
-    <color name="primary_color_light">#1A4A7A</color>
-    <color name="secondary_color">#256D85</color>
-    <color name="accent_color">#8FE3CF</color>
-    <color name="surface_color">#FFFFFF</color>
-    <color name="primary_text_color">#212121</color>
-    <color name="secondary_text_color">#757575</color>
-    <color name="notification_red">#F44336</color>
-    <color name="nav_selected">#1976D2</color>
-    <color name="nav_unselected">#757575</color>
-    <color name="card_background">#FFFFFF</color>
-    <color name="link_color">#1976D2</color>
-    <color name="bullet_color">#2196F3</color>
-    <color name="green">#4CAF50</color>
-    <color name="red">#F44336</color>
-    <color name="orange">#FF9800</color>
-    <color name="blue">#2196F3</color>
-    <color name="gray_50">#FAFAFA</color>
-    <color name="gray_100">#F5F5F5</color>
-    <color name="gray_200">#EEEEEE</color>
-    <color name="gray_300">#E0E0E0</color>
-    <color name="gray_400">#BDBDBD</color>
-    <color name="gray_500">#9E9E9E</color>
-    <color name="gray_600">#757575</color>
-    <color name="gray_700">#616161</color>
-    <color name="gray_800">#424242</color>
-    <color name="gray_900">#212121</color>
+    <color name="transparent">#00000000</color>
 
-    <!-- Dialog Colors -->
-    <color name="dialog_background">#FFFFFF</color>
-    <color name="dialog_border">#E0E0E0</color>
-    <color name="dialog_overlay">#80000000</color>
+    <!-- Logo-Based Brand Colors -->
+    <color name="primary">#1B3B6F</color>           <!-- Dark blue from logo background -->
+    <color name="primary_light">#4A6FA5</color>     <!-- Lighter variant -->
+    <color name="primary_dark">#0D2142</color>      <!-- Darker variant -->
+    <color name="secondary">#FF6B47</color>         <!-- Orange-red from logo braces -->
+    <color name="accent">#FFD93D</color>            <!-- Golden yellow from logo pages -->
+    <color name="surface">#F8F9FA</color>           <!-- Light gray from center page -->
 
-    <!-- Card Colors -->
-    <color name="card_border">#EEEEEE</color>
-    <color name="card_shadow">#1A000000</color>
-
-    <!-- Badge Colors -->
-    <color name="badge_background">#E3F2FD</color>
-    <color name="badge_admin_background">#FFEBEE</color>
-    <color name="badge_student_background">#E8F5E8</color>
-    <color name="badge_teacher_background">#FFF3E0</color>
-
-
-    <color name="text_tertiary">#9E9E9E</color>
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
     <color name="text_hint">#BDBDBD</color>
-    <color name="text_disabled">#E0E0E0</color>
     <color name="text_on_primary">#FFFFFF</color>
-
-    <!-- Role Colors -->
-    <color name="admin_color">#FF5722</color>
-    <color name="admin_color_light">#FF8A65</color>
-    <color name="admin_color_dark">#E64A19</color>
-
-    <color name="user_color">#2196F3</color>
-    <color name="user_color_light">#64B5F6</color>
-    <color name="user_color_dark">#1976D2</color>
-
-    <color name="teacher_color">#FF9800</color>
-    <color name="teacher_color_light">#FFB74D</color>
-    <color name="teacher_color_dark">#F57C00</color>
-
-    <color name="student_color">#4CAF50</color>
-    <color name="student_color_light">#81C784</color>
-    <color name="student_color_dark">#388E3C</color>
-
-    <!-- Progress Colors -->
-    <color name="progress_excellent">#4CAF50</color>
-    <color name="progress_excellent_light">#81C784</color>
-    <color name="progress_excellent_dark">#388E3C</color>
-
-    <color name="progress_good">#FF9800</color>
-    <color name="progress_good_light">#FFB74D</color>
-    <color name="progress_good_dark">#F57C00</color>
-
-    <color name="progress_poor">#F44336</color>
-    <color name="progress_poor_light">#EF5350</color>
-    <color name="progress_poor_dark">#D32F2F</color>
-
-    <color name="progress_background">#E0E0E0</color>
-    <color name="progress_background_light">#EEEEEE</color>
-
-    <!-- Icon Colors -->
-    <color name="icon_color">#616161</color>
-    <color name="icon_secondary_color">#9E9E9E</color>
-    <color name="icon_tertiary_color">#BDBDBD</color>
-    <color name="icon_disabled">#E0E0E0</color>
-    <color name="icon_on_primary">#FFFFFF</color>
-
-    <!-- Profile Specific Colors -->
-    <color name="profile_icon_color">#BDBDBD</color>
-    <color name="profile_border_color">#E0E0E0</color>
-    <color name="profile_background">#F5F5F5</color>
-
-    <!-- Favorite Colors -->
-    <color name="favorite_color">#E91E63</color>
-    <color name="favorite_color_light">#F48FB1</color>
-    <color name="favorite_color_dark">#C2185B</color>
-    <color name="favorite_inactive">#BDBDBD</color>
 
     <!-- Background Colors -->
     <color name="background_primary">#FFFFFF</color>
     <color name="background_secondary">#F5F5F5</color>
-    <color name="background_tertiary">#FAFAFA</color>
 
-    <!-- Surface Colors -->
-    <color name="surface_primary">#FFFFFF</color>
-    <color name="surface_secondary">#F8F9FA</color>
-    <color name="surface_elevated">#FFFFFF</color>
+    <!-- Essential Grays (only necessary ones) -->
+    <color name="gray_light">#EEEEEE</color>        <!-- Dividers, borders -->
+    <color name="gray_medium">#9E9E9E</color>       <!-- Icons, disabled states -->
+    <color name="gray_dark">#616161</color>         <!-- Secondary text -->
 
-    <!-- Border Colors -->
-    <color name="border_primary">#E0E0E0</color>
-    <color name="border_secondary">#EEEEEE</color>
-    <color name="border_light">#F5F5F5</color>
+    <!-- Status Colors (semantic) -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
 
-    <!-- State Colors -->
-    <color name="state_pressed">#1F000000</color>
-    <color name="state_focused">#1F2196F3</color>
-    <color name="state_hovered">#0A000000</color>
-    <color name="state_disabled">#61000000</color>
+    <!-- Interactive States -->
+    <color name="selected">#E3F2FD</color>          <!-- Light blue for selections -->
+    <color name="pressed">#1F000000</color>         <!-- Overlay for pressed states -->
+    <color name="ripple">#33000000</color>          <!-- Touch ripple effect -->
 
-    <!-- Success/Warning/Error Colors -->
-    <color name="success_color">#4CAF50</color>
-    <color name="success_light">#C8E6C9</color>
-    <color name="success_dark">#2E7D32</color>
+    <!-- Assignment/Quiz Status -->
+    <color name="status_submitted">#4CAF50</color>   <!-- Use success -->
+    <color name="status_in_progress">#FF9800</color> <!-- Use warning -->
+    <color name="status_overdue">#F44336</color>     <!-- Use error -->
+    <color name="status_not_started">#757575</color> <!-- Use text_secondary -->
 
-    <color name="warning_color">#FF9800</color>
-    <color name="warning_light">#FFE0B2</color>
-    <color name="warning_dark">#E65100</color>
+    <!-- Role Indicators -->
+    <color name="role_admin">#FF5722</color>
+    <color name="role_teacher">#FF9800</color>
+    <color name="role_student">#4CAF50</color>
 
-    <color name="error_light">#FFCDD2</color>
-    <color name="error_dark">#C62828</color>
-
-    <color name="info_color">#2196F3</color>
-    <color name="info_light">#BBDEFB</color>
-    <color name="info_dark">#1565C0</color>
-
-    <!-- Grade Colors -->
-    <color name="grade_a">#4CAF50</color>    <!-- Green for A grade (90-100) -->
-    <color name="grade_b">#8BC34A</color>    <!-- Light Green for B grade (80-89) -->
-    <color name="grade_c">#FFC107</color>    <!-- Amber for C grade (70-79) -->
-    <color name="grade_d">#FF9800</color>    <!-- Orange for D grade (60-69) -->
-    <color name="grade_f">#F44336</color>    <!-- Red for F grade (below 60) -->
-
-    <!-- Chart Colors -->
-    <color name="chart_color_1">#2196F3</color>
-    <color name="chart_color_2">#4CAF50</color>
-    <color name="chart_color_3">#FF9800</color>
-    <color name="chart_color_4">#9C27B0</color>
-    <color name="chart_color_5">#00BCD4</color>
-
-    <!-- Transparent Colors -->
-    <color name="transparent">#00000000</color>
-    <color name="semi_transparent_black">#80000000</color>
-    <color name="semi_transparent_white">#80FFFFFF</color>
-    <color name="overlay_light">#33FFFFFF</color>
-    <color name="overlay_dark">#33000000</color>
-    <color name="status_submitted_bg">#E8F5E8</color>
-    <color name="status_submitted_text">#2E7D32</color>
-
-    <color name="status_graded_bg">#E8F5E8</color>
-    <color name="status_graded_text">#388E3C</color>
-
-    <color name="status_pending_bg">#FFF3E0</color>
-    <color name="status_pending_text">#F57C00</color>
-
-    <color name="status_late_bg">#FFEBEE</color>
-    <color name="status_late_text">#D32F2F</color>
-
-    <color name="status_default_bg">#F5F5F5</color>
-    <color name="status_default_text">#616161</color>
-    <color name="light_gray">#EEEEEE</color>
-    <color name="border_color">#E0E0E0</color>
-
-    <color name="success_bg">#E8F5E8</color>
-    <color name="warning_bg">#FFF3E0</color>
-    <color name="error_bg">#FFEBEE</color>
-    <color name="search_background">#FFFFFF</color>
-    <color name="category_badge_bg">#E3F2FD</color>
-    <color name="level_badge_bg">#FFF3E0</color>
-    <color name="visibility_badge_bg">#E8F5E8</color>
-    <color name="level_color">#FF9800</color>
-    <!-- Quiz UI Colors -->
-    <color name="quiz_background">#F5F7FA</color>
-    <color name="header_text">#FFFFFF</color>
-    <color name="header_text_secondary">#E3F2FD</color>
-    <color name="question_text">#2C3E50</color>
-    <color name="timer_normal">#4CAF50</color>
-    <color name="timer_warning">#FF9800</color>
-    <color name="timer_danger">#F44336</color>
-    <color name="primary_button_color">#2196F3</color>
-    <color name="submit_button_color">#4CAF50</color>
-    <color name="option_selected">#E3F2FD</color>
-    <color name="option_unselected">#FFFFFF</color>
-    <color name="option_border">#E0E0E0</color>
-    <color name="radio_button_tint">#2196F3</color>
-
-    <!-- Status Colors -->
-    <color name="status_passed">#4CAF50</color>
-    <color name="status_failed">#F44336</color>
-
-    <!-- Score Colors -->
-    <color name="score_passed">#2E7D32</color>
-    <color name="score_failed">#C62828</color>
-
-
-
-    <!-- Background Colors -->
-    <color name="background_white">#FFFFFF</color>
-
-    <!-- Item Background States -->
-    <color name="item_background_normal">#FFFFFF</color>
-    <color name="item_background_pressed">#F0F0F0</color>
-    <color name="item_background_selected">#E3F2FD</color>
-
-    <!-- Status Background Colors -->
-    <color name="status_background_passed">#4CAF50</color>
-    <color name="status_background_failed">#F44336</color>
-
+    <!-- Overlays -->
+    <color name="overlay_light">#80FFFFFF</color>
+    <color name="overlay_dark">#80000000</color>
 </resources>

@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/background_primary">
 
     <!-- Header -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="Quiz History"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="?attr/homeAsUpIndicator" />
+            app:titleTextColor="@color/text_on_primary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@color/text_on_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Content Container -->
-    <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -34,8 +38,10 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/primary"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <!-- Empty State -->
         <LinearLayout
@@ -45,31 +51,47 @@
             android:orientation="vertical"
             android:gravity="center"
             android:padding="32dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="gone">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_quizzes"
-                android:layout_marginBottom="16dp"
-                android:alpha="0.5" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/gray_light">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_quizzes"
+                    android:padding="24dp"
+                    app:tint="@color/gray_medium"
+                    tools:ignore="ContentDescription" />
+
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No Quiz Attempts Found"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/gray_600"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Start taking quizzes to see your attempt history here"
-                android:textSize="14sp"
-                android:textColor="@color/gray_500"
-                android:textAlignment="center" />
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:textAlignment="center"
+                android:lineSpacingMultiplier="1.3"
+                android:layout_marginHorizontal="16dp" />
 
         </LinearLayout>
 
@@ -79,110 +101,152 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <!-- Stats Header -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="20dp"
+                    android:baselineAligned="false">
 
+                    <!-- Total Attempts -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:background="@drawable/stat_item_background"
+                        android:padding="16dp">
 
                         <TextView
                             android:id="@+id/totalAttemptsText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
-                            android:textColor="@color/colorPrimary" />
+                            android:textColor="@color/primary"
+                            tools:text="12" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Attempts"
                             android:textSize="12sp"
-                            android:textColor="@color/gray_600" />
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="4dp"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.1" />
 
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/gray_300" />
-
+                    <!-- Average Score -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:background="@drawable/stat_item_background"
+                        android:padding="16dp"
+                        android:layout_marginHorizontal="8dp">
 
                         <TextView
                             android:id="@+id/averageScoreText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0%"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
-                            android:textColor="@color/green" />
+                            android:textColor="@color/success"
+                            tools:text="78%" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Average Score"
                             android:textSize="12sp"
-                            android:textColor="@color/gray_600" />
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="4dp"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.1" />
 
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/gray_300" />
-
+                    <!-- Passed Quizzes -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:background="@drawable/stat_item_background"
+                        android:padding="16dp">
 
                         <TextView
                             android:id="@+id/passedQuizzesText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
-                            android:textColor="@color/blue" />
+                            android:textColor="@color/info"
+                            tools:text="9" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Passed"
                             android:textSize="12sp"
-                            android:textColor="@color/gray_600" />
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="4dp"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.1" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="20dp"
+                    android:background="@color/accent"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recent Attempts"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+
+            </LinearLayout>
 
             <!-- Quiz Attempts List -->
             <androidx.recyclerview.widget.RecyclerView
@@ -190,27 +254,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_margin="16dp"
-                android:clipToPadding="false" />
+                android:layout_marginHorizontal="16dp"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                 />
 
-            <!-- Pagination Controls -->
+        </LinearLayout>
+
+        <!-- Pagination Controls -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/paginationCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/surface"
+            tools:visibility="visible">
+
             <LinearLayout
-                android:id="@+id/paginationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="16dp"
-                android:background="@color/gray_100">
+                android:padding="16dp">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/previousButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Previous"
                     android:enabled="false"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_marginEnd="16dp" />
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/primary"
+                    app:cornerRadius="8dp"
+                    android:layout_marginEnd="16dp"
+                    tools:enabled="true" />
 
                 <TextView
                     android:id="@+id/pageIndicator"
@@ -218,22 +299,31 @@
                     android:layout_height="wrap_content"
                     android:text="Page 1 of 1"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_700"
-                    android:layout_marginHorizontal="16dp" />
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@drawable/date_background"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    tools:text="Page 2 of 5" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/nextButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Next"
                     android:enabled="false"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_marginStart="16dp" />
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/primary"
+                    app:cornerRadius="8dp"
+                    android:layout_marginStart="16dp"
+                    tools:enabled="true" />
 
             </LinearLayout>
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

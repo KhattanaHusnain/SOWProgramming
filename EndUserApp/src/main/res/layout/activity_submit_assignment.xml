@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/background_primary"
     tools:context=".presenters.activities.SubmitAssignmentActivity">
 
     <LinearLayout
@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Assignment Title"
-                    android:textColor="@color/primary_text_color"
+                    android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -44,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Assignment Description"
-                    android:textColor="@color/secondary_text_color"
+                    android:textColor="@color/text_secondary"
                     android:textSize="16sp"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="12dp" />
@@ -62,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Due: May 5, 2025"
-                        android:textColor="@color/accent_color"
+                        android:textColor="@color/secondary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -71,7 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Max Score: 100"
-                        android:textColor="@color/primary_color"
+                        android:textColor="@color/primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -83,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Tags: programming, java, android"
-                    android:textColor="@color/secondary_text_color"
+                    android:textColor="@color/text_hint"
                     android:textSize="12sp"
                     android:layout_marginBottom="4dp"
                     android:visibility="gone" />
@@ -94,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Categories: mobile development, programming"
-                    android:textColor="@color/secondary_text_color"
+                    android:textColor="@color/text_hint"
                     android:textSize="12sp"
                     android:layout_marginBottom="8dp"
                     android:visibility="gone" />
@@ -105,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Status: Not Started"
-                    android:textColor="@color/status_bar"
+                    android:textColor="@color/status_not_started"
                     android:textSize="14sp"
                     android:background="@drawable/status_background"
                     android:padding="8dp"
@@ -121,7 +122,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Assignment Images"
-                    android:textColor="@color/primary_text_color"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
@@ -163,7 +165,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -176,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Submit Your Work"
-                    android:textColor="@color/primary_text_color"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp" />
@@ -187,8 +190,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Select Images from Gallery"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_on_primary"
                     android:background="@drawable/button_primary"
+                    android:backgroundTint="@color/primary"
                     android:padding="12dp"
                     android:layout_marginBottom="16dp"
                     android:drawableLeft="@drawable/ic_image"
@@ -207,7 +211,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Selected Images:"
-                        android:textColor="@color/secondary_text_color"
+                        android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
 
@@ -226,8 +230,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Submit Assignment"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_on_primary"
                     android:background="@drawable/button_submit"
+                    android:backgroundTint="@color/success"
                     android:padding="12dp"
                     android:layout_marginBottom="16dp"
                     android:drawableLeft="@drawable/ic_send"
@@ -245,7 +250,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:indeterminateTint="@color/accent" />
 
     </LinearLayout>
 

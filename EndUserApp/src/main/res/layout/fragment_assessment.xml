@@ -8,7 +8,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background_secondary">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/background_primary">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -36,7 +38,7 @@
                         android:text="Your Performance"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/primary"
                         android:layout_marginBottom="16dp" />
 
                     <LinearLayout
@@ -61,14 +63,14 @@
                                 android:text="0.0%"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="@color/secondary" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Quiz Average"
                                 android:textSize="12sp"
-                                android:textColor="@color/text_color_secondary"
+                                android:textColor="@color/text_secondary"
                                 android:gravity="center" />
 
                         </LinearLayout>
@@ -89,14 +91,14 @@
                                 android:text="0.0%"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="@color/secondary" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Assignment Average"
                                 android:textSize="12sp"
-                                android:textColor="@color/text_color_secondary"
+                                android:textColor="@color/text_secondary"
                                 android:gravity="center" />
 
                         </LinearLayout>
@@ -117,14 +119,14 @@
                                 android:text="0"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="@color/secondary" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Enrolled Courses"
                                 android:textSize="12sp"
-                                android:textColor="@color/text_color_secondary"
+                                android:textColor="@color/text_secondary"
                                 android:gravity="center" />
 
                         </LinearLayout>
@@ -140,7 +142,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/background_primary">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -153,7 +156,7 @@
                         android:text="Enrolled Courses"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/primary"
                         android:padding="16dp"
                         android:paddingBottom="8dp" />
 
@@ -164,6 +167,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="16dp"
+                        android:indeterminateTint="@color/primary"
                         android:visibility="gone" />
 
                     <!-- Empty State -->
@@ -173,7 +177,7 @@
                         android:layout_height="wrap_content"
                         android:text="No enrolled courses found"
                         android:textSize="16sp"
-                        android:textColor="@color/text_color_secondary"
+                        android:textColor="@color/text_secondary"
                         android:gravity="center"
                         android:padding="32dp"
                         android:visibility="gone" />

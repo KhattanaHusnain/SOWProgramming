@@ -428,7 +428,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
 
     private void showError(String message) {
         statusText.setText(message);
-        statusText.setTextColor(ContextCompat.getColor(this, R.color.error_color));
+        statusText.setTextColor(ContextCompat.getColor(this, R.color.error));
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 

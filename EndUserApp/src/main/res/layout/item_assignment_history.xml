@@ -6,7 +6,8 @@
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="3dp"
-    app:strokeWidth="0dp">
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/background_primary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
                 android:text="Assignment 1"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/primary_text_color" />
+                android:textColor="@color/text_primary" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipStatus"
@@ -37,9 +38,9 @@
                 android:layout_height="wrap_content"
                 android:text="Submitted"
                 android:textSize="12sp"
-                app:chipBackgroundColor="@color/status_submitted_bg"
+                app:chipBackgroundColor="@color/status_submitted"
                 app:chipStrokeWidth="0dp"
-                android:textColor="@color/status_submitted_text" />
+                android:textColor="@color/text_on_primary" />
 
         </LinearLayout>
 
@@ -64,7 +65,7 @@
                     android:text="85 / 100"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/accent_color" />
+                    android:textColor="@color/primary" />
 
                 <TextView
                     android:id="@+id/tvPercentage"
@@ -72,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:text="85.0%"
                     android:textSize="14sp"
-                    android:textColor="@color/secondary_text_color" />
+                    android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -97,7 +98,7 @@
                         android:layout_height="16dp"
                         android:src="@drawable/ic_image"
                         android:layout_marginEnd="4dp"
-                        app:tint="@color/secondary_text_color" />
+                        app:tint="@color/gray_medium" />
 
                     <TextView
                         android:id="@+id/tvImageCount"
@@ -105,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:text="3 images"
                         android:textSize="12sp"
-                        android:textColor="@color/secondary_text_color" />
+                        android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
 
@@ -125,7 +126,7 @@
                         android:layout_height="16dp"
                         android:src="@drawable/ic_checked"
                         android:layout_marginEnd="4dp"
-                        app:tint="@color/success_color" />
+                        app:tint="@color/success" />
 
                     <TextView
                         android:id="@+id/tvCheckedStatus"
@@ -133,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:text="Checked"
                         android:textSize="12sp"
-                        android:textColor="@color/success_color" />
+                        android:textColor="@color/success" />
 
                 </LinearLayout>
 
@@ -149,10 +150,10 @@
             android:layout_marginTop="12dp"
             android:text="Submitted on Jan 15, 2024 14:30"
             android:textSize="14sp"
-            android:textColor="@color/secondary_text_color"
+            android:textColor="@color/text_secondary"
             android:drawableStart="@drawable/ic_time"
             android:drawablePadding="6dp"
-            app:drawableTint="@color/secondary_text_color" />
+            app:drawableTint="@color/gray_medium" />
 
         <!-- Action Button -->
         <com.google.android.material.button.MaterialButton
@@ -164,9 +165,11 @@
             android:layout_marginTop="8dp"
             android:text="View Details"
             android:textSize="12sp"
+            android:textColor="@color/primary"
             app:icon="@drawable/ic_arrow_forward"
             app:iconGravity="end"
-            app:iconSize="16dp" />
+            app:iconSize="16dp"
+            app:iconTint="@color/primary" />
 
     </LinearLayout>
 

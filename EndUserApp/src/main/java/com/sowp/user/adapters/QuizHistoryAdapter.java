@@ -111,15 +111,15 @@ public class QuizHistoryAdapter extends RecyclerView.Adapter<QuizHistoryAdapter.
 
                 if (attempt.isPassed()) {
                     statusText.setBackgroundResource(R.drawable.bg_status_passed);
-                    statusText.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+                    statusText.setTextColor(ContextCompat.getColor(context, R.color.white));
                     if (statusIndicator != null) {
-                        statusIndicator.setBackgroundColor(ContextCompat.getColor(context, R.color.status_passed));
+                        statusIndicator.setBackgroundColor(ContextCompat.getColor(context, R.color.success));
                     }
                 } else {
                     statusText.setBackgroundResource(R.drawable.bg_status_failed);
-                    statusText.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+                    statusText.setTextColor(ContextCompat.getColor(context, R.color.white));
                     if (statusIndicator != null) {
-                        statusIndicator.setBackgroundColor(ContextCompat.getColor(context, R.color.status_failed));
+                        statusIndicator.setBackgroundColor(ContextCompat.getColor(context, R.color.error));
                     }
                 }
 
@@ -127,9 +127,9 @@ public class QuizHistoryAdapter extends RecyclerView.Adapter<QuizHistoryAdapter.
                 String scoreStr = attempt.getScorePercentage();
                 scoreText.setText(scoreStr);
                 if (attempt.isPassed()) {
-                    scoreText.setTextColor(ContextCompat.getColor(context, R.color.score_passed));
+                    scoreText.setTextColor(ContextCompat.getColor(context, R.color.success));
                 } else {
-                    scoreText.setTextColor(ContextCompat.getColor(context, R.color.score_failed));
+                    scoreText.setTextColor(ContextCompat.getColor(context, R.color.error));
                 }
 
                 // Set questions (correct/total)

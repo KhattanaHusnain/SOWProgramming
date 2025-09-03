@@ -216,14 +216,14 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
             if (tvCheckedStatus != null && ivCheckedIcon != null) {
                 if (isChecked) {
                     tvCheckedStatus.setText("Graded");
-                    tvCheckedStatus.setTextColor(ContextCompat.getColor(context, R.color.success_color));
+                    tvCheckedStatus.setTextColor(ContextCompat.getColor(context, R.color.success));
                     ivCheckedIcon.setImageResource(R.drawable.ic_checked);
-                    ivCheckedIcon.setColorFilter(ContextCompat.getColor(context, R.color.success_color));
+                    ivCheckedIcon.setColorFilter(ContextCompat.getColor(context, R.color.success));
                 } else {
                     tvCheckedStatus.setText("Pending Grade");
-                    tvCheckedStatus.setTextColor(ContextCompat.getColor(context, R.color.warning_color));
+                    tvCheckedStatus.setTextColor(ContextCompat.getColor(context, R.color.warning));
                     ivCheckedIcon.setImageResource(R.drawable.ic_pending);
-                    ivCheckedIcon.setColorFilter(ContextCompat.getColor(context, R.color.warning_color));
+                    ivCheckedIcon.setColorFilter(ContextCompat.getColor(context, R.color.warning));
                 }
 
                 showCheckedStatusLayout(true);
@@ -275,15 +275,21 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
         private StatusColors getStatusColors(String status) {
             switch (status) {
                 case "submitted":
-                    return new StatusColors(R.color.status_submitted_bg, R.color.status_submitted_text);
+                    return new StatusColors(R.color.selected, R.color.status_submitted);
                 case "graded":
-                    return new StatusColors(R.color.status_graded_bg, R.color.status_graded_text);
+                    return new StatusColors(R.color.selected, R.color.success);
                 case "failed":
-                    return new StatusColors(R.color.status_late_bg, R.color.status_late_text);
+                    return new StatusColors(R.color.background_secondary, R.color.error);
                 case "pending":
-                    return new StatusColors(R.color.status_pending_bg, R.color.status_pending_text);
+                    return new StatusColors(R.color.background_secondary, R.color.warning);
+                case "in_progress":
+                    return new StatusColors(R.color.background_secondary, R.color.status_in_progress);
+                case "overdue":
+                    return new StatusColors(R.color.background_secondary, R.color.status_overdue);
+                case "not_started":
+                    return new StatusColors(R.color.gray_light, R.color.status_not_started);
                 default:
-                    return new StatusColors(R.color.status_default_bg, R.color.status_default_text);
+                    return new StatusColors(R.color.gray_light, R.color.text_secondary);
             }
         }
 
@@ -292,11 +298,11 @@ public class AssignmentHistoryAdapter extends RecyclerView.Adapter<AssignmentHis
 
             int colorRes;
             if (percentage >= 80) {
-                colorRes = R.color.success_color;
+                colorRes = R.color.success;
             } else if (percentage >= 60) {
-                colorRes = R.color.warning_color;
+                colorRes = R.color.warning;
             } else {
-                colorRes = R.color.error_color;
+                colorRes = R.color.error;
             }
 
             tvScore.setTextColor(ContextCompat.getColor(context, colorRes));

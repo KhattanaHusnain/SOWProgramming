@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/background_primary"
     tools:context=".presenters.activities.OfflineCourseActivity">
 
+    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface_color"
+        android:background="@color/primary"
         app:elevation="4dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/surface_color"
+            android:background="@color/primary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/ic_back"
-            app:title="Offline Courses"
-            app:titleTextColor="@color/text_primary" />
+            app:navigationIconTint="@color/text_on_primary"
+            app:title="@string/offline_courses_title"
+            app:titleTextColor="@color/text_on_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,17 +46,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_marginEnd="12dp"
                     android:src="@drawable/ic_download"
-                    android:contentDescription="Offline icon"
-                    app:tint="@color/accent_color" />
+                    android:contentDescription="@string/offline_icon_description"
+                    app:tint="@color/secondary" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -63,17 +67,18 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Downloaded Courses"
+                        android:text="@string/downloaded_courses_title"
                         android:textColor="@color/text_primary"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-medium" />
 
                     <TextView
                         android:id="@+id/courseCountTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Available for offline viewing"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/available_offline_description"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         tools:text="5 courses available" />
@@ -82,13 +87,12 @@
 
             </LinearLayout>
 
-
             <!-- Empty State -->
             <LinearLayout
                 android:id="@+id/emptyStateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="48dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="32dp"
@@ -96,31 +100,44 @@
                 tools:visibility="gone">
 
                 <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_marginBottom="24dp"
                     android:alpha="0.6"
                     android:src="@drawable/ic_empty_courses"
-                    android:contentDescription="No offline courses" />
+                    android:contentDescription="@string/no_offline_courses_description"
+                    app:tint="@color/gray_medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="No Offline Courses"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/no_offline_courses_title"
                     android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:gravity="center"
+                    android:text="@string/no_offline_courses_description"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingHorizontal="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/browseCoursesButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:gravity="center"
-                    android:text="Download courses to access them offline and continue learning anywhere."
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
+                    android:text="@string/browse_courses"
+                    android:textColor="@color/text_on_primary"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="8dp"
+                    app:strokeWidth="0dp" />
 
             </LinearLayout>
 
@@ -132,6 +149,7 @@
                 android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
                 android:paddingBottom="16dp"
+                android:scrollbars="vertical"
                 tools:listitem="@layout/item_course" />
 
         </LinearLayout>
@@ -145,7 +163,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"
-        app:indicatorColor="@color/accent_color"
+        app:indicatorColor="@color/primary"
+        app:trackColor="@color/gray_light"
+        tools:visibility="visible" />
+
+    <!-- Floating Action Button for Quick Actions -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_refresh"
+        android:contentDescription="@string/refresh_courses_description"
+        app:backgroundTint="@color/secondary"
+        app:tint="@color/white"
+        android:visibility="gone"
         tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

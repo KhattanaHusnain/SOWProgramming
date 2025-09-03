@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/quiz_background"
+    android:background="@color/background_secondary"
     tools:context=".presenters.activities.TakeQuizActivity">
 
     <!-- Header Section -->
@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/header_background"
+        android:backgroundTint="@color/primary"
         android:elevation="4dp"
         android:orientation="vertical"
         android:padding="16dp"
@@ -29,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/header_text"
+                android:textColor="@color/text_on_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="Question 1 of 10" />
@@ -39,12 +40,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/timer_background"
+                android:backgroundTint="@color/secondary"
                 android:drawableStart="@drawable/ic_timer"
                 android:drawablePadding="8dp"
                 android:gravity="center"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="6dp"
-                android:textColor="@color/timer_normal"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:text="Time: 30s" />
@@ -60,7 +62,9 @@
             android:layout_marginTop="12dp"
             android:max="100"
             android:progress="10"
-            android:progressDrawable="@drawable/progress_bar_drawable" />
+            android:progressDrawable="@drawable/progress_bar_drawable"
+            android:progressTint="@color/accent"
+            android:progressBackgroundTint="@color/primary_light" />
 
         <TextView
             android:id="@+id/progressText"
@@ -69,7 +73,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
             android:text="10% Complete"
-            android:textColor="@color/header_text_secondary"
+            android:textColor="@color/text_on_primary"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -82,6 +86,7 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="6dp"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintTop_toBottomOf="@id/headerLayout">
 
@@ -103,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="@color/question_text"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="normal"
                     android:text="What is the correct answer to this sample question that we are displaying here?" />
@@ -129,6 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/footer_background"
+        android:backgroundTint="@color/surface"
         android:elevation="4dp"
         android:gravity="end"
         android:orientation="horizontal"
@@ -140,11 +146,11 @@
             android:layout_width="wrap_content"
             android:layout_height="56dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/primary_button_color"
+            android:backgroundTint="@color/primary"
             android:paddingHorizontal="24dp"
             android:text="Next"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_on_primary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:cornerRadius="12dp"
@@ -156,11 +162,11 @@
             android:id="@+id/submitButton"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:backgroundTint="@color/submit_button_color"
+            android:backgroundTint="@color/success"
             android:paddingHorizontal="24dp"
             android:text="Submit Quiz"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_on_primary"
             android:textSize="16sp"
             android:textStyle="bold"
             android:visibility="gone"

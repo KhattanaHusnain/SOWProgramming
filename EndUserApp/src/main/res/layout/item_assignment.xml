@@ -11,6 +11,7 @@
     android:layout_marginBottom="4dp"
     app:cardElevation="2dp"
     app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/white"
     android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
@@ -35,7 +36,7 @@
                 android:background="@drawable/circle_primary"
                 android:gravity="center"
                 android:text="1"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_on_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="3" />
@@ -84,7 +85,7 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_image"
-                    android:tint="@color/accent_color"
+                    app:tint="@color/accent"
                     android:contentDescription="Has images"
                     android:visibility="gone" />
 
@@ -94,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:text="3 images"
                     android:textSize="10sp"
-                    android:textColor="@color/accent_color"
+                    android:textColor="@color/accent"
                     android:layout_marginStart="4dp"
                     android:visibility="gone"
                     tools:text="3 images" />
@@ -120,8 +121,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -143,7 +143,7 @@
                     android:text="100.0"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_color"
+                    android:textColor="@color/primary"
                     tools:text="100.0" />
 
             </LinearLayout>
@@ -168,7 +168,7 @@
                     android:text="70.0"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/success_color"
+                    android:textColor="@color/success"
                     tools:text="70.0" />
 
             </LinearLayout>
@@ -199,41 +199,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <!-- Categories -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="4dp" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:chipSpacingHorizontal="4dp"
-            app:chipSpacingVertical="2dp" />
-
-        <!-- Tags -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tags"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="4dp" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupTags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:chipSpacingHorizontal="4dp"
-            app:chipSpacingVertical="2dp" />
 
     </LinearLayout>
 
