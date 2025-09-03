@@ -3,7 +3,6 @@ package com.sowp.admin.assignmentmanagement;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -78,7 +77,7 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         cardViewUncheckedAssignment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AssignmentManagementActivity.this, ViewUncheckedAssignemntsActivity.class);
+                Intent intent = new Intent(AssignmentManagementActivity.this, ViewUncheckedAssignmentsActivity.class);
                 startActivity(intent);
             }
         });

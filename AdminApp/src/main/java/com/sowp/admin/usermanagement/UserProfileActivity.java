@@ -368,7 +368,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private void checkEmailVerificationStatus() {
         boolean isVerified = !currentUser.getFullName().isEmpty() &&
                 !currentUser.getDisplayPhone().isEmpty();
-        currentUser.setVerified(isVerified);
+        currentUser.setIsVerified(isVerified);
         updateVerificationStatus();
     }
 
@@ -399,7 +399,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void updateVerificationStatus() {
-        if (currentUser.isVerified()) {
+        if (currentUser.getIsVerified()) {
             ivProfileVerification.setVisibility(View.VISIBLE);
             ivProfileVerification.setImageResource(R.drawable.ic_verified);
         } else {
