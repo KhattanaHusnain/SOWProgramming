@@ -80,8 +80,8 @@ public class CoursesManagementActivity extends AppCompatActivity {
     }
 
     private void loadTotalCourses() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Course")
+        FirebaseFirestore fb= FirebaseFirestore.getInstance();
+        fb.collection("Course")
                 .count()
                 .get(AggregateSource.SERVER)
                 .addOnSuccessListener(aggregateQuerySnapshot -> {
