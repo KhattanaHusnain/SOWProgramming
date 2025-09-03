@@ -117,15 +117,13 @@ public class UserManagementActivity extends AppCompatActivity {
         // Verification Status Spinner
         String[] verificationOptions = {"All", "Verified", "Unverified"};
         ArrayAdapter<String> verificationAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, verificationOptions);
-        verificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                android.R.layout.simple_spinner_item, verificationOptions);;
         spinnerVerification.setAdapter(verificationAdapter);
 
         // Sort By Spinner
         String[] sortOptions = {"Name", "Email", "Semester", "Gender", "Degree", "Date Created"};
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, sortOptions);
-        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSortBy.setAdapter(sortAdapter);
     }
 
