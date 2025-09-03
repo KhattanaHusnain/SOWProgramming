@@ -26,8 +26,6 @@ public class TopicManagementActivity extends AppCompatActivity {
     LinearLayout cardViewTopics;
     LinearLayout uploadTopics;
     TextView txtTotalTopics;
-    TextView txtActiveTopics;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +34,6 @@ public class TopicManagementActivity extends AppCompatActivity {
         cardViewTopics = findViewById(R.id.cardViewTopics);
         uploadTopics = findViewById(R.id.cardUploadTopic);
         txtTotalTopics = findViewById(R.id.txtTotalTopics);
-        txtActiveTopics = findViewById(R.id.txtActiveTopics);
 
 
         btn_back.setOnClickListener(v -> finish());
@@ -50,8 +47,8 @@ public class TopicManagementActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
-        loadTotalTopics();
 
+        loadTotalTopics();
 
     }
     public void loadTotalTopics(){
