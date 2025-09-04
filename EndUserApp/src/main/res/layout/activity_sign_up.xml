@@ -166,7 +166,7 @@
                     app:startIconDrawable="@drawable/ic_name"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_primary"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -190,7 +190,7 @@
                     app:startIconDrawable="@drawable/ic_emails"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -214,7 +214,7 @@
                     app:startIconDrawable="@drawable/ic_phone"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -238,7 +238,7 @@
                     app:startIconDrawable="@drawable/ic_gender"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:endIconMode="dropdown_menu"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -263,7 +263,7 @@
                     app:startIconDrawable="@drawable/ic_calendar"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:endIconMode="custom"
                     app:endIconDrawable="@drawable/ic_calendar"
                     app:endIconTint="@color/primary"
@@ -301,7 +301,7 @@
                     app:startIconDrawable="@drawable/ic_degree"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:errorEnabled="true"
                     app:endIconMode="dropdown_menu"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -326,7 +326,7 @@
                     app:startIconDrawable="@drawable/ic_semester"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:endIconMode="dropdown_menu"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -370,7 +370,7 @@
                     app:startIconDrawable="@drawable/ic_password"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="@color/gray_medium"
                     app:errorEnabled="true"
@@ -396,7 +396,7 @@
                     app:startIconDrawable="@drawable/ic_password"
                     app:startIconTint="@color/primary"
                     app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_hint"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="@color/gray_medium"
                     app:errorEnabled="true"
