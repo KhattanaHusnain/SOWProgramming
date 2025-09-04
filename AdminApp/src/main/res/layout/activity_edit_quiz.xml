@@ -332,52 +332,42 @@
 
             </androidx.cardview.widget.CardView>
 
+            <!-- Bottom Action Buttons -->
+            <LinearLayout
+                android:id="@+id/layoutActionButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveChanges"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Save Changes"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    app:cornerRadius="8dp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/primary"
+                    app:icon="@drawable/ic_save" />
+
+                <!-- Delete User Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteQuiz"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Delete Quiz"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    app:cornerRadius="8dp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#AB1B0B"
+                    app:icon="@drawable/ic_delete" />
+            </LinearLayout>
         </LinearLayout>
-
     </ScrollView>
-
-    <!-- Bottom Action Buttons -->
-    <LinearLayout
-        android:id="@+id/layoutActionButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#FFFFFF"
-        android:elevation="8dp"
-        android:weightSum="2"
-        android:visibility="gone">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveChanges"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="Save Changes"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            app:cornerRadius="8dp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/primary"
-            app:icon="@drawable/ic_save" />
-
-        <!-- Delete User Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDeleteQuiz"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="Delete Topic"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            app:cornerRadius="8dp"
-            android:textStyle="bold"
-            app:backgroundTint="#AB1B0B"
-            app:icon="@drawable/ic_delete" />
-
-
-    </LinearLayout>
-
 </LinearLayout>

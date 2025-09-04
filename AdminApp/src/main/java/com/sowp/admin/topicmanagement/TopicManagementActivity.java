@@ -10,108 +10,67 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sowp.admin.R;
 import com.sowp.admin.coursemanagement.ViewCoursesActivity;
 
-public class TopicManagementActivity extends AppCompatActivity {
+import org.w3c.dom.Document;
 
-    private ImageView btnBack;
-    private LinearLayout cardViewTopics;
-    private LinearLayout cardUploadTopic;
-    private TextView txtTotalQuizzes;
-    private TextView txtActiveQuizzes;
+import java.util.List;
+
+public class TopicManagementActivity extends AppCompatActivity {
+    ImageView btn_back;
+    LinearLayout cardViewTopics;
+    LinearLayout uploadTopics;
+    TextView txtTotalTopics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_management);
-
-        // Initialize views
-        initializeViews();
-
-        // Set click listeners
-        setClickListeners();
-
-        // Load quiz statistics
-        loadQuizStatistics();
-    }
-
-    private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
+        btn_back = findViewById(R.id.btnBack);
         cardViewTopics = findViewById(R.id.cardViewTopics);
-        cardUploadTopic = findViewById(R.id.cardUploadTopic);
-        txtTotalQuizzes = findViewById(R.id.txtTotalQuizzes);
-        txtActiveQuizzes = findViewById(R.id.txtActiveQuizzes);
-    }
+        uploadTopics = findViewById(R.id.cardUploadTopic);
+        txtTotalTopics = findViewById(R.id.txtTotalTopics);
 
-    private void setClickListeners() {
 
-        // Back button click listener
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
+        btn_back.setOnClickListener(v -> finish());
+        cardViewTopics.setOnClickListener(v ->{
+            Intent intent = new Intent(TopicManagementActivity.this, ViewCoursesActivity.class);
+            intent.putExtra("cameForTopics", true);
+            startActivity(intent);
+        });
+        uploadTopics.setOnClickListener(v -> {
+            Intent intent = new Intent(TopicManagementActivity.this, AddTopicActivity.class);
+
+            startActivity(intent);
         });
 
-        // View Quizzes List card click listener
+        loadTotalTopics();
 
-        cardViewTopics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TopicManagementActivity.this, ViewCoursesActivity.class);
-                intent.putExtra("cameForTopics", true);
-                startActivity(intent);
-            }
-        });
-
-        // Upload New Quiz card click listener
-        cardUploadTopic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TopicManagementActivity.this, AddTopicActivity.class);
-                startActivity(intent);
-            }
-        });
     }
+    public void loadTotalTopics(){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection("Course")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int totalTopics = 0;
+                        List<DocumentSnapshot> documents=queryDocumentSnapshots.getDocuments();
+                        for(DocumentSnapshot document : documents)
+                        {
+                            Long lectures = document.getLong("lectures");
+                            totalTopics += lectures.intValue();
+                        }
+                        txtTotalTopics.setText(String.valueOf(totalTopics));
 
-    private void loadQuizStatistics() {
-        // This method would typically load data from a database or API
-        // For now, we'll use dummy data
-
-        // Simulate loading quiz statistics
-        int totalQuizzes = getTotalQuizzesCount();
-        int activeQuizzes = getActiveQuizzesCount();
-
-        // Update UI with the statistics
-        txtTotalQuizzes.setText(String.valueOf(totalQuizzes));
-        txtActiveQuizzes.setText(String.valueOf(activeQuizzes));
-    }
-
-    // Simulate getting total quizzes count from database/API
-    private int getTotalQuizzesCount() {
-        // TODO: Replace with actual database query or API call
-        return 12; // Dummy data
-    }
-
-    // Simulate getting active quizzes count from database/API
-    private int getActiveQuizzesCount() {
-        // TODO: Replace with actual database query or API call
-        return 8; // Dummy data
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // Optional: Add custom back navigation logic here
-        finish();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Refresh statistics when returning to this activity
-        loadQuizStatistics();
+                    }
+                });
     }
 
 }

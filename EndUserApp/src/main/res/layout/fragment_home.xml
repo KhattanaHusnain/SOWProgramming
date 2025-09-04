@@ -84,7 +84,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_notification"
                         android:contentDescription="Notifications"
-                        android:tint="@color/primary"/>
+                        app:tint="@color/primary" />
                 </LinearLayout>
 
                 <!-- Dashboard Stats Card -->
@@ -96,7 +96,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
                     app:strokeWidth="0dp"
-                    app:cardBackgroundColor="@color/primary">
+                    app:cardBackgroundColor="@color/primary_light">
 
                     <LinearLayout
                         android:layout_width="match_parent"

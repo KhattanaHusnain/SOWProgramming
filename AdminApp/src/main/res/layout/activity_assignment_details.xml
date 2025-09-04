@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:title="Assignment Details"
             app:titleTextColor="@android:color/white"
             app:navigationIcon="@drawable/ic_arrow_back" />
@@ -54,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
@@ -75,7 +76,7 @@
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_assignment"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/colorPrimary" />
+                                app:tint="#FF9800" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -84,7 +85,7 @@
                                 android:text="Assignment Details"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/text_primary" />
+                                android:textColor="#2c3e50" />
 
                         </LinearLayout>
 
@@ -186,6 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
@@ -207,7 +209,7 @@
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_image"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/colorPrimary" />
+                                app:tint="#4CAF50"/>
 
                             <TextView
                                 android:layout_width="0dp"
@@ -216,7 +218,7 @@
                                 android:text="Submitted Images"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/text_primary" />
+                                android:textColor="#2c3e50"/>
 
                         </LinearLayout>
 
@@ -246,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
@@ -267,7 +270,7 @@
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_grade"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/colorPrimary" />
+                                app:tint="@color/accent" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -276,7 +279,7 @@
                                 android:text="Grade Assignment"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/text_primary" />
+                                android:textColor="#2c3e50" />
 
                         </LinearLayout>
 
@@ -295,8 +298,8 @@
                                 android:layout_weight="1"
                                 android:layout_marginEnd="16dp"
                                 android:hint="Score"
-                                app:boxStrokeColor="@color/colorPrimary"
-                                app:hintTextColor="@color/colorPrimary">
+                                app:boxStrokeColor="@color/primary"
+                                app:hintTextColor="@color/primary">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etScore"
@@ -319,7 +322,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Max Score"
                                     android:textSize="12sp"
-                                    android:textColor="@color/colorPrimary"
+                                    android:textColor="@color/primary"
                                     android:layout_marginBottom="4dp" />
 
                                 <TextView
@@ -332,6 +335,7 @@
                                     android:textColor="@color/text_primary"
                                     android:padding="12dp"
                                     android:background="@drawable/bg_max_score_readonly"
+                                    android:backgroundTint="@color/white"
                                     android:minWidth="60dp"
                                     android:gravity="center" />
 
@@ -346,8 +350,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
                             android:hint="Feedback (optional)"
-                            app:boxStrokeColor="@color/colorPrimary"
-                            app:hintTextColor="@color/colorPrimary">
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etFeedback"
@@ -360,7 +364,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Grade Button -->
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnGradeAssignment"
                             android:layout_width="match_parent"
                             android:layout_height="56dp"
@@ -368,9 +372,10 @@
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/white"
-                            android:background="@drawable/bg_grade_button"
-                            android:drawableStart="@drawable/ic_grade"
-                            android:drawablePadding="12dp"
+                            app:cornerRadius="12dp"
+                            android:backgroundTint="@color/primary"
+                            app:icon="@drawable/ic_grade"
+                            app:iconGravity="textStart"
                             android:gravity="center"
                             android:elevation="2dp" />
 
