@@ -1,21 +1,37 @@
 package com.sowp.user.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+
+import com.sowp.user.models.Topic;
+import com.sowp.user.presenters.activities.TopicView;
+import com.sowp.user.repositories.firebase.TopicRepository;
+
+import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MessageFormatter {
 
     // Regex patterns for different formatting
+
+    TopicRepository repository;
     private static final Pattern BOLD_PATTERN = Pattern.compile("\\*\\*(.*?)\\*\\*");
     private static final Pattern ITALIC_PATTERN = Pattern.compile("\\*(.*?)\\*");
     private static final Pattern UNDERLINE_PATTERN = Pattern.compile("__(.*?)__");
@@ -275,6 +291,54 @@ public class MessageFormatter {
         preview = preview.replaceAll("`(.*?)`", "「$1」"); // Code indicator
 
         return preview;
+    }
+
+    public SpannableString makeLinksClickable(String message, Context context) {
+        SpannableString spannable = new SpannableString(message);
+
+        // Match Course/x/Topics/y
+        Pattern pattern = Pattern.compile("Course/(\\d+)/Topics/(\\d+)");
+        Matcher matcher = pattern.matcher(message);
+
+        while (matcher.find()) {
+            final String courseId = matcher.group(1);
+            final String topicId = matcher.group(2);
+
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    repository.loadTopicsOfCourse(Integer.parseInt(courseId), new TopicRepository.Callback() {
+                        @Override
+                        public void onSuccess(List<Topic> topics) {
+
+                        }
+
+                        @Override
+                        public void onFailure(String message) {
+
+                        }
+                    });
+                    Intent intent = new Intent(context, TopicView.class);
+                    intent.putExtra("courseId", Integer.parseInt(courseId));
+                    intent.putExtra("topicId", Integer.parseInt(topicId));
+                    context.startActivity(intent);
+                }
+
+                @Override
+                public void updateDrawState(@NonNull TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setColor(Color.BLUE); // make link blue
+                    ds.setUnderlineText(true); // underline like hyperlink
+                }
+            };
+
+            spannable.setSpan(clickableSpan,
+                    matcher.start(),
+                    matcher.end(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return spannable;
     }
 
 

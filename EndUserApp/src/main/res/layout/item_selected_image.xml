@@ -5,7 +5,8 @@
     android:layout_height="120dp"
     android:layout_margin="4dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/background_primary">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,16 +19,20 @@
             android:scaleType="centerCrop"
             android:contentDescription="Selected Image" />
 
-        <Button
+        <ImageView
             android:id="@+id/removeImageButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="4dp"
-            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_margin="6dp"
+            android:background="@drawable/bg_remove_button"
+            android:src="@drawable/ic_close"
             android:contentDescription="Remove Image"
-            android:padding="2dp" />
+            android:padding="6dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect" />
 
     </RelativeLayout>
 

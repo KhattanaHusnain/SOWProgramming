@@ -3,269 +3,323 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="16dp">
+    android:background="@color/background_primary"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <!-- Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit Profile"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@color/primary"
             android:gravity="center"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="40dp"
+            android:letterSpacing="0.02" />
 
-        <!-- Full Name -->
+        <!-- Profile Items Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profile_item_background"
-            android:padding="16dp">
+            android:orientation="vertical"
+            android:background="@drawable/profile_container_background"
+            android:padding="16dp"
+            android:elevation="2dp">
 
+            <!-- Full Name -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/profile_item_background"
+                android:padding="18dp"
+                android:elevation="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Full Name"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvFullName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Full Name"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvFullName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditFullName"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:background="@drawable/edit_button_background"
+                    android:contentDescription="Edit Full Name"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/primary" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnEditFullName"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Full Name" />
-        </LinearLayout>
-
-        <!-- Gender -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profile_item_background"
-            android:padding="16dp">
-
+            <!-- Gender -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/profile_item_background"
+                android:padding="18dp"
+                android:elevation="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Gender"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvGender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gender"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvGender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditGender"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:background="@drawable/edit_button_background"
+                    android:contentDescription="Edit Gender"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/primary" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnEditGender"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Gender" />
-        </LinearLayout>
-
-        <!-- Semester -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profile_item_background"
-            android:padding="16dp">
-
+            <!-- Semester -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/profile_item_background"
+                android:padding="18dp"
+                android:elevation="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Semester"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvSemester"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Semester"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvSemester"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditSemester"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:background="@drawable/edit_button_background"
+                    android:contentDescription="Edit Semester"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/primary" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnEditSemester"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Semester" />
-        </LinearLayout>
-
-        <!-- Phone -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profile_item_background"
-            android:padding="16dp">
-
+            <!-- Phone -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/profile_item_background"
+                android:padding="18dp"
+                android:elevation="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Phone"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditPhone"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:background="@drawable/edit_button_background"
+                    android:contentDescription="Edit Phone"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/primary" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnEditPhone"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Phone" />
-        </LinearLayout>
-
-        <!-- Degree -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profile_item_background"
-            android:padding="16dp">
-
+            <!-- Degree -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/profile_item_background"
+                android:padding="18dp"
+                android:elevation="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Degree"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvDegree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Degree"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvDegree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditDegree"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:background="@drawable/edit_button_background"
+                    android:contentDescription="Edit Degree"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/primary" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnEditDegree"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Degree" />
-        </LinearLayout>
-
-        <!-- Date of Birth -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/profile_item_background"
-            android:padding="16dp">
-
+            <!-- Date of Birth -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:background="@drawable/profile_item_background"
+                android:padding="18dp"
+                android:elevation="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Date of Birth"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvDateOfBirth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loading..."
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date of Birth"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvDateOfBirth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnEditDateOfBirth"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:background="@drawable/edit_button_background"
+                    android:contentDescription="Edit Date of Birth"
+                    android:layout_gravity="center_vertical"
+                    app:tint="@color/primary" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnEditDateOfBirth"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Edit Date of Birth" />
         </LinearLayout>
 
     </LinearLayout>

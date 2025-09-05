@@ -122,9 +122,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.colorPrimary,
-                R.color.colorPrimaryDark,
-                R.color.colorAccent
+                R.color.primary,        // instead of R.color.colorPrimary
+                R.color.accent,         // instead of R.color.colorAccent
+                R.color.primary_dark    // instead of R.color.colorPrimaryDark
         );
 
         // Profile Views

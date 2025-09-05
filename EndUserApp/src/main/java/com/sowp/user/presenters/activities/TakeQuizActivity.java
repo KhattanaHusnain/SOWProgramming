@@ -108,7 +108,7 @@ public class TakeQuizActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submitButton);
 
         // Set initial timer color
-        timerText.setTextColor(ContextCompat.getColor(this, R.color.timer_normal));
+        timerText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
     }
 
     private void loadQuizDetails() {
@@ -203,7 +203,7 @@ public class TakeQuizActivity extends AppCompatActivity {
 
                     // Apply modern styling
                     radioButton.setBackgroundResource(R.drawable.option_background);
-                    radioButton.setButtonTintList(ContextCompat.getColorStateList(this, R.color.radio_button_tint));
+                    radioButton.setButtonTintList(ContextCompat.getColorStateList(this, R.color.primary));
 
                     optionsGroup.addView(radioButton);
 
@@ -255,9 +255,9 @@ public class TakeQuizActivity extends AppCompatActivity {
                 if (seconds <= 10) {
                     timerText.setTextColor(Color.RED);
                 } else if (seconds <= 20) {
-                    timerText.setTextColor(ContextCompat.getColor(TakeQuizActivity.this, R.color.timer_warning));
+                    timerText.setTextColor(ContextCompat.getColor(TakeQuizActivity.this, R.color.warning));
                 } else {
-                    timerText.setTextColor(ContextCompat.getColor(TakeQuizActivity.this, R.color.timer_normal));
+                    timerText.setTextColor(ContextCompat.getColor(TakeQuizActivity.this, R.color.text_primary));
                 }
             }
 

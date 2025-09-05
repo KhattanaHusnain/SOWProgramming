@@ -10,6 +10,7 @@
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
     android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/background_primary"
     app:cardCornerRadius="12dp"
     app:cardElevation="3dp">
 
@@ -23,6 +24,7 @@
             android:id="@+id/imageContainer"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            app:cardBackgroundColor="@color/surface"
             app:cardCornerRadius="8dp"
             app:cardElevation="1dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +73,7 @@
                 android:layout_marginEnd="2dp"
                 android:contentDescription="Rating star"
                 android:src="@drawable/ic_star"
-                app:tint="@color/badge_gold" />
+                app:tint="@color/accent" />
 
             <TextView
                 android:id="@+id/ratingTextView"
@@ -96,6 +98,7 @@
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
             app:drawableStartCompat="@drawable/ic_person"
+            app:drawableTint="@color/gray_medium"
             app:layout_constraintEnd_toEndOf="@+id/courseTitleTextView"
             app:layout_constraintStart_toStartOf="@+id/courseTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView"
@@ -121,7 +124,7 @@
                 android:paddingTop="2dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="2dp"
-                android:textColor="@color/accent_color"
+                android:textColor="@color/secondary"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 tools:text="Programming" />
@@ -136,7 +139,7 @@
                 android:paddingTop="2dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="2dp"
-                android:textColor="@color/level_color"
+                android:textColor="@color/primary"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 tools:text="Intermediate" />
@@ -180,6 +183,7 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 app:drawableStartCompat="@drawable/ic_time"
+                app:drawableTint="@color/gray_medium"
                 tools:text="5h 30m" />
 
             <TextView
@@ -192,6 +196,7 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 app:drawableStartCompat="@drawable/ic_play_arrow"
+                app:drawableTint="@color/gray_medium"
                 tools:text="24 lectures" />
 
             <TextView
@@ -204,6 +209,7 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 app:drawableStartCompat="@drawable/ic_people"
+                app:drawableTint="@color/gray_medium"
                 tools:text="1.2k students" />
 
         </LinearLayout>
@@ -214,7 +220,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            android:background="@color/divider_color"
+            android:background="@color/gray_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/courseInfoLayout" />
@@ -250,7 +256,7 @@
                 android:paddingTop="3dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="3dp"
-                android:textColor="@color/accent_color"
+                android:textColor="@color/info"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 tools:text="PUBLIC" />

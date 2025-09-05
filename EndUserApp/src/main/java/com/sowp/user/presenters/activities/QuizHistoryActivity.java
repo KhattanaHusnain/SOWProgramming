@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.sowp.user.R;
 import com.sowp.user.adapters.QuizHistoryAdapter;
 import com.sowp.user.models.QuizAttempt;
@@ -29,7 +30,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
     private ProgressBar progressBar;
     private LinearLayout emptyStateLayout;
     private LinearLayout contentLayout;
-    private LinearLayout paginationLayout;
+    private MaterialCardView paginationCard; // Changed from LinearLayout to MaterialCardView
     private TextView totalAttemptsText;
     private TextView averageScoreText;
     private TextView passedQuizzesText;
@@ -67,7 +68,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         progressBar = findViewById(R.id.progressBar);
         emptyStateLayout = findViewById(R.id.emptyStateLayout);
         contentLayout = findViewById(R.id.contentLayout);
-        paginationLayout = findViewById(R.id.paginationLayout);
+        paginationCard = findViewById(R.id.paginationCard); // Changed to match XML ID
         totalAttemptsText = findViewById(R.id.totalAttemptsText);
         averageScoreText = findViewById(R.id.averageScoreText);
         passedQuizzesText = findViewById(R.id.passedQuizzesText);
@@ -173,9 +174,9 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
 
     private void updatePaginationControls() {
         if (totalPages <= 1) {
-            paginationLayout.setVisibility(View.GONE);
+            paginationCard.setVisibility(View.GONE); // Changed from paginationLayout to paginationCard
         } else {
-            paginationLayout.setVisibility(View.VISIBLE);
+            paginationCard.setVisibility(View.VISIBLE); // Changed from paginationLayout to paginationCard
             previousButton.setEnabled(currentPage > 0);
             nextButton.setEnabled(currentPage < totalPages - 1);
             pageIndicator.setText(String.format("Page %d of %d", currentPage + 1, Math.max(totalPages, 1)));
@@ -220,7 +221,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         progressBar.setVisibility(View.GONE);
         contentLayout.setVisibility(View.GONE);
         emptyStateLayout.setVisibility(View.VISIBLE);
-        paginationLayout.setVisibility(View.GONE);
+        paginationCard.setVisibility(View.GONE); // Changed from paginationLayout to paginationCard
     }
 
     private void showContent() {

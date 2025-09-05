@@ -1,11 +1,19 @@
 package com.sowp.user.models;
 
+import com.google.firebase.database.PropertyName;
 import java.util.List;
 
 public class Question {
+    @PropertyName("id")
     private int id;
+
+    @PropertyName("text")
     private String text;
+
+    @PropertyName("options")
     private List<String> options;
+
+    @PropertyName("correctAnswer")
     private String correctAnswer;
 
     // Required empty constructor for Firestore
@@ -19,6 +27,7 @@ public class Question {
     }
 
     // Getters and Setters
+    @PropertyName("id")
     public int getId() {
         return id;
     }
@@ -27,6 +36,7 @@ public class Question {
         this.id = id;
     }
 
+    @PropertyName("text")
     public String getText() {
         return text;
     }
@@ -35,6 +45,7 @@ public class Question {
         this.text = text;
     }
 
+    @PropertyName("options")
     public List<String> getOptions() {
         return options;
     }
@@ -43,6 +54,7 @@ public class Question {
         this.options = options;
     }
 
+    @PropertyName("correctAnswer")
     public String getCorrectAnswer() {
         return correctAnswer;
     }

@@ -1,22 +1,46 @@
 package com.sowp.user.models;
 
+import com.google.firebase.database.PropertyName;
 import java.util.List;
 
 /**
  * Model class representing an assignment attempt/submission
  */
 public class AssignmentAttempt {
+    @PropertyName("attemptId")
     private String attemptId;
+
+    @PropertyName("assignmentId")
     private int assignmentId;            // Changed to int to match Assignment model
+
+    @PropertyName("assignmentTitle")
     private String assignmentTitle;      // Added for better display
+
+    @PropertyName("courseId")
     private int courseId;               // Added to track which course
+
+    @PropertyName("checked")
     private boolean checked;
+
+    @PropertyName("maxScore")
     private int maxScore;
+
+    @PropertyName("score")
     private int score;
+
+    @PropertyName("status")
     private String status;
+
+    @PropertyName("submissionTimestamp")
     private long submissionTimestamp;
+
+    @PropertyName("submittedImages")
     private List<String> submittedImages; // Base64 encoded images
+
+    @PropertyName("feedback")
     private String feedback;             // Added for instructor feedback
+
+    @PropertyName("gradedAt")
     private long gradedAt;              // Added for grading timestamp
 
     // Default constructor required for Firestore
@@ -41,50 +65,62 @@ public class AssignmentAttempt {
     }
 
     // Getters
+    @PropertyName("attemptId")
     public String getAttemptId() {
         return attemptId;
     }
 
+    @PropertyName("assignmentId")
     public int getAssignmentId() {
         return assignmentId;
     }
 
+    @PropertyName("assignmentTitle")
     public String getAssignmentTitle() {
         return assignmentTitle;
     }
 
+    @PropertyName("courseId")
     public int getCourseId() {
         return courseId;
     }
 
+    @PropertyName("checked")
     public boolean isChecked() {
         return checked;
     }
 
+    @PropertyName("maxScore")
     public int getMaxScore() {
         return maxScore;
     }
 
+    @PropertyName("score")
     public int getScore() {
         return score;
     }
 
+    @PropertyName("status")
     public String getStatus() {
         return status;
     }
 
+    @PropertyName("submissionTimestamp")
     public long getSubmissionTimestamp() {
         return submissionTimestamp;
     }
 
+    @PropertyName("submittedImages")
     public List<String> getSubmittedImages() {
         return submittedImages;
     }
 
+    @PropertyName("feedback")
     public String getFeedback() {
         return feedback;
     }
 
+    @PropertyName("gradedAt")
     public long getGradedAt() {
         return gradedAt;
     }

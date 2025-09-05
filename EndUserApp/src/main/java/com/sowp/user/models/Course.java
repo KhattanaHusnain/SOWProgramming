@@ -4,6 +4,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 import androidx.room.Ignore;
+import com.google.firebase.database.PropertyName;
 
 import java.util.List;
 
@@ -12,93 +13,123 @@ public class Course {
 
     @PrimaryKey
     @ColumnInfo(name = "id")
+    @PropertyName("id")
     private int id;
 
     @ColumnInfo(name = "illustration")
+    @PropertyName("illustration")
     private String illustration;
 
     @ColumnInfo(name = "title")
+    @PropertyName("title")
     private String title;
 
     @ColumnInfo(name = "shortTitle")
+    @PropertyName("shortTitle")
     private String shortTitle;
 
     @ColumnInfo(name = "courseCode")
+    @PropertyName("courseCode")
     private String courseCode;
 
     @ColumnInfo(name = "instructor")
+    @PropertyName("instructor")
     private String instructor;
 
     @ColumnInfo(name = "members")
+    @PropertyName("members")
     private int members;
 
     @ColumnInfo(name = "description")
+    @PropertyName("description")
     private String description;
 
     @ColumnInfo(name = "duration")
+    @PropertyName("duration")
     private String duration;
 
     @ColumnInfo(name = "categoryArray")
+    @PropertyName("categoryArray")
     private List<String> categoryArray;
 
     @ColumnInfo(name = "departmentArray")
+    @PropertyName("departmentArray")
     private List<String> departmentArray;
 
     @ColumnInfo(name = "outline")
+    @PropertyName("outline")
     private String outline;
 
     @ColumnInfo(name = "createdAt")
+    @PropertyName("createdAt")
     private long createdAt;
 
     @ColumnInfo(name = "updatedAt")
+    @PropertyName("updatedAt")
     private long updatedAt;
 
     @ColumnInfo(name = "public")
+    @PropertyName("public")
     private boolean isPublic;
 
     @ColumnInfo(name = "lectures")
+    @PropertyName("lectures")
     private int lectures;
 
     @ColumnInfo(name = "completed")
+    @PropertyName("completed")
     private boolean completed;
 
     @ColumnInfo(name = "semester")
+    @PropertyName("semester")
     private String semester;
 
     @ColumnInfo(name = "tags")
+    @PropertyName("tags")
     private List<String> tags;
 
     @ColumnInfo(name = "preRequisite")
+    @PropertyName("preRequisite")
     private List<String> preRequisite;
 
     @ColumnInfo(name = "followUp")
+    @PropertyName("followUp")
     private List<String> followUp;
 
     @ColumnInfo(name = "creditHours")
+    @PropertyName("creditHours")
     private int creditHours;
 
     @ColumnInfo(name = "isLab")
+    @PropertyName("isLab")
     private boolean isLab; // true for lab, false for theoretical
 
     @ColumnInfo(name = "isComputer")
+    @PropertyName("isComputer")
     private boolean isComputer; // true for computer-based, false for non-computer
 
     @ColumnInfo(name = "language")
+    @PropertyName("language")
     private String language;
 
     @ColumnInfo(name = "noOfQuizzes")
+    @PropertyName("noOfQuizzes")
     private int noOfQuizzes;
 
     @ColumnInfo(name = "noOfAssignments")
+    @PropertyName("noOfAssignments")
     private int noOfAssignments;
 
     @ColumnInfo(name = "level")
+    @PropertyName("level")
     private String level; // e.g., "Beginner", "Intermediate", "Advanced"
 
     @ColumnInfo(name = "isPaid")
+    @PropertyName("isPaid")
     private boolean isPaid;
 
     @ColumnInfo(name = "avgCourseRating")
+    @PropertyName("avgCourseRating")
     private double avgCourseRating;
 
     // Default constructor
@@ -172,6 +203,7 @@ public class Course {
     }
 
     // Getters and Setters
+    @PropertyName("id")
     public int getId() {
         return id;
     }
@@ -180,6 +212,7 @@ public class Course {
         this.id = id;
     }
 
+    @PropertyName("illustration")
     public String getIllustration() {
         return illustration;
     }
@@ -188,6 +221,7 @@ public class Course {
         this.illustration = illustration;
     }
 
+    @PropertyName("title")
     public String getTitle() {
         return title;
     }
@@ -196,6 +230,7 @@ public class Course {
         this.title = title;
     }
 
+    @PropertyName("shortTitle")
     public String getShortTitle() {
         return shortTitle;
     }
@@ -204,6 +239,7 @@ public class Course {
         this.shortTitle = shortTitle;
     }
 
+    @PropertyName("courseCode")
     public String getCourseCode() {
         return courseCode;
     }
@@ -212,6 +248,7 @@ public class Course {
         this.courseCode = courseCode;
     }
 
+    @PropertyName("instructor")
     public String getInstructor() {
         return instructor;
     }
@@ -220,6 +257,7 @@ public class Course {
         this.instructor = instructor;
     }
 
+    @PropertyName("members")
     public int getMembers() {
         return members;
     }
@@ -228,6 +266,7 @@ public class Course {
         this.members = members;
     }
 
+    @PropertyName("description")
     public String getDescription() {
         return description;
     }
@@ -236,6 +275,7 @@ public class Course {
         this.description = description;
     }
 
+    @PropertyName("duration")
     public String getDuration() {
         return duration;
     }
@@ -244,6 +284,7 @@ public class Course {
         this.duration = duration;
     }
 
+    @PropertyName("categoryArray")
     public List<String> getCategoryArray() {
         return categoryArray;
     }
@@ -252,6 +293,7 @@ public class Course {
         this.categoryArray = categoryArray;
     }
 
+    @PropertyName("departmentArray")
     public List<String> getDepartmentArray() {
         return departmentArray;
     }
@@ -260,6 +302,7 @@ public class Course {
         this.departmentArray = departmentArray;
     }
 
+    @PropertyName("outline")
     public String getOutline() {
         return outline;
     }
@@ -268,6 +311,7 @@ public class Course {
         this.outline = outline;
     }
 
+    @PropertyName("createdAt")
     public long getCreatedAt() {
         return createdAt;
     }
@@ -276,6 +320,7 @@ public class Course {
         this.createdAt = createdAt;
     }
 
+    @PropertyName("updatedAt")
     public long getUpdatedAt() {
         return updatedAt;
     }
@@ -284,6 +329,7 @@ public class Course {
         this.updatedAt = updatedAt;
     }
 
+    @PropertyName("public")
     public boolean isPublic() {
         return isPublic;
     }
@@ -292,6 +338,7 @@ public class Course {
         isPublic = aPublic;
     }
 
+    @PropertyName("lectures")
     public int getLectures() {
         return lectures;
     }
@@ -300,6 +347,7 @@ public class Course {
         this.lectures = lectures;
     }
 
+    @PropertyName("completed")
     public boolean getCompleted() {
         return completed;
     }
@@ -308,6 +356,7 @@ public class Course {
         this.completed = completed;
     }
 
+    @PropertyName("semester")
     public String getSemester() {
         return semester;
     }
@@ -316,6 +365,7 @@ public class Course {
         this.semester = semester;
     }
 
+    @PropertyName("tags")
     public List<String> getTags() {
         return tags;
     }
@@ -324,6 +374,7 @@ public class Course {
         this.tags = tags;
     }
 
+    @PropertyName("preRequisite")
     public List<String> getPreRequisite() {
         return preRequisite;
     }
@@ -332,6 +383,7 @@ public class Course {
         this.preRequisite = preRequisite;
     }
 
+    @PropertyName("followUp")
     public List<String> getFollowUp() {
         return followUp;
     }
@@ -340,6 +392,7 @@ public class Course {
         this.followUp = followUp;
     }
 
+    @PropertyName("creditHours")
     public int getCreditHours() {
         return creditHours;
     }
@@ -348,6 +401,7 @@ public class Course {
         this.creditHours = creditHours;
     }
 
+    @PropertyName("isLab")
     public boolean isLab() {
         return isLab;
     }
@@ -356,6 +410,7 @@ public class Course {
         isLab = lab;
     }
 
+    @PropertyName("isComputer")
     public boolean isComputer() {
         return isComputer;
     }
@@ -364,6 +419,7 @@ public class Course {
         isComputer = computer;
     }
 
+    @PropertyName("language")
     public String getLanguage() {
         return language;
     }
@@ -372,6 +428,7 @@ public class Course {
         this.language = language;
     }
 
+    @PropertyName("noOfQuizzes")
     public int getNoOfQuizzes() {
         return noOfQuizzes;
     }
@@ -380,6 +437,7 @@ public class Course {
         this.noOfQuizzes = noOfQuizzes;
     }
 
+    @PropertyName("noOfAssignments")
     public int getNoOfAssignments() {
         return noOfAssignments;
     }
@@ -388,6 +446,7 @@ public class Course {
         this.noOfAssignments = noOfAssignments;
     }
 
+    @PropertyName("level")
     public String getLevel() {
         return level;
     }
@@ -396,6 +455,7 @@ public class Course {
         this.level = level;
     }
 
+    @PropertyName("isPaid")
     public boolean isPaid() {
         return isPaid;
     }
@@ -404,6 +464,7 @@ public class Course {
         isPaid = paid;
     }
 
+    @PropertyName("avgCourseRating")
     public double getAvgCourseRating() {
         return avgCourseRating;
     }

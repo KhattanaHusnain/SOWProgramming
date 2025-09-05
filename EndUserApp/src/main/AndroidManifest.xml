@@ -28,80 +28,105 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.SOWProgramming"
         tools:targetApi="31">
         <activity
             android:name=".presenters.activities.ViewAssignmentsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.ViewQuizzesActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.AssignmentDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.QuizDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.AssignmentHistoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.QuizHistoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.AboutActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.SubmitAssignmentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.ChangeProfilePicture"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.SettingsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.OfflineTopicViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.OfflineTopicListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.OfflineCourseActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.VideoPlayerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming.NoActionBar"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".presenters.activities.TakeQuizActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.ForgotPassword"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.EditProfile"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.TopicList"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.TopicView"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.Description"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.Main"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.SignUp"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.Login"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.Authentication"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.SOWProgramming" />
         <activity
             android:name=".presenters.activities.SplashScreen"
             android:exported="true"
@@ -112,7 +137,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <meta-data
             android:name="com.google.android.gms.client_id"
             android:value="@string/default_web_client_id" />

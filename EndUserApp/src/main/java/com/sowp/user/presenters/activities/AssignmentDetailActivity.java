@@ -229,11 +229,11 @@ public class AssignmentDetailActivity extends AppCompatActivity {
     private void setScoreColor(double percentage) {
         int colorRes;
         if (percentage >= 80) {
-            colorRes = R.color.success_color;
+            colorRes = R.color.success; // Updated from success_color to success
         } else if (percentage >= 60) {
-            colorRes = R.color.warning_color;
+            colorRes = R.color.warning; // Updated from warning_color to warning
         } else {
-            colorRes = R.color.error_color;
+            colorRes = R.color.error; // Updated from error_color to error
         }
 
         int color = ContextCompat.getColor(this, colorRes);
@@ -247,24 +247,24 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         int backgroundColorRes, textColorRes;
         switch (status.toLowerCase()) {
             case "submitted":
-                backgroundColorRes = R.color.status_submitted_bg;
-                textColorRes = R.color.status_submitted_text;
+                backgroundColorRes = R.color.status_submitted; // Updated from status_submitted_bg
+                textColorRes = R.color.text_on_primary; // Updated from status_submitted_text
                 break;
             case "graded":
-                backgroundColorRes = R.color.status_graded_bg;
-                textColorRes = R.color.status_graded_text;
+                backgroundColorRes = R.color.success; // Updated from status_graded_bg
+                textColorRes = R.color.text_on_primary; // Updated from status_graded_text
                 break;
             case "failed":
-                backgroundColorRes = R.color.status_late_bg;
-                textColorRes = R.color.status_late_text;
+                backgroundColorRes = R.color.status_overdue; // Updated from status_late_bg
+                textColorRes = R.color.text_on_primary; // Updated from status_late_text
                 break;
             case "pending":
-                backgroundColorRes = R.color.status_pending_bg;
-                textColorRes = R.color.status_pending_text;
+                backgroundColorRes = R.color.status_in_progress; // Updated from status_pending_bg
+                textColorRes = R.color.text_on_primary; // Updated from status_pending_text
                 break;
             default:
-                backgroundColorRes = R.color.status_default_bg;
-                textColorRes = R.color.status_default_text;
+                backgroundColorRes = R.color.gray_medium; // Updated from status_default_bg
+                textColorRes = R.color.text_on_primary; // Updated from status_default_text
                 break;
         }
 
@@ -275,13 +275,13 @@ public class AssignmentDetailActivity extends AppCompatActivity {
     private void setupCheckedChip(boolean isChecked) {
         if (isChecked) {
             chipChecked.setText("Graded");
-            chipChecked.setChipBackgroundColorResource(R.color.success_color);
-            chipChecked.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+            chipChecked.setChipBackgroundColorResource(R.color.success); // Updated from success_color
+            chipChecked.setTextColor(ContextCompat.getColor(this, R.color.white)); // Updated to use white
             chipChecked.setChipIcon(ContextCompat.getDrawable(this, R.drawable.ic_checked));
         } else {
             chipChecked.setText("Pending");
-            chipChecked.setChipBackgroundColorResource(R.color.warning_color);
-            chipChecked.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+            chipChecked.setChipBackgroundColorResource(R.color.warning); // Updated from warning_color
+            chipChecked.setTextColor(ContextCompat.getColor(this, R.color.white)); // Updated to use white
             chipChecked.setChipIcon(ContextCompat.getDrawable(this, R.drawable.ic_pending));
         }
     }
@@ -290,19 +290,19 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         int colorRes;
         switch (status.toLowerCase()) {
             case "submitted":
-                colorRes = R.color.status_submitted_bg;
+                colorRes = R.color.status_submitted; // Updated from status_submitted_bg
                 break;
             case "graded":
-                colorRes = R.color.status_graded_bg;
+                colorRes = R.color.success; // Updated from status_graded_bg
                 break;
             case "failed":
-                colorRes = R.color.status_late_bg;
+                colorRes = R.color.status_overdue; // Updated from status_late_bg
                 break;
             case "pending":
-                colorRes = R.color.status_pending_bg;
+                colorRes = R.color.status_in_progress; // Updated from status_pending_bg
                 break;
             default:
-                colorRes = R.color.status_default_bg;
+                colorRes = R.color.gray_medium; // Updated from status_default_bg
                 break;
         }
 

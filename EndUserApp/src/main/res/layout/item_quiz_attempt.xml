@@ -31,7 +31,7 @@
                 android:text="Quiz Title"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="@color/text_primary"
                 android:maxLines="2"
                 android:ellipsize="end" />
 
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:text="Score: "
                     android:textSize="14sp"
-                    android:textColor="@color/gray_600" />
+                    android:textColor="@color/text_secondary" />
 
                 <TextView
                     android:id="@+id/scoreText"
@@ -77,7 +77,7 @@
                     android:text="85%"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/primary" />
 
             </LinearLayout>
 
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:text="Questions: "
                     android:textSize="14sp"
-                    android:textColor="@color/gray_600" />
+                    android:textColor="@color/text_secondary" />
 
                 <TextView
                     android:id="@+id/questionsText"
@@ -100,7 +100,7 @@
                     android:text="8/10"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/primary" />
 
             </LinearLayout>
 
@@ -124,7 +124,7 @@
                     android:src="@drawable/ic_clock"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="4dp"
-                    android:tint="@color/gray_500" />
+                    android:tint="@color/gray_medium" />
 
                 <TextView
                     android:id="@+id/timeTakenText"
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:text="05:30"
                     android:textSize="12sp"
-                    android:textColor="@color/gray_600" />
+                    android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -147,7 +147,7 @@
                     android:src="@drawable/ic_calendar"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="4dp"
-                    android:tint="@color/gray_500" />
+                    android:tint="@color/gray_medium" />
 
                 <TextView
                     android:id="@+id/dateText"
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:text="Dec 15, 2024"
                     android:textSize="12sp"
-                    android:textColor="@color/gray_600" />
+                    android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 
