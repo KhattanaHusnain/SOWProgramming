@@ -12,7 +12,7 @@
         <!-- Secondary brand color for dark mode. -->
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorOnSecondary">@color/text_primary</item>
-        <item name="colorSecondaryContainer">@color/accent</item>
+        <item name="colorSecondaryContainer">@color/ripple</item>
         <item name="colorOnSecondaryContainer">@color/text_primary</item>
 
         <!-- Tertiary brand color for dark mode. -->

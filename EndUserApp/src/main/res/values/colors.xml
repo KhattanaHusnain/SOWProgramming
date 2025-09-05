@@ -7,7 +7,7 @@
 
     <!-- Logo-Based Brand Colors -->
     <color name="primary">#1B3B6F</color>           <!-- Dark blue from logo background -->
-    <color name="primary_light">#4A6FA5</color>     <!-- Lighter variant -->
+    <color name="primary_light">#2196f3</color>     <!-- Lighter variant -->
     <color name="primary_dark">#0D2142</color>      <!-- Darker variant -->
     <color name="secondary">#FF6B47</color>         <!-- Orange-red from logo braces -->
     <color name="accent">#FFD93D</color>            <!-- Golden yellow from logo pages -->
