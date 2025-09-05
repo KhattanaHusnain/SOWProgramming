@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sowp.user.models.ChatMessage;
 import com.sowp.user.models.User;
 import com.sowp.user.R;
-import com.sowp.user.presenters.fragments.ChatFragment;
 import com.sowp.user.utils.Base64ImageUtils;
 import com.sowp.user.utils.MessageFormatter;
 
@@ -65,6 +64,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public ChatAdapter(Context context, List<ChatMessage> chatMessages, String currentUserEmail) {
         this.context = context;
         this.chatMessages = chatMessages;
+        this.formatter = new MessageFormatter();
         this.currentUserEmail = currentUserEmail;
         this.inflater = LayoutInflater.from(context);
     }

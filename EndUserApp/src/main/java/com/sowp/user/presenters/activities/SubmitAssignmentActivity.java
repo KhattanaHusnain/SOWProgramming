@@ -254,23 +254,36 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
     }
 
     private void handleImageSelection(Intent data) {
-        selectedImageUris.clear();
+        List<Uri> newImageUris = new ArrayList<>();
 
         if (data.getClipData() != null) {
             int count = data.getClipData().getItemCount();
             for (int i = 0; i < count; i++) {
                 Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                selectedImageUris.add(imageUri);
+                // Only add if not already selected
+                if (!selectedImageUris.contains(imageUri)) {
+                    newImageUris.add(imageUri);
+                    selectedImageUris.add(imageUri);
+                }
             }
         } else if (data.getData() != null) {
-            selectedImageUris.add(data.getData());
+            Uri imageUri = data.getData();
+            // Only add if not already selected
+            if (!selectedImageUris.contains(imageUri)) {
+                newImageUris.add(imageUri);
+                selectedImageUris.add(imageUri);
+            }
         }
 
         selectedImagesAdapter.notifyDataSetChanged();
         updateUIState();
 
-        String message = selectedImageUris.size() + " image(s) selected";
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        if (newImageUris.isEmpty()) {
+            Toast.makeText(this, "No new images selected (duplicates ignored)", Toast.LENGTH_SHORT).show();
+        } else {
+            String message = newImageUris.size() + " new image(s) added. Total: " + selectedImageUris.size();
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateUIState() {
@@ -455,12 +468,12 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
         class ImageViewHolder extends RecyclerView.ViewHolder {
             private ImageView imageView;
-            private Button removeButton;
+            private ImageView removeButton; // Changed from Button to ImageView
 
             public ImageViewHolder(@NonNull View itemView) {
                 super(itemView);
                 imageView = itemView.findViewById(R.id.selectedImageView);
-                removeButton = itemView.findViewById(R.id.removeImageButton);
+                removeButton = itemView.findViewById(R.id.removeImageButton); // This will now work correctly
             }
 
             public void bind(Uri imageUri, int position) {
