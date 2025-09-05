@@ -86,7 +86,6 @@ public class UserManagementActivity extends AppCompatActivity {
         spinnerSortBy = findViewById(R.id.spinner_sort_by);
         etSearch = findViewById(R.id.et_search);
         mainLayout = findViewById(R.id.main_layout);
-
         userList = new ArrayList<>();
         filteredUserList = new ArrayList<>();
     }
@@ -117,13 +116,13 @@ public class UserManagementActivity extends AppCompatActivity {
         // Verification Status Spinner
         String[] verificationOptions = {"All", "Verified", "Unverified"};
         ArrayAdapter<String> verificationAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, verificationOptions);;
+                android.R.layout.simple_spinner_dropdown_item, verificationOptions);;
         spinnerVerification.setAdapter(verificationAdapter);
 
         // Sort By Spinner
         String[] sortOptions = {"Name", "Email", "Semester", "Gender", "Degree", "Date Created"};
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, sortOptions);
+                android.R.layout.simple_spinner_dropdown_item, sortOptions);
         spinnerSortBy.setAdapter(sortAdapter);
     }
 

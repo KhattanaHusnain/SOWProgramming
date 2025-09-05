@@ -217,7 +217,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
                 android:indeterminateTint="@color/primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <!-- Courses List -->
             <androidx.recyclerview.widget.RecyclerView
