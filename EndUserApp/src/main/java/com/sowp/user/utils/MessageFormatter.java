@@ -311,6 +311,11 @@ public class MessageFormatter {
                         @Override
                         public void onSuccess(List<Topic> topics) {
 
+                            Intent intent = new Intent(context, TopicView.class);
+                            intent.putExtra("courseId", Integer.parseInt(courseId));
+                            intent.putExtra("topicId", Integer.parseInt(topicId));
+                            context.startActivity(intent);
+
                         }
 
                         @Override
@@ -318,10 +323,7 @@ public class MessageFormatter {
 
                         }
                     });
-                    Intent intent = new Intent(context, TopicView.class);
-                    intent.putExtra("courseId", Integer.parseInt(courseId));
-                    intent.putExtra("topicId", Integer.parseInt(topicId));
-                    context.startActivity(intent);
+
                 }
 
                 @Override
