@@ -174,7 +174,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             return formattedMessageCache.get(cacheKey);
         }
 
-        SpannableString formattedMessage = formatter.makeLinksClickable(messageText, context);
+        // Use the new main formatting method
+        SpannableString formattedMessage = formatter.formatComplete(messageText, context);
         formattedMessageCache.put(cacheKey, formattedMessage);
 
         // Limit cache size to prevent memory issues
