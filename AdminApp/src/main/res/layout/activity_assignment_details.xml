@@ -335,7 +335,7 @@
                                     android:textColor="@color/text_primary"
                                     android:padding="12dp"
                                     android:background="@drawable/bg_max_score_readonly"
-                                    android:backgroundTint="@color/white"
+                                    android:backgroundTint="@color/text_secondary"
                                     android:minWidth="60dp"
                                     android:gravity="center" />
 
