@@ -245,7 +245,7 @@ public class UserManagementActivity extends AppCompatActivity {
             }
         }
 
-
+        // Sort the filtered list
         switch (currentSortBy) {
             case "Name":
                 filteredUserList.sort((u1, u2) -> u1.getFullName().compareToIgnoreCase(u2.getFullName()));
@@ -305,6 +305,7 @@ public class UserManagementActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Refresh the list when returning from user profile
         loadUsers();
     }
 }
