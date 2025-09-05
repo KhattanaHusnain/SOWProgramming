@@ -14,9 +14,7 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -40,8 +38,6 @@ public class MessageFormatter {
     private static final Pattern STRIKETHROUGH_PATTERN = Pattern.compile("~~(.*?)~~");
     private static final Pattern CODE_PATTERN = Pattern.compile("`(.*?)`");
     private static final Pattern EMOJI_PATTERN = Pattern.compile(":(\\w+):");
-    private static final Pattern TOPIC_PATTERN = Pattern.compile("Course/(\\d+)/Topics/(\\d+)");
-
 
     // Common emoji mappings
     private static final String[][] EMOJI_MAP = {
@@ -301,7 +297,8 @@ public class MessageFormatter {
         SpannableString spannable = new SpannableString(message);
 
         // Match Course/x/Topics/y
-        Matcher matcher = TOPIC_PATTERN.matcher(message);
+        Pattern pattern = Pattern.compile("Course/(\\d+)/Topics/(\\d+)");
+        Matcher matcher = pattern.matcher(message);
 
         while (matcher.find()) {
             final String courseId = matcher.group(1);
@@ -310,20 +307,20 @@ public class MessageFormatter {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-
-                    repository.getTopicById(Integer.parseInt(courseId), Integer.parseInt(topicId), new TopicRepository.SingleTopicCallback() {
+                    repository.loadTopicsOfCourse(Integer.parseInt(courseId), new TopicRepository.Callback() {
                         @Override
-                        public void onSuccess(Topic topic) {
+                        public void onSuccess(List<Topic> topics) {
+
                             Intent intent = new Intent(context, TopicView.class);
-                            intent.putExtra("TOPIC_NAME", topic.getName());
-                            intent.putExtra("TOPIC_CONTENT", topic.getContent());
-                            intent.putExtra("VIDEO_ID", topic.getVideoID());
+                            intent.putExtra("courseId", Integer.parseInt(courseId));
+                            intent.putExtra("topicId", Integer.parseInt(topicId));
                             context.startActivity(intent);
+
                         }
 
                         @Override
                         public void onFailure(String message) {
-                            Log.e("TopicRepository", "Error loading topic: " + message);
+
                         }
                     });
 
