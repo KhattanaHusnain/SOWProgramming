@@ -14,7 +14,9 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -22,22 +24,23 @@ import com.sowp.user.models.Topic;
 import com.sowp.user.presenters.activities.TopicView;
 import com.sowp.user.repositories.firebase.TopicRepository;
 
-import java.util.Calendar;
-import java.util.List;
+import java.lang.ref.WeakReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MessageFormatter {
+    private static final String TAG = "MessageFormatter";
 
     // Regex patterns for different formatting
-
-    TopicRepository repository;
     private static final Pattern BOLD_PATTERN = Pattern.compile("\\*\\*(.*?)\\*\\*");
     private static final Pattern ITALIC_PATTERN = Pattern.compile("\\*(.*?)\\*");
     private static final Pattern UNDERLINE_PATTERN = Pattern.compile("__(.*?)__");
     private static final Pattern STRIKETHROUGH_PATTERN = Pattern.compile("~~(.*?)~~");
     private static final Pattern CODE_PATTERN = Pattern.compile("`(.*?)`");
     private static final Pattern EMOJI_PATTERN = Pattern.compile(":(\\w+):");
+    private static final Pattern TOPIC_PATTERN = Pattern.compile("Course/(\\d+)/Topics/(\\d+)");
+
+    private TopicRepository repository;
 
     // Common emoji mappings
     private static final String[][] EMOJI_MAP = {
@@ -47,6 +50,13 @@ public class MessageFormatter {
             {"-_-", "😑"}, {">:(", "😠"}, {":@", "😡"}, {"XD", "😆"},
             {"lol", "😂"}, {"LOL", "😂"}, {"omg", "😱"}, {"OMG", "😱"}
     };
+
+    /**
+     * Constructor - Initialize repository
+     */
+    public MessageFormatter() {
+        this.repository = new TopicRepository();
+    }
 
     /**
      * Main method to format a message with basic text formatting
@@ -275,7 +285,11 @@ public class MessageFormatter {
                 .replace("`", "\\`");
     }
 
-
+    /**
+     * Preview formatting without applying it
+     * @param message Message to preview
+     * @return String with visual formatting indicators
+     */
     public static String previewFormatting(String message) {
         if (message == null || message.trim().isEmpty()) {
             return "";
@@ -293,55 +307,128 @@ public class MessageFormatter {
         return preview;
     }
 
+    /**
+     * Make links clickable including Course/x/Topics/y links
+     * @param message Message to process
+     * @param context Context for starting activities
+     * @return SpannableString with clickable links
+     */
     public SpannableString makeLinksClickable(String message, Context context) {
-        SpannableString spannable = new SpannableString(message);
+        if (message == null || message.trim().isEmpty()) {
+            return new SpannableString("");
+        }
 
-        // Match Course/x/Topics/y
-        Pattern pattern = Pattern.compile("Course/(\\d+)/Topics/(\\d+)");
-        Matcher matcher = pattern.matcher(message);
+        // First apply basic formatting
+        SpannableString spannable = formatMessage(message);
+
+        // Add automatic link detection for URLs, emails, etc.
+        Linkify.addLinks(spannable, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES | Linkify.PHONE_NUMBERS);
+
+        // Then add custom topic links
+        return addTopicLinks(spannable, context);
+    }
+
+    /**
+     * Add clickable spans for Course/x/Topics/y patterns
+     * @param spannable SpannableString to process
+     * @param context Context for starting activities
+     * @return SpannableString with topic links
+     */
+    private SpannableString addTopicLinks(SpannableString spannable, Context context) {
+        if (repository == null) {
+            repository = new TopicRepository();
+        }
+
+        String text = spannable.toString();
+        Matcher matcher = TOPIC_PATTERN.matcher(text);
+
+        // Use SpannableStringBuilder for modification
+        SpannableStringBuilder builder = new SpannableStringBuilder(spannable);
+
+        // Use WeakReference to prevent memory leaks
+        WeakReference<Context> contextRef = new WeakReference<>(context);
 
         while (matcher.find()) {
             final String courseId = matcher.group(1);
             final String topicId = matcher.group(2);
 
+            Log.d(TAG, "Found topic link: Course/" + courseId + "/Topics/" + topicId);
+
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    repository.loadTopicsOfCourse(Integer.parseInt(courseId), new TopicRepository.Callback() {
-                        @Override
-                        public void onSuccess(List<Topic> topics) {
+                    Context ctx = contextRef.get();
+                    if (ctx == null) {
+                        Log.w(TAG, "Context was garbage collected, cannot handle click");
+                        return;
+                    }
 
-                            Intent intent = new Intent(context, TopicView.class);
-                            intent.putExtra("courseId", Integer.parseInt(courseId));
-                            intent.putExtra("topicId", Integer.parseInt(topicId));
-                            context.startActivity(intent);
+                    Log.d(TAG, "Topic link clicked: Course/" + courseId + "/Topics/" + topicId);
 
+                    try {
+                        int courseIdInt = Integer.parseInt(courseId);
+                        int topicIdInt = Integer.parseInt(topicId);
+
+                        repository.getTopicById(courseIdInt, topicIdInt, new TopicRepository.SingleTopicCallback() {
+                            @Override
+                            public void onSuccess(Topic topic) {
+                                Context currentCtx = contextRef.get();
+                                if (currentCtx == null) {
+                                    Log.w(TAG, "Context was garbage collected during topic load");
+                                    return;
+                                }
+
+                                Log.d(TAG, "Topic loaded successfully: " + topic.getName());
+                                try {
+                                    Intent intent = new Intent(currentCtx, TopicView.class);
+                                    intent.putExtra("TOPIC_NAME", topic.getName());
+                                    intent.putExtra("TOPIC_CONTENT", topic.getContent());
+                                    intent.putExtra("VIDEO_ID", topic.getVideoID());
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    currentCtx.startActivity(intent);
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error starting TopicView activity", e);
+                                    Toast.makeText(currentCtx, "Error opening topic", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(String errorMessage) {
+                                Context currentCtx = contextRef.get();
+                                Log.e(TAG, "Error loading topic: " + errorMessage);
+                                if (currentCtx != null) {
+                                    Toast.makeText(currentCtx, "Topic not found", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } catch (NumberFormatException e) {
+                        Log.e(TAG, "Invalid topic ID format", e);
+                        if (ctx != null) {
+                            Toast.makeText(ctx, "Invalid topic link", Toast.LENGTH_SHORT).show();
                         }
-
-                        @Override
-                        public void onFailure(String message) {
-
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error handling topic click", e);
+                        if (ctx != null) {
+                            Toast.makeText(ctx, "Error loading topic", Toast.LENGTH_SHORT).show();
                         }
-                    });
-
+                    }
                 }
 
                 @Override
                 public void updateDrawState(@NonNull TextPaint ds) {
                     super.updateDrawState(ds);
-                    ds.setColor(Color.BLUE); // make link blue
-                    ds.setUnderlineText(true); // underline like hyperlink
+                    ds.setColor(Color.BLUE);
+                    ds.setUnderlineText(true);
                 }
             };
 
-            spannable.setSpan(clickableSpan,
+            builder.setSpan(clickableSpan,
                     matcher.start(),
                     matcher.end(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        return spannable;
+        return new SpannableString(builder);
     }
-
 
 }

@@ -33,7 +33,9 @@ import java.util.Map;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
     private static final String TAG = "ChatAdapter";
-    MessageFormatter formatter;
+
+    // Instance variables
+    private MessageFormatter formatter;
     private final List<ChatMessage> chatMessages;
     private final Context context;
     private String currentUserEmail;
@@ -45,7 +47,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     // Cache for user profile data
     private final Map<String, User> userCache = new HashMap<>();
     private final Map<String, Bitmap> profileImageCache = new HashMap<>();
+    private final Map<String, SpannableString> formattedMessageCache = new HashMap<>();
 
+    // View types for optimization
+    private static final int VIEW_TYPE_CURRENT_USER = 1;
+    private static final int VIEW_TYPE_OTHER_USER = 2;
+
+    // Interfaces
     public interface OnMessageActionListener {
         void onDeleteMessage(ChatMessage message, int position);
         void onDeleteForEveryone(ChatMessage message, int position);
@@ -61,26 +69,41 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         void onUserDataLoadFailed(String error);
     }
 
+    /**
+     * Constructor
+     */
     public ChatAdapter(Context context, List<ChatMessage> chatMessages, String currentUserEmail) {
         this.context = context;
         this.chatMessages = chatMessages;
-        this.formatter = new MessageFormatter();
+        this.formatter = new MessageFormatter(); // Initialize formatter with repository
         this.currentUserEmail = currentUserEmail;
         this.inflater = LayoutInflater.from(context);
     }
 
+    /**
+     * Set message action listener
+     */
     public void setOnMessageActionListener(OnMessageActionListener listener) {
         this.actionListener = listener;
     }
 
+    /**
+     * Set user profile click listener
+     */
     public void setOnUserProfileClickListener(OnUserProfileClickListener listener) {
         this.profileClickListener = listener;
     }
 
+    /**
+     * Set user role
+     */
     public void setUserRole(String role) {
         this.userRole = role;
     }
 
+    /**
+     * Cache user data for improved performance
+     */
     public void cacheUserData(String email, User userData) {
         if (email != null && userData != null) {
             userCache.put(email, userData);
@@ -89,13 +112,32 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 try {
                     Bitmap bitmap = Base64ImageUtils.base64ToBitmap(userData.getPhoto());
                     if (bitmap != null) {
+                        // Scale down if too large to prevent memory issues
+                        int maxSize = 100; // dp
+                        if (bitmap.getWidth() > maxSize || bitmap.getHeight() > maxSize) {
+                            bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, maxSize, true);
+                        }
                         profileImageCache.put(email, bitmap);
                     }
+                } catch (OutOfMemoryError e) {
+                    Log.e(TAG, "OutOfMemoryError caching profile image for " + email, e);
+                    clearOldestProfileImages();
                 } catch (Exception e) {
                     Log.e(TAG, "Error caching profile image for " + email, e);
                 }
             }
         }
+    }
+
+    /**
+     * Get view type for optimization
+     */
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessage message = chatMessages.get(position);
+        boolean isCurrentUser = currentUserEmail != null &&
+                currentUserEmail.equals(message.getEmail());
+        return isCurrentUser ? VIEW_TYPE_CURRENT_USER : VIEW_TYPE_OTHER_USER;
     }
 
     @NonNull
@@ -108,37 +150,54 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatMessage chatMessage = chatMessages.get(position);
+        String messageText = chatMessage.getMessage();
         String messageEmail = chatMessage.getEmail();
-        boolean isCurrentUser = currentUserEmail != null && currentUserEmail.equals(messageEmail);
+        boolean isCurrentUser = getItemViewType(position) == VIEW_TYPE_CURRENT_USER;
 
-        holder.messageCurrentUser.setText(formatter.makeLinksClickable(chatMessage.getMessage(),holder.itemView.getContext()));
-        holder.messageCurrentUser.setMovementMethod(LinkMovementMethod.getInstance());
-        holder.messageCurrentUser.setHighlightColor(Color.TRANSPARENT);
-
-        holder.messageOthers.setText(formatter.makeLinksClickable(chatMessage.getMessage(),holder.itemView.getContext()));
-        holder.messageOthers.setMovementMethod(LinkMovementMethod.getInstance());
-        holder.messageOthers.setHighlightColor(Color.TRANSPARENT);
+        // Get or create formatted message with links
+        SpannableString formattedMessage = getFormattedMessage(messageText, chatMessage.getId());
 
         if (isCurrentUser) {
-            setupCurrentUserMessage(holder, chatMessage, position);
+            setupCurrentUserMessage(holder, chatMessage, formattedMessage, position);
         } else {
-            setupOtherUserMessage(holder, chatMessage, messageEmail, position);
+            setupOtherUserMessage(holder, chatMessage, formattedMessage, messageEmail, position);
         }
     }
 
-    private void setupCurrentUserMessage(ChatViewHolder holder, ChatMessage chatMessage, int position) {
+    /**
+     * Get formatted message from cache or create new one
+     */
+    private SpannableString getFormattedMessage(String messageText, String messageId) {
+        String cacheKey = messageText + "_" + messageId;
+
+        if (formattedMessageCache.containsKey(cacheKey)) {
+            return formattedMessageCache.get(cacheKey);
+        }
+
+        SpannableString formattedMessage = formatter.makeLinksClickable(messageText, context);
+        formattedMessageCache.put(cacheKey, formattedMessage);
+
+        // Limit cache size to prevent memory issues
+        if (formattedMessageCache.size() > 100) {
+            clearOldestFormattedMessages();
+        }
+
+        return formattedMessage;
+    }
+
+    /**
+     * Setup current user message display
+     */
+    private void setupCurrentUserMessage(ChatViewHolder holder, ChatMessage chatMessage,
+                                         SpannableString formattedMessage, int position) {
         // Show current user layout, hide others
         holder.currentUserMessageContainer.setVisibility(View.VISIBLE);
         holder.othersMessageContainer.setVisibility(View.GONE);
 
-        // Set message content
-        try {
-            SpannableString formattedMsg = MessageFormatter.formatMessage(chatMessage.getMessage());
-            holder.messageCurrentUser.setText(formattedMsg);
-        } catch (Exception e) {
-            Log.e(TAG, "Error formatting message", e);
-            holder.messageCurrentUser.setText(chatMessage.getMessage());
-        }
+        // Set message content with clickable links
+        holder.messageCurrentUser.setText(formattedMessage);
+        holder.messageCurrentUser.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.messageCurrentUser.setHighlightColor(Color.TRANSPARENT);
 
         holder.messageTimeCurrentUser.setText(chatMessage.getFormattedDateTime());
 
@@ -148,28 +207,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             holder.usernameCurrentUser.setVisibility(View.GONE); // Usually hidden for current user
         }
 
-
-
-        // Setup long press
+        // Setup long press context menu
         holder.setupLongPressListener(chatMessage, position, currentUserEmail, userRole, actionListener, context);
-
-        // Enable link clicking
-        holder.messageCurrentUser.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
     }
 
-    private void setupOtherUserMessage(ChatViewHolder holder, ChatMessage chatMessage, String messageEmail, int position) {
+    /**
+     * Setup other user message display
+     */
+    private void setupOtherUserMessage(ChatViewHolder holder, ChatMessage chatMessage,
+                                       SpannableString formattedMessage, String messageEmail, int position) {
         // Show others layout, hide current user
         holder.othersMessageContainer.setVisibility(View.VISIBLE);
         holder.currentUserMessageContainer.setVisibility(View.GONE);
 
-        // Set message content
-        try {
-            SpannableString formattedMsg = MessageFormatter.formatMessage(chatMessage.getMessage());
-            holder.messageOthers.setText(formattedMsg);
-        } catch (Exception e) {
-            Log.e(TAG, "Error formatting message", e);
-            holder.messageOthers.setText(chatMessage.getMessage());
-        }
+        // Set message content with clickable links
+        holder.messageOthers.setText(formattedMessage);
+        holder.messageOthers.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.messageOthers.setHighlightColor(Color.TRANSPARENT);
 
         holder.messageTimeOthers.setText(chatMessage.getFormattedDateTime());
 
@@ -180,13 +234,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         setupProfileImage(holder.profileImage, messageEmail);
         setupProfileClickListener(holder.profileImage, messageEmail);
 
-        // Setup long press
+        // Setup long press context menu
         holder.setupLongPressListener(chatMessage, position, currentUserEmail, userRole, actionListener, context);
-
-        // Enable link clicking
-        holder.messageOthers.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
     }
 
+    /**
+     * Set username from cache or load it
+     */
     private void setUsernameFromCache(TextView usernameView, String userEmail) {
         if (usernameView == null) return;
 
@@ -225,11 +279,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
+    /**
+     * Capitalize first letter of string
+     */
     private String capitalizeFirst(String str) {
         if (str == null || str.length() == 0) return str;
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    /**
+     * Setup profile image
+     */
     private void setupProfileImage(ImageView profileImageView, String userEmail) {
         if (profileImageView == null) return;
 
@@ -271,18 +331,40 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
+    /**
+     * Load profile image from user data
+     */
     private void loadProfileImageFromUserData(ImageView profileImageView, String userEmail, User userData) {
         if (profileImageView == null) return;
 
         if (userData != null && userData.getPhoto() != null && !userData.getPhoto().isEmpty()) {
             try {
-                Bitmap bitmap = Base64ImageUtils.base64ToBitmap(userData.getPhoto());
+                // Add size check to prevent OutOfMemoryError
+                String base64Image = userData.getPhoto();
+                if (base64Image.length() > 1024 * 1024) { // 1MB limit
+                    Log.w(TAG, "Profile image too large for user: " + userEmail);
+                    setDefaultProfileImage(profileImageView);
+                    return;
+                }
+
+                Bitmap bitmap = Base64ImageUtils.base64ToBitmap(base64Image);
                 if (bitmap != null) {
+                    // Scale down if too large
+                    int maxSize = 100; // dp
+                    if (bitmap.getWidth() > maxSize || bitmap.getHeight() > maxSize) {
+                        bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, maxSize, true);
+                    }
+
                     profileImageView.setImageBitmap(bitmap);
                     profileImageCache.put(userEmail, bitmap);
                 } else {
                     setDefaultProfileImage(profileImageView);
                 }
+            } catch (OutOfMemoryError e) {
+                Log.e(TAG, "OutOfMemoryError loading profile image", e);
+                setDefaultProfileImage(profileImageView);
+                // Clear some cache to free memory
+                clearOldestProfileImages();
             } catch (Exception e) {
                 Log.e(TAG, "Error loading profile image from base64", e);
                 setDefaultProfileImage(profileImageView);
@@ -292,6 +374,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
+    /**
+     * Set default profile image
+     */
     private void setDefaultProfileImage(ImageView profileImageView) {
         if (profileImageView == null) return;
 
@@ -302,6 +387,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
+    /**
+     * Setup profile image click listener
+     */
     private void setupProfileClickListener(ImageView profileImageView, String userEmail) {
         if (profileImageView == null) return;
 
@@ -332,11 +420,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return chatMessages.size();
     }
 
+    /**
+     * Set current user email and refresh display
+     */
     public void setCurrentUserEmail(String email) {
         this.currentUserEmail = email;
         notifyDataSetChanged();
     }
 
+    /**
+     * Preload group member data for better performance
+     */
     public void preloadGroupMembers(List<String> memberEmails) {
         // Pre-load user data for all group members to improve performance
         if (profileClickListener != null) {
@@ -358,8 +452,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
+    /**
+     * Clear all caches and free memory
+     */
     public void clearCaches() {
         userCache.clear();
+
+        // Recycle bitmaps before clearing
         for (Bitmap bitmap : profileImageCache.values()) {
             if (bitmap != null && !bitmap.isRecycled()) {
                 try {
@@ -370,8 +469,59 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             }
         }
         profileImageCache.clear();
+        formattedMessageCache.clear();
     }
 
+    /**
+     * Clear formatted message cache
+     */
+    public void clearFormattedMessageCache() {
+        formattedMessageCache.clear();
+    }
+
+    /**
+     * Clear oldest formatted messages to manage memory
+     */
+    private void clearOldestFormattedMessages() {
+        if (formattedMessageCache.size() > 50) {
+            // Simple FIFO approach - remove oldest entries
+            int toRemove = formattedMessageCache.size() - 40;
+            var iterator = formattedMessageCache.entrySet().iterator();
+            for (int i = 0; i < toRemove && iterator.hasNext(); i++) {
+                iterator.next();
+                iterator.remove();
+            }
+        }
+    }
+
+    /**
+     * Clear oldest profile images to manage memory
+     */
+    private void clearOldestProfileImages() {
+        if (profileImageCache.size() > 20) { // Keep only 20 recent images
+            // Remove oldest entries (simple FIFO approach)
+            int toRemove = profileImageCache.size() - 15;
+            var iterator = profileImageCache.entrySet().iterator();
+            for (int i = 0; i < toRemove && iterator.hasNext(); i++) {
+                var entry = iterator.next();
+                Bitmap bitmap = entry.getValue();
+                if (bitmap != null && !bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
+                iterator.remove();
+            }
+        }
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        clearCaches();
+    }
+
+    /**
+     * ViewHolder class for chat items
+     */
     public static class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         // Others' message views
         final LinearLayout othersMessageContainer;
@@ -386,6 +536,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         final TextView messageCurrentUser;
         final TextView messageTimeCurrentUser;
 
+        // Context menu data
         private ChatMessage currentMessage;
         private int currentPosition;
         private String currentUserEmail;
@@ -418,6 +569,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             }
         }
 
+        /**
+         * Setup long press listener for context menu
+         */
         public void setupLongPressListener(ChatMessage chatMessage, int position, String currentUserEmail,
                                            String userRole, OnMessageActionListener actionListener, Context context) {
             this.currentMessage = chatMessage;
@@ -463,6 +617,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             }
         }
 
+        /**
+         * Handle context menu item selection
+         */
         private boolean onContextItemSelected(MenuItem item) {
             try {
                 switch (item.getItemId()) {
@@ -488,6 +645,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             }
         }
 
+        /**
+         * Copy message to clipboard
+         */
         private void copyMessageToClipboard() {
             try {
                 ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
