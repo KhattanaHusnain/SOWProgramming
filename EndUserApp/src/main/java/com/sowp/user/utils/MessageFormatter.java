@@ -15,6 +15,7 @@ import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -307,13 +308,16 @@ public class MessageFormatter {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
+
                     repository.loadTopicsOfCourse(Integer.parseInt(courseId), new TopicRepository.Callback() {
                         @Override
                         public void onSuccess(List<Topic> topics) {
 
+
                             Intent intent = new Intent(context, TopicView.class);
-                            intent.putExtra("courseId", Integer.parseInt(courseId));
-                            intent.putExtra("topicId", Integer.parseInt(topicId));
+                            intent.putExtra("TOPIC_NAME", Integer.parseInt(courseId));
+                            intent.putExtra("TOPIC_CONTENT", Integer.parseInt(courseId));
+                            intent.putExtra("VIDEO_ID", Integer.parseInt(courseId));
                             context.startActivity(intent);
 
                         }
