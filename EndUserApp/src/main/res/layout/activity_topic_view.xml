@@ -6,21 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/background_primary"
     tools:context=".presenters.activities.TopicView">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="@color/primary">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="Topic Name"
+            app:titleTextColor="@color/text_on_primary"
+            app:navigationIconTint="@color/text_on_primary"
             tools:title="Introduction to Android Development" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -29,13 +33,16 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:background="@color/surface"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:colorScheme="@color/primary">
 
         <WebView
             android:id="@+id/topic_webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="80dp" />
+            android:layout_marginBottom="80dp"
+            android:background="@color/background_primary" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -45,7 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:indeterminateTint="@color/primary" />
 
     <!-- Video Play Button -->
     <com.google.android.material.button.MaterialButton
@@ -57,8 +65,12 @@
         android:text="Watch Video"
         android:textAllCaps="false"
         android:textSize="16sp"
+        android:textColor="@color/text_on_primary"
+        android:backgroundTint="@color/secondary"
         app:icon="@drawable/ic_play_arrow"
+        app:iconTint="@color/text_on_primary"
         app:iconGravity="textStart"
+        app:rippleColor="@color/ripple"
         style="@style/Widget.Material3.Button" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

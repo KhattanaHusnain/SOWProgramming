@@ -5,22 +5,22 @@
     android:viewportHeight="100">
   <path
       android:pathData="M50,50m-45,0a45,45 0,1 1,90 0a45,45 0,1 1,-90 0"
-      android:fillColor="#34A853"/>
+      android:fillColor="@color/success"/>
   <path
       android:pathData="M50,50m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0"
-      android:fillColor="#46BF62"/>
+      android:fillColor="@color/role_student"/>
   <path
       android:pathData="M60,40C55,40 55,35 50,35C45,35 45,40 40,40C35,40 30,45 30,50C30,55 35,60 40,60L60,60C65,60 70,55 70,50C70,45 65,40 60,40Z"
-      android:fillColor="#FFFFFF"/>
+      android:fillColor="@color/white"/>
   <path
       android:pathData="M40,50L50,55L60,50"
       android:strokeWidth="3"
-      android:fillColor="#00000000"
-      android:strokeColor="#FFFFFF"
+      android:fillColor="@color/transparent"
+      android:strokeColor="@color/white"
       android:strokeLineCap="round"/>
   <path
       android:pathData="M50,50m-45,0a45,45 0,1 1,90 0a45,45 0,1 1,-90 0"
       android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#0F9D58"/>
+      android:fillColor="@color/transparent"
+      android:strokeColor="@color/success"/>
 </vector>

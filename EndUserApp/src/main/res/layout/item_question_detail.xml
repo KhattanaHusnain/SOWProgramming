@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp"
+    app:cardBackgroundColor="@color/background_primary"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp">
 
@@ -27,7 +28,7 @@
                 android:text="Q1."
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/primary"
                 android:layout_marginEnd="8dp" />
 
             <TextView
@@ -37,7 +38,7 @@
                 android:text="CORRECT"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/text_on_primary"
                 android:background="@drawable/bg_status_correct"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:text="What is the capital of France?"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="12dp" />
 
         <!-- Options Container -->
@@ -87,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:text="Your Answer:"
                     android:textSize="12sp"
-                    android:textColor="@color/gray_600"
+                    android:textColor="@color/text_secondary"
                     android:layout_marginBottom="2dp" />
 
                 <TextView
@@ -97,7 +98,7 @@
                     android:text="Paris"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/text_primary" />
 
             </LinearLayout>
 
@@ -112,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="Correct Answer:"
                     android:textSize="12sp"
-                    android:textColor="@color/gray_600"
+                    android:textColor="@color/text_secondary"
                     android:layout_marginBottom="2dp" />
 
                 <TextView
@@ -122,7 +123,7 @@
                     android:text="Paris"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/green" />
+                    android:textColor="@color/success" />
 
             </LinearLayout>
 

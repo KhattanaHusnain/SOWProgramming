@@ -165,13 +165,13 @@ public class UserProfilePopup {
 
             // Set role-specific styling
             if ("Admin".equalsIgnoreCase(userData.getRole())) {
-                roleTextView.setTextColor(ContextCompat.getColor(context, R.color.admin_color));
+                roleTextView.setTextColor(ContextCompat.getColor(context, R.color.role_admin));
             } else {
-                roleTextView.setTextColor(ContextCompat.getColor(context, R.color.user_color));
+                roleTextView.setTextColor(ContextCompat.getColor(context, R.color.role_teacher));
             }
         } else {
             roleTextView.setText("Student");
-            roleTextView.setTextColor(ContextCompat.getColor(context, R.color.user_color));
+            roleTextView.setTextColor(ContextCompat.getColor(context, R.color.role_student));
             roleTextView.setVisibility(View.VISIBLE);
         }
     }

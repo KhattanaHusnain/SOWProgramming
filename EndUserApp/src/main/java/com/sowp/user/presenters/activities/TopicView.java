@@ -83,9 +83,9 @@ public class TopicView extends AppCompatActivity {
 
     private void setupSwipeRefresh() {
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.colorPrimary,
-                R.color.colorAccent,
-                R.color.colorPrimaryDark
+                R.color.primary,        // instead of R.color.colorPrimary
+                R.color.accent,         // instead of R.color.colorAccent
+                R.color.primary_dark    // instead of R.color.colorPrimaryDark
         );
 
         swipeRefreshLayout.setOnRefreshListener(() -> {

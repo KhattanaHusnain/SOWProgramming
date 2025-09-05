@@ -26,6 +26,8 @@ public class TopicManagementActivity extends AppCompatActivity {
     LinearLayout cardViewTopics;
     LinearLayout uploadTopics;
     TextView txtTotalTopics;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

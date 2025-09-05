@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f5f5f5"
+    android:background="@color/background_secondary"
     tools:context=".presenters.activities.ViewAssignmentsActivity">
 
     <!-- Header -->
@@ -23,7 +23,7 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_back"
             android:layout_marginEnd="16dp"
-            app:tint="@color/white"
+            app:tint="@color/text_on_primary"
             android:layout_gravity="center_vertical"
             android:contentDescription="Back" />
 
@@ -42,7 +42,7 @@
                 android:text="Course Assignments"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/text_on_primary"
                 tools:text="Mobile App Development" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Loading..."
                 android:textSize="14sp"
-                android:textColor="@color/badge_silver"
+                android:textColor="@color/accent"
                 tools:text="CS401" />
 
         </LinearLayout>
@@ -66,7 +66,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        app:cardBackgroundColor="@color/white">
+        app:cardBackgroundColor="@color/background_primary"
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +83,7 @@
                 android:text="0 assignments found"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#2C3E50"
+                android:textColor="@color/text_primary"
                 android:layout_marginBottom="16dp"
                 tools:text="15 assignments found" />
 
@@ -98,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxStrokeColor="@color/primary"
                     android:hint="Search assignments..."
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
@@ -108,6 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
+                        android:textColor="@color/text_primary"
                         android:maxLines="1" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -117,7 +119,7 @@
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:hint="Filter"
-                    app:hintTextColor="@color/primary"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxStrokeColor="@color/primary"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
 
@@ -125,6 +127,7 @@
                         android:id="@+id/spinnerFilter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
                         android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -147,6 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:indeterminateTint="@color/primary"
             android:visibility="gone" />
 
         <!-- RecyclerView -->
@@ -174,7 +178,7 @@
                 android:layout_height="120dp"
                 android:src="@drawable/ic_empty_courses"
                 android:contentDescription="No assignments"
-                app:tint="@color/text_secondary" />
+                app:tint="@color/gray_medium" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -206,7 +210,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:background="@color/white"
+        android:background="@color/surface"
         android:elevation="2dp"
         android:visibility="gone">
 

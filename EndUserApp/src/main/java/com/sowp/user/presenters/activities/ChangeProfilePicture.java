@@ -15,23 +15,23 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.sowp.user.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,6 +39,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,15 +50,15 @@ public class ChangeProfilePicture extends AppCompatActivity {
     private static final String TAG = "ChangeProfilePicture";
     private static final int IMAGE_QUALITY = 80;
     private static final int MAX_IMAGE_SIZE = 400;
+    private static final String FILE_PROVIDER_AUTHORITY = ".fileprovider";
 
     // UI Components
-
-    private ImageView backButton;
+    private Toolbar toolbar;
     private CircleImageView profileImage;
     private FloatingActionButton btnChangePhoto;
     private MaterialButton btnTakePhoto, btnChooseGallery, btnSave, btnCancel;
-    private MaterialTextView statusText;
-    private ContentLoadingProgressBar progressBar;
+    private TextView statusText;
+    private ProgressBar progressBar;
     private View actionButtonsContainer;
 
     // Data
@@ -63,6 +66,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
     private String originalImageBase64 = "";
     private boolean imageChanged = false;
     private Uri photoUri;
+    private File currentPhotoFile;
 
     // Firebase
     private FirebaseAuth auth;
@@ -81,6 +85,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
 
         initializeFirebase();
         initializeViews();
+        setupToolbar();
         initializeActivityResultLaunchers();
         setupClickListeners();
         loadCurrentProfileImage();
@@ -92,7 +97,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        backButton = findViewById(R.id.btn_back);
+        toolbar = findViewById(R.id.toolbar);
         profileImage = findViewById(R.id.profile_image);
         btnChangePhoto = findViewById(R.id.btn_change_photo);
         btnTakePhoto = findViewById(R.id.btn_take_photo);
@@ -102,6 +107,16 @@ public class ChangeProfilePicture extends AppCompatActivity {
         statusText = findViewById(R.id.status_text);
         progressBar = findViewById(R.id.progress_bar);
         actionButtonsContainer = findViewById(R.id.action_buttons_container);
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     private void initializeActivityResultLaunchers() {
@@ -124,6 +139,11 @@ public class ChangeProfilePicture extends AppCompatActivity {
                 success -> {
                     if (success && photoUri != null) {
                         handleSelectedImage(photoUri);
+                    } else {
+                        if (currentPhotoFile != null && currentPhotoFile.exists()) {
+                            currentPhotoFile.delete();
+                        }
+                        showError("Failed to capture photo");
                     }
                 }
         );
@@ -153,7 +173,6 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        backButton.setOnClickListener(v -> finish());
         btnChangePhoto.setOnClickListener(v -> checkPermissionsAndShowDialog());
         btnTakePhoto.setOnClickListener(v -> openCamera());
         btnChooseGallery.setOnClickListener(v -> openImagePicker());
@@ -205,60 +224,137 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        imagePickerLauncher.launch(Intent.createChooser(intent, "Select Profile Picture"));
+        try {
+            Intent intent;
+
+            // Try modern approach first (Android 10+)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+            } else {
+                // Fallback for older versions
+                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+            }
+
+            // Alternative: Use ACTION_GET_CONTENT if ACTION_PICK fails
+            if (intent.resolveActivity(getPackageManager()) == null) {
+                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+            }
+
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                imagePickerLauncher.launch(Intent.createChooser(intent, "Select Profile Picture"));
+            } else {
+                showError("No gallery app available");
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error opening gallery: " + e.getMessage(), e);
+            showError("Failed to open gallery");
+        }
     }
 
     private void openCamera() {
         try {
+            // Clean up any existing photo file
+            cleanupTempFile();
+
+            // Create new photo file and URI
             photoUri = createImageUri();
-            cameraLauncher.launch(photoUri);
+
+            if (photoUri != null) {
+                cameraLauncher.launch(photoUri);
+            } else {
+                showError("Failed to create photo file");
+            }
         } catch (Exception e) {
-            Log.e(TAG, "Error opening camera: " + e.getMessage());
+            Log.e(TAG, "Error opening camera: " + e.getMessage(), e);
             showError("Camera not available");
         }
     }
 
     private Uri createImageUri() throws IOException {
-        File imageFile = new File(getExternalFilesDir(null), "profile_temp.jpg");
-        return FileProvider.getUriForFile(this, getPackageName() + ".provider", imageFile);
+        // Create an image file name with timestamp
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "PROFILE_" + timeStamp + "_";
+
+        File storageDir = new File(getExternalFilesDir(null), "profile_photos");
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        currentPhotoFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Get the authority from your package name + .fileprovider
+        String authority = getPackageName() + FILE_PROVIDER_AUTHORITY;
+
+        return FileProvider.getUriForFile(this, authority, currentPhotoFile);
     }
 
     private void handleSelectedImage(Uri imageUri) {
         showLoading(true);
+        statusText.setText("Processing image...");
 
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        // Use background thread for image processing
+        new Thread(() -> {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                if (inputStream == null) {
+                    runOnUiThread(() -> {
+                        showLoading(false);
+                        showError("Failed to read image file");
+                    });
+                    return;
+                }
 
-            if (bitmap != null) {
-                // Handle image rotation
-                bitmap = handleImageRotation(imageUri, bitmap);
-                processAndDisplayImage(bitmap);
-            } else {
-                showError("Failed to load image");
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                inputStream.close();
+
+                if (bitmap != null) {
+                    // Handle image rotation
+                    bitmap = handleImageRotation(imageUri, bitmap);
+
+                    // Process on main thread
+                    Bitmap finalBitmap = bitmap;
+                    runOnUiThread(() -> processAndDisplayImage(finalBitmap));
+                } else {
+                    runOnUiThread(() -> {
+                        showLoading(false);
+                        showError("Failed to load image");
+                    });
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error processing image: " + e.getMessage(), e);
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    showError("Error processing image. Please try again.");
+                });
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Error processing image: " + e.getMessage());
-            showError("Error processing image. Please try again.");
-        } finally {
-            showLoading(false);
-        }
+        }).start();
     }
 
     private Bitmap handleImageRotation(Uri imageUri, Bitmap bitmap) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            ExifInterface exif = new ExifInterface(inputStream);
-            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            if (inputStream != null) {
+                ExifInterface exif = new ExifInterface(inputStream);
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                inputStream.close();
 
-            int rotationInDegrees = exifToDegrees(rotation);
+                int rotationInDegrees = exifToDegrees(rotation);
 
-            if (rotationInDegrees != 0) {
-                Matrix matrix = new Matrix();
-                matrix.postRotate(rotationInDegrees);
-                return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                if (rotationInDegrees != 0) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(rotationInDegrees);
+                    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                }
             }
         } catch (Exception e) {
             Log.w(TAG, "Could not rotate image: " + e.getMessage());
@@ -277,21 +373,33 @@ public class ChangeProfilePicture extends AppCompatActivity {
     }
 
     private void processAndDisplayImage(Bitmap bitmap) {
-        // Resize bitmap for better performance and storage
-        Bitmap resizedBitmap = resizeBitmapMaintainAspect(bitmap, MAX_IMAGE_SIZE);
+        try {
+            // Resize bitmap for better performance and storage
+            Bitmap resizedBitmap = resizeBitmapMaintainAspect(bitmap, MAX_IMAGE_SIZE);
 
-        // Animate the change
-        profileImage.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+            // Animate the change
+            profileImage.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
 
-        // Set the image
-        profileImage.setImageBitmap(resizedBitmap);
+            // Set the image
+            profileImage.setImageBitmap(resizedBitmap);
 
-        // Convert to Base64
-        profileImageBase64 = bitmapToBase64(resizedBitmap);
-        imageChanged = true;
+            // Convert to Base64 in background
+            new Thread(() -> {
+                String base64 = bitmapToBase64(resizedBitmap);
 
-        // Update UI
-        updateUIAfterImageSelection();
+                runOnUiThread(() -> {
+                    profileImageBase64 = base64;
+                    imageChanged = true;
+                    showLoading(false);
+                    updateUIAfterImageSelection();
+                });
+            }).start();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error processing and displaying image: " + e.getMessage(), e);
+            showLoading(false);
+            showError("Error processing image");
+        }
     }
 
     private void updateUIAfterImageSelection() {
@@ -316,6 +424,11 @@ public class ChangeProfilePicture extends AppCompatActivity {
             return;
         }
 
+        if (profileImageBase64.isEmpty()) {
+            showError("No image data to save");
+            return;
+        }
+
         showLoading(true);
         statusText.setText("Saving profile picture...");
 
@@ -336,10 +449,13 @@ public class ChangeProfilePicture extends AppCompatActivity {
                                     Snackbar.LENGTH_LONG)
                             .setAction("DONE", v -> finish())
                             .show();
+
+                    // Clean up temp file after successful save
+                    cleanupTempFile();
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Log.e(TAG, "Error saving profile picture: " + e.getMessage());
+                    Log.e(TAG, "Error saving profile picture: " + e.getMessage(), e);
                     showError("Failed to save profile picture. Please try again.");
                 });
     }
@@ -374,8 +490,11 @@ public class ChangeProfilePicture extends AppCompatActivity {
         profileImageBase64 = originalImageBase64;
         imageChanged = false;
         statusText.setText("Tap the camera icon to change your photo");
-        statusText.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+        statusText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
         actionButtonsContainer.setVisibility(View.GONE);
+
+        // Clean up temp file
+        cleanupTempFile();
     }
 
     private void loadCurrentProfileImage() {
@@ -385,6 +504,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
         }
 
         showLoading(true);
+        statusText.setText("Loading profile picture...");
 
         firestore.collection("User")
                 .document(auth.getCurrentUser().getEmail())
@@ -401,15 +521,24 @@ public class ChangeProfilePicture extends AppCompatActivity {
                                 byte[] decodedBytes = Base64.decode(photoBase64, Base64.DEFAULT);
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
                                 profileImage.setImageBitmap(bitmap);
+                                statusText.setText("Tap the camera icon to change your photo");
                             } catch (Exception e) {
                                 Log.e(TAG, "Error decoding stored image: " + e.getMessage());
+                                statusText.setText("Tap the camera icon to change your photo");
                             }
+                        } else {
+                            statusText.setText("Tap the camera icon to change your photo");
                         }
+                    } else {
+                        statusText.setText("Tap the camera icon to change your photo");
                     }
+                    statusText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
                     Log.e(TAG, "Error loading profile image: " + e.getMessage());
+                    statusText.setText("Tap the camera icon to change your photo");
+                    statusText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
                 });
     }
 
@@ -428,7 +557,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
 
     private void showError(String message) {
         statusText.setText(message);
-        statusText.setTextColor(ContextCompat.getColor(this, R.color.error_color));
+        statusText.setTextColor(ContextCompat.getColor(this, R.color.error));
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
@@ -469,6 +598,18 @@ public class ChangeProfilePicture extends AppCompatActivity {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
+    private void cleanupTempFile() {
+        if (currentPhotoFile != null && currentPhotoFile.exists()) {
+            try {
+                currentPhotoFile.delete();
+                currentPhotoFile = null;
+                photoUri = null;
+            } catch (Exception e) {
+                Log.w(TAG, "Could not delete temporary file: " + e.getMessage());
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (imageChanged) {
@@ -481,16 +622,6 @@ public class ChangeProfilePicture extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Clean up temporary file if exists
-        if (photoUri != null) {
-            try {
-                File file = new File(photoUri.getPath());
-                if (file.exists()) {
-                    file.delete();
-                }
-            } catch (Exception e) {
-                Log.w(TAG, "Could not delete temporary file: " + e.getMessage());
-            }
-        }
+        cleanupTempFile();
     }
 }

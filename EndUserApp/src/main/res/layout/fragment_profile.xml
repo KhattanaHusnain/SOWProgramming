@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:background="@color/background_primary">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -29,7 +29,8 @@
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -127,7 +128,8 @@
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -211,7 +213,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/divider_color"
+                            android:background="@color/gray_light"
                             android:layout_marginBottom="16dp" />
 
                         <!-- Skeleton Assignment/Quiz Rows -->
@@ -311,7 +313,8 @@
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -365,7 +368,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp">
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/white">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -385,7 +389,7 @@
                                     android:layout_height="80dp"
                                     android:layout_centerHorizontal="true"
                                     android:src="@drawable/ic_profile"
-                                    app:civ_border_color="@color/colorPrimary"
+                                    app:civ_border_color="@color/primary"
                                     app:civ_border_width="2dp" />
                             </RelativeLayout>
 
@@ -408,7 +412,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_person"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -428,7 +432,8 @@
                                             android:layout_height="wrap_content"
                                             android:text="Name"
                                             android:textSize="16sp"
-                                            android:textStyle="bold" />
+                                            android:textStyle="bold"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
 
@@ -445,7 +450,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_email"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -464,7 +469,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="email"
-                                            android:textSize="16sp" />
+                                            android:textSize="16sp"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
 
@@ -481,7 +487,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_phone"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -500,7 +506,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="+12345678"
-                                            android:textSize="16sp" />
+                                            android:textSize="16sp"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
 
@@ -517,7 +524,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_cake"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -536,7 +543,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="28 june, 2000"
-                                            android:textSize="16sp" />
+                                            android:textSize="16sp"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
 
@@ -553,7 +561,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_gender"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -572,7 +580,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Male"
-                                            android:textSize="16sp" />
+                                            android:textSize="16sp"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
 
@@ -589,7 +598,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_degree"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -608,7 +617,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Information Technology"
-                                            android:textSize="16sp" />
+                                            android:textSize="16sp"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
 
@@ -624,7 +634,7 @@
                                         android:layout_marginEnd="12dp"
                                         android:layout_gravity="center_vertical"
                                         android:src="@drawable/ic_calendar"
-                                        app:tint="#1565C0"/>
+                                        app:tint="@color/primary"/>
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
@@ -643,7 +653,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="January 15, 2025"
-                                            android:textSize="16sp" />
+                                            android:textSize="16sp"
+                                            android:textColor="@color/text_primary" />
                                     </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
@@ -656,7 +667,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp">
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/white">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -670,6 +682,7 @@
                                 android:text="Learning Progress"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
+                                android:textColor="@color/text_primary"
                                 android:layout_marginBottom="16dp" />
 
                             <!-- Course Statistics -->
@@ -700,7 +713,7 @@
                                         android:text="5"
                                         android:textSize="18sp"
                                         android:textStyle="bold"
-                                        android:textColor="@color/colorPrimary" />
+                                        android:textColor="@color/primary" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -724,7 +737,7 @@
                                         android:text="12"
                                         android:textSize="18sp"
                                         android:textStyle="bold"
-                                        android:textColor="@color/progress_color" />
+                                        android:textColor="@color/success" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -748,14 +761,14 @@
                                         android:text="3"
                                         android:textSize="18sp"
                                         android:textStyle="bold"
-                                        android:textColor="@color/accent_color" />
+                                        android:textColor="@color/accent" />
                                 </LinearLayout>
                             </LinearLayout>
 
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="@color/divider_color"
+                                android:background="@color/gray_light"
                                 android:layout_marginBottom="16dp" />
 
                             <!-- Assignment Progress -->
@@ -776,7 +789,8 @@
                                         android:layout_height="wrap_content"
                                         android:text="Assignments Taken"
                                         android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textStyle="bold"
+                                        android:textColor="@color/text_primary" />
 
                                     <TextView
                                         android:id="@+id/txt_assignments_taken"
@@ -784,6 +798,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="24"
                                         android:textSize="16sp"
+                                        android:textColor="@color/text_primary"
                                         android:layout_marginTop="4dp" />
                                 </LinearLayout>
 
@@ -796,13 +811,13 @@
                                     android:text="History"
                                     android:textAllCaps="false"
                                     android:textSize="14sp"
-                                    android:textColor="#2196F3"
+                                    android:textColor="@color/info"
 
                                     app:cornerRadius="8dp"
                                     app:strokeWidth="1dp"
-                                    app:strokeColor="#2196F3"
-                                    app:backgroundTint="#FFFFFF"
-                                    app:rippleColor="#E3F2FD"
+                                    app:strokeColor="@color/info"
+                                    app:backgroundTint="@color/white"
+                                    app:rippleColor="@color/selected"
 
                                     android:drawableEnd="@drawable/ic_arrow_forward"
                                     android:elevation="2dp">
@@ -828,7 +843,8 @@
                                         android:layout_height="wrap_content"
                                         android:text="Quizzes Taken"
                                         android:textSize="14sp"
-                                        android:textStyle="bold" />
+                                        android:textStyle="bold"
+                                        android:textColor="@color/text_primary" />
 
                                     <TextView
                                         android:id="@+id/txt_quizzes_taken"
@@ -836,6 +852,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="18"
                                         android:textSize="16sp"
+                                        android:textColor="@color/text_primary"
                                         android:layout_marginTop="4dp" />
                                 </LinearLayout>
 
@@ -848,13 +865,13 @@
                                     android:text="History"
                                     android:textAllCaps="false"
                                     android:textSize="14sp"
-                                    android:textColor="#2196F3"
+                                    android:textColor="@color/info"
 
                                     app:cornerRadius="8dp"
                                     app:strokeWidth="1dp"
-                                    app:strokeColor="#2196F3"
-                                    app:backgroundTint="#FFFFFF"
-                                    app:rippleColor="#E3F2FD"
+                                    app:strokeColor="@color/info"
+                                    app:backgroundTint="@color/white"
+                                    app:rippleColor="@color/selected"
 
                                     android:drawableEnd="@drawable/ic_arrow_forward"
                                     android:elevation="2dp">
@@ -870,7 +887,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp">
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/white">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -883,7 +901,8 @@
                                 android:layout_height="24dp"
                                 android:layout_marginEnd="16dp"
                                 android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_certificate" />
+                                android:src="@drawable/ic_certificate"
+                                app:tint="@color/secondary" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -896,7 +915,8 @@
                                     android:layout_height="wrap_content"
                                     android:text="Certificates Earned"
                                     android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_primary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -914,7 +934,7 @@
                                 android:text="7"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="@color/primary"
                                 android:layout_gravity="center_vertical" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -925,7 +945,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp">
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/white">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -939,7 +960,7 @@
                                 android:layout_marginEnd="16dp"
                                 android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_notifications"
-                                app:tint="#1565C0"/>
+                                app:tint="@color/primary"/>
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -952,7 +973,8 @@
                                     android:layout_height="wrap_content"
                                     android:text="Enable Notifications"
                                     android:textSize="16sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_primary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -968,7 +990,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:checked="true" />
+                                android:checked="true"
+                                app:thumbTint="@color/primary"
+                                app:trackTint="@color/gray_light" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -978,7 +1002,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp">
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/white">
 
                         <LinearLayout
                             android:id="@+id/layout_logout"
@@ -996,13 +1021,13 @@
                                 android:layout_marginEnd="16dp"
                                 android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_logout"
-                                app:tint="@color/error_color" />
+                                app:tint="@color/error" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Logout"
-                                android:textColor="@color/error_color"
+                                android:textColor="@color/error"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_gravity="center_vertical" />

@@ -1,19 +1,73 @@
 package com.sowp.user.models;
 
+import com.google.firebase.database.PropertyName;
 import java.util.List;
 
 public class User {
+    @PropertyName("userId")
     private String userId;
+
+    @PropertyName("fullName")
     private String fullName;
+
+    @PropertyName("photo")
     private String photo;
+
+    @PropertyName("email")
     private String email;
+
+    @PropertyName("phone")
     private String phone;
+
+    @PropertyName("gender")
     private String gender;
+
+    @PropertyName("birthdate")
     private String birthdate;
+
+    @PropertyName("degree")
     private String degree;
+
+    @PropertyName("semester")
     private String semester;
+
+    @PropertyName("role")
     private String role;
 
+    @PropertyName("isVerified")
+    private boolean isVerified;
+
+    @PropertyName("notification")
+    private boolean notification;
+
+    @PropertyName("createdAt")
+    private long createdAt;
+
+    @PropertyName("assignmentAvg")
+    private float assignmentAvg;
+
+    @PropertyName("quizzesAvg")
+    private float quizzesAvg;
+
+    @PropertyName("enrolledCourses")
+    private List<Integer> enrolledCourses;
+
+    @PropertyName("favorites")
+    private List<Integer> favorites;
+
+    @PropertyName("quizzes")
+    private List<String> quizzes;
+
+    @PropertyName("assignments")
+    private List<String> assignments;
+
+    @PropertyName("completedCourses")
+    private List<Integer> completedCourses;
+
+    @PropertyName("certificates")
+    private List<String> certificates;
+
+    @PropertyName("isVerified")
     public boolean getIsVerified() {
         return isVerified;
     }
@@ -21,18 +75,6 @@ public class User {
     public void setIsVerified(boolean verified) {
         isVerified = verified;
     }
-
-    private boolean isVerified;
-    private boolean notification;
-    private long createdAt;
-    private float assignmentAvg;
-    private float quizzesAvg;
-    private List<Integer> enrolledCourses;
-    private List<Integer> favorites;
-    private List<String> quizzes;
-    private List<String> assignments;
-    private List<Integer> completedCourses;
-    private List<String> certificates;
 
     public User(String userId, String fullName, String photo, String email, String phone, String gender, String birthdate, String degree, String semester, String role, boolean isVerified, boolean notification, long createdAt, float assignmentAvg, float quizzesAvg, List<Integer> enrolledCourses, List<Integer> favorites, List<String> quizzes, List<String> assignments, List<Integer> completedCourses, List<String> certificates) {
         this.userId = userId;
@@ -97,6 +139,7 @@ public class User {
         this.isVerified = isVerified;
     }
 
+    @PropertyName("enrolledCourses")
     public List<Integer> getEnrolledCourses() {
         return enrolledCourses;
     }
@@ -105,6 +148,7 @@ public class User {
         this.enrolledCourses = enrolledCourses;
     }
 
+    @PropertyName("favorites")
     public List<Integer> getFavorites() {
         return favorites;
     }
@@ -113,6 +157,7 @@ public class User {
         this.favorites = favorites;
     }
 
+    @PropertyName("quizzes")
     public List<String> getQuizzes() {
         return quizzes;
     }
@@ -121,6 +166,7 @@ public class User {
         this.quizzes = quizzes;
     }
 
+    @PropertyName("assignments")
     public List<String> getAssignments() {
         return assignments;
     }
@@ -129,6 +175,7 @@ public class User {
         this.assignments = assignments;
     }
 
+    @PropertyName("completedCourses")
     public List<Integer> getCompletedCourses() {
         return completedCourses;
     }
@@ -137,6 +184,7 @@ public class User {
         this.completedCourses = completedCourses;
     }
 
+    @PropertyName("certificates")
     public List<String> getCertificates() {
         return certificates;
     }
@@ -148,6 +196,7 @@ public class User {
     public User() {
     }
 
+    @PropertyName("userId")
     public String getUserId() {
         return userId;
     }
@@ -156,6 +205,7 @@ public class User {
         this.userId = userId;
     }
 
+    @PropertyName("fullName")
     public String getFullName() {
         return fullName;
     }
@@ -164,6 +214,7 @@ public class User {
         this.fullName = fullName;
     }
 
+    @PropertyName("email")
     public String getEmail() {
         return email;
     }
@@ -172,6 +223,7 @@ public class User {
         this.email = email;
     }
 
+    @PropertyName("phone")
     public String getPhone() {
         return phone;
     }
@@ -180,6 +232,7 @@ public class User {
         this.phone = phone;
     }
 
+    @PropertyName("gender")
     public String getGender() {
         return gender;
     }
@@ -188,6 +241,7 @@ public class User {
         this.gender = gender;
     }
 
+    @PropertyName("birthdate")
     public String getBirthdate() {
         return birthdate;
     }
@@ -196,6 +250,7 @@ public class User {
         this.birthdate = birthdate;
     }
 
+    @PropertyName("degree")
     public String getDegree() {
         return degree;
     }
@@ -204,6 +259,7 @@ public class User {
         this.degree = degree;
     }
 
+    @PropertyName("semester")
     public String getSemester() {
         return semester;
     }
@@ -212,6 +268,7 @@ public class User {
         this.semester = semester;
     }
 
+    @PropertyName("notification")
     public boolean isNotification() {
         return notification;
     }
@@ -220,6 +277,7 @@ public class User {
         this.notification = notification;
     }
 
+    @PropertyName("createdAt")
     public long getCreatedAt() {
         return createdAt;
     }
@@ -228,6 +286,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    @PropertyName("photo")
     public String getPhoto() {
         return photo;
     }
@@ -235,6 +294,8 @@ public class User {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
+
+    @PropertyName("assignmentAvg")
     public float getAssignmentAvg() {
         return assignmentAvg;
     }
@@ -243,6 +304,7 @@ public class User {
         this.assignmentAvg = assignmentAvg;
     }
 
+    @PropertyName("quizzesAvg")
     public float getQuizzesAvg() {
         return quizzesAvg;
     }
@@ -251,6 +313,7 @@ public class User {
         this.quizzesAvg = quizzesAvg;
     }
 
+    @PropertyName("role")
     public String getRole() {
         return role;
     }

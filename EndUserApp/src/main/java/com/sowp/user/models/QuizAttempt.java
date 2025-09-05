@@ -5,20 +5,49 @@ import com.google.firebase.database.PropertyName;
 import java.util.List;
 
 public class QuizAttempt {
+    @PropertyName("attemptId")
     private String attemptId;
+
+    @PropertyName("quizId")
     private int quizId;           // Changed from String to int
+
+    @PropertyName("courseId")
     private int courseId;         // Added courseId field
+
+    @PropertyName("quizTitle")
     private String quizTitle;
+
+    @PropertyName("score")
     private int score;
+
+    @PropertyName("correctAnswers")
     private int correctAnswers;
+
+    @PropertyName("totalQuestions")
     private int totalQuestions;
+
+    @PropertyName("passed")
     private boolean passed;
+
+    @PropertyName("passingScore")
     private double passingScore;
+
+    @PropertyName("completed")
     private boolean completed;
+
+    @PropertyName("completedAt")
     private long completedAt;
+
+    @PropertyName("timeTaken")
     private long timeTaken;
+
+    @PropertyName("startTime")
     private long startTime;
+
+    @PropertyName("endTime")
     private long endTime;
+
+    @PropertyName("answers")
     private List<QuestionAttempt> answers;
 
     // Empty constructor required for Firestore
@@ -47,6 +76,7 @@ public class QuizAttempt {
     }
 
     // Getters and Setters
+    @PropertyName("attemptId")
     public String getAttemptId() {
         return attemptId;
     }
@@ -55,6 +85,7 @@ public class QuizAttempt {
         this.attemptId = attemptId;
     }
 
+    @PropertyName("quizId")
     public int getQuizId() {
         return quizId;
     }
@@ -63,6 +94,7 @@ public class QuizAttempt {
         this.quizId = quizId;
     }
 
+    @PropertyName("courseId")
     public int getCourseId() {
         return courseId;
     }
@@ -71,6 +103,7 @@ public class QuizAttempt {
         this.courseId = courseId;
     }
 
+    @PropertyName("quizTitle")
     public String getQuizTitle() {
         return quizTitle;
     }
@@ -79,6 +112,7 @@ public class QuizAttempt {
         this.quizTitle = quizTitle;
     }
 
+    @PropertyName("score")
     public int getScore() {
         return score;
     }
@@ -87,6 +121,7 @@ public class QuizAttempt {
         this.score = score;
     }
 
+    @PropertyName("correctAnswers")
     public int getCorrectAnswers() {
         return correctAnswers;
     }
@@ -95,6 +130,7 @@ public class QuizAttempt {
         this.correctAnswers = correctAnswers;
     }
 
+    @PropertyName("totalQuestions")
     public int getTotalQuestions() {
         return totalQuestions;
     }
@@ -103,6 +139,7 @@ public class QuizAttempt {
         this.totalQuestions = totalQuestions;
     }
 
+    @PropertyName("passed")
     public boolean isPassed() {
         return passed;
     }
@@ -111,6 +148,7 @@ public class QuizAttempt {
         this.passed = passed;
     }
 
+    @PropertyName("passingScore")
     public double getPassingScore() {
         return passingScore;
     }
@@ -119,6 +157,7 @@ public class QuizAttempt {
         this.passingScore = passingScore;
     }
 
+    @PropertyName("completed")
     public boolean isCompleted() {
         return completed;
     }
@@ -127,6 +166,7 @@ public class QuizAttempt {
         this.completed = completed;
     }
 
+    @PropertyName("completedAt")
     public long getCompletedAt() {
         return completedAt;
     }
@@ -135,6 +175,7 @@ public class QuizAttempt {
         this.completedAt = completedAt;
     }
 
+    @PropertyName("timeTaken")
     public long getTimeTaken() {
         return timeTaken;
     }
@@ -143,6 +184,7 @@ public class QuizAttempt {
         this.timeTaken = timeTaken;
     }
 
+    @PropertyName("startTime")
     public long getStartTime() {
         return startTime;
     }
@@ -151,6 +193,7 @@ public class QuizAttempt {
         this.startTime = startTime;
     }
 
+    @PropertyName("endTime")
     public long getEndTime() {
         return endTime;
     }
@@ -159,6 +202,7 @@ public class QuizAttempt {
         this.endTime = endTime;
     }
 
+    @PropertyName("answers")
     public List<QuestionAttempt> getAnswers() {
         return answers;
     }
@@ -214,13 +258,25 @@ public class QuizAttempt {
 
     // Inner class for individual question attempts
     public static class QuestionAttempt {
+        @PropertyName("questionId")
         private int questionId;
+
+        @PropertyName("questionText")
         private String questionText;
+
+        @PropertyName("questionNumber")
         private int questionNumber;
+
+        @PropertyName("userAnswer")
         private String userAnswer;
+
+        @PropertyName("correctAnswer")
         private String correctAnswer;
+
         @PropertyName("isCorrect")
         private boolean isCorrect;
+
+        @PropertyName("options")
         private List<String> options;
 
         // Empty constructor required for Firestore
@@ -239,6 +295,7 @@ public class QuizAttempt {
         }
 
         // Getters and Setters
+        @PropertyName("questionId")
         public int getQuestionId() {
             return questionId;
         }
@@ -247,6 +304,7 @@ public class QuizAttempt {
             this.questionId = questionId;
         }
 
+        @PropertyName("questionText")
         public String getQuestionText() {
             return questionText;
         }
@@ -255,6 +313,7 @@ public class QuizAttempt {
             this.questionText = questionText;
         }
 
+        @PropertyName("questionNumber")
         public int getQuestionNumber() {
             return questionNumber;
         }
@@ -263,6 +322,7 @@ public class QuizAttempt {
             this.questionNumber = questionNumber;
         }
 
+        @PropertyName("userAnswer")
         public String getUserAnswer() {
             return userAnswer;
         }
@@ -271,6 +331,7 @@ public class QuizAttempt {
             this.userAnswer = userAnswer;
         }
 
+        @PropertyName("correctAnswer")
         public String getCorrectAnswer() {
             return correctAnswer;
         }
@@ -289,6 +350,7 @@ public class QuizAttempt {
             this.isCorrect = isCorrect;
         }
 
+        @PropertyName("options")
         public List<String> getOptions() {
             return options;
         }

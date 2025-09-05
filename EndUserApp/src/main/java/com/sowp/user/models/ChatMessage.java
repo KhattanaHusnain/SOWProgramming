@@ -1,20 +1,38 @@
 package com.sowp.user.models;
 
+import androidx.annotation.Keep;
+import com.google.firebase.firestore.PropertyName;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+@Keep
 public class ChatMessage {
-    private String id;
-    private String email;
-    private String message;
-    private long timestamp;
-    private List<String> deletedForUsers; // Array of user emails/UIDs who deleted this message
 
+    @Keep
+    @PropertyName("id")
+    private String id;
+
+    @Keep
+    @PropertyName("email")
+    private String email;
+
+    @Keep
+    @PropertyName("message")
+    private String message;
+
+    @Keep
+    @PropertyName("timestamp")
+    private long timestamp;
+
+    @Keep
+    @PropertyName("deletedForUsers")
+    private List<String> deletedForUsers;
+
+    // Default constructor required for Firebase
     public ChatMessage() {
-        // Default constructor required for Firebase
         this.deletedForUsers = new ArrayList<>();
     }
 
@@ -25,53 +43,52 @@ public class ChatMessage {
         this.deletedForUsers = new ArrayList<>();
     }
 
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
+    // --- Getters & Setters ---
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Keep
+    @PropertyName("id")
+    public String getId() { return id; }
+    @Keep
+    @PropertyName("id")
+    public void setId(String id) { this.id = id; }
 
-    public String getEmail() {
-        return email;
-    }
+    @Keep
+    @PropertyName("email")
+    public String getEmail() { return email; }
+    @Keep
+    @PropertyName("email")
+    public void setEmail(String email) { this.email = email; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @Keep
+    @PropertyName("message")
+    public String getMessage() { return message; }
+    @Keep
+    @PropertyName("message")
+    public void setMessage(String message) { this.message = message; }
 
-    public String getMessage() {
-        return message;
-    }
+    @Keep
+    @PropertyName("timestamp")
+    public long getTimestamp() { return timestamp; }
+    @Keep
+    @PropertyName("timestamp")
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
+    @Keep
+    @PropertyName("deletedForUsers")
     public List<String> getDeletedForUsers() {
         return deletedForUsers != null ? deletedForUsers : new ArrayList<>();
     }
-
+    @Keep
+    @PropertyName("deletedForUsers")
     public void setDeletedForUsers(List<String> deletedForUsers) {
         this.deletedForUsers = deletedForUsers != null ? deletedForUsers : new ArrayList<>();
     }
 
-    // Helper method to check if message is deleted for a specific user
+    // --- Helper methods (not stored in DB, no annotations needed) ---
     public boolean isDeletedForUser(String userEmail) {
         return getDeletedForUsers().contains(userEmail);
     }
 
-    // Helper method to add user to deleted list
     public void addDeletedForUser(String userEmail) {
         if (deletedForUsers == null) {
             deletedForUsers = new ArrayList<>();
@@ -82,7 +99,8 @@ public class ChatMessage {
     }
 
     public String getFormattedDateTime() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         return dateFormat.format(new Date(timestamp));
     }
 }

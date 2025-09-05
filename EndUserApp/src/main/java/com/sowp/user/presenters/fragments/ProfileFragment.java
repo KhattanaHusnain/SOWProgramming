@@ -140,9 +140,9 @@ public class ProfileFragment extends Fragment {
     private void setupSwipeRefresh() {
         // Configure SwipeRefreshLayout
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.colorPrimary,
-                R.color.colorAccent,
-                R.color.progress_color
+                R.color.primary,        // instead of R.color.colorPrimary
+                R.color.accent,         // instead of R.color.colorAccent
+                R.color.primary_dark    // instead of R.color.colorPrimaryDark
         );
 
         // Set refresh listener

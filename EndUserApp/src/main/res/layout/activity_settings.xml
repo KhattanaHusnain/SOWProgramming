@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/background_primary"
     tools:context=".presenters.activities.SettingsActivity">
 
     <!-- Header -->
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:background="@color/primary_color"
+        android:background="@color/primary"
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,19 +27,20 @@
             android:layout_height="24dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_back"
-            android:contentDescription="Back"
+            android:contentDescription="@string/back"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="4dp" />
+            android:padding="4dp"
+            app:tint="@color/text_on_primary" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            android:text="Settings"
+            android:text="@string/settings"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_on_primary"
             android:gravity="start|center_vertical" />
 
     </LinearLayout>
@@ -48,6 +49,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/background_secondary"
         app:layout_constraintTop_toBottomOf="@+id/header_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,112 +65,133 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="@string/profile"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
                 android:layout_marginBottom="8dp"
                 android:textAllCaps="true" />
 
-            <!-- Edit Personal Data -->
+            <!-- Profile Section Card -->
             <LinearLayout
-                android:id="@+id/layout_edit_personal_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:layout_marginBottom="1dp"
-                android:clickable="true"
-                android:focusable="true">
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:layout_marginBottom="24dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_person"
-                    android:contentDescription="Edit Personal Data" />
-
+                <!-- Edit Personal Data -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/layout_edit_personal_data"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Edit Personal Data"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_person"
+                        android:contentDescription="@string/edit_personal_data"
+                        app:tint="@color/gray_medium" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Update your name, email, and other details"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="2dp" />
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_personal_data"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit_personal_data_desc"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_chevron_right"
+                        android:contentDescription="@string/arrow"
+                        app:tint="@color/gray_medium" />
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_chevron_right"
-                    android:contentDescription="Arrow" />
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_light"
+                    android:layout_marginStart="56dp" />
 
-            </LinearLayout>
-
-            <!-- Change Profile Picture -->
-            <LinearLayout
-                android:id="@+id/layout_change_profile_picture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_camera"
-                    android:contentDescription="Change Profile Picture" />
-
+                <!-- Change Profile Picture -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/layout_change_profile_picture"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Change Profile Picture"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_camera"
+                        android:contentDescription="@string/change_profile_picture"
+                        app:tint="@color/gray_medium" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Update your profile photo"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="2dp" />
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/change_profile_picture"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/change_profile_picture_desc"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_chevron_right"
+                        android:contentDescription="@string/arrow"
+                        app:tint="@color/gray_medium" />
 
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_chevron_right"
-                    android:contentDescription="Arrow" />
 
             </LinearLayout>
 
@@ -176,107 +199,128 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Preferences"
+                android:text="@string/preferences"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
                 android:layout_marginBottom="8dp"
                 android:textAllCaps="true" />
 
-            <!-- Notifications Toggle -->
+            <!-- Preferences Section Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:layout_marginBottom="1dp">
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:layout_marginBottom="24dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_notifications"
-                    android:contentDescription="Notifications" />
-
+                <!-- Notifications Toggle -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                    <TextView
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_notifications"
+                        android:contentDescription="@string/notifications"
+                        app:tint="@color/gray_medium" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/notifications"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/notifications_desc"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switch_notifications"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Notifications"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Receive push notifications"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="2dp" />
+                        android:layout_gravity="center_vertical"
+                        android:checked="true"
+                        app:thumbTint="@color/white"
+                        app:trackTint="@color/primary" />
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch_notifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:checked="true" />
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_light"
+                    android:layout_marginStart="56dp" />
 
-            </LinearLayout>
-
-            <!-- Group Messaging Toggle -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:id="@+id/groupMsgToggle"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_group"
-                    android:contentDescription="Group Messaging" />
-
+                <!-- Group Messaging Toggle -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/groupMsgToggle"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                    <TextView
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_group"
+                        android:contentDescription="@string/group_messaging"
+                        app:tint="@color/gray_medium" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/group_messaging"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/group_messaging_desc"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switch_group_messaging"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Group Messaging"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Allow group messages"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="2dp" />
+                        android:layout_gravity="center_vertical"
+                        android:checked="true"
+                        app:thumbTint="@color/white"
+                        app:trackTint="@color/primary" />
 
                 </LinearLayout>
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch_group_messaging"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:checked="true" />
 
             </LinearLayout>
 
@@ -284,61 +328,72 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account"
+                android:text="@string/account"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/primary"
                 android:layout_marginBottom="8dp"
                 android:textAllCaps="true" />
 
-            <!-- Delete Account -->
+            <!-- Account Section Card -->
             <LinearLayout
-                android:id="@+id/layout_delete_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:clickable="true"
-                android:focusable="true">
+                android:orientation="vertical"
+                android:background="@drawable/card_background">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_delete"
-                    android:contentDescription="Delete Account"
-                    app:tint="@color/error_color" />
-
+                <!-- Delete Account -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/layout_delete_account"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Delete Account"
-                        android:textSize="16sp"
-                        android:textColor="@color/error_color" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_delete"
+                        android:contentDescription="@string/delete_account"
+                        app:tint="@color/error" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Permanently delete your account and all data"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="2dp" />
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delete_account"
+                            android:textSize="16sp"
+                            android:textColor="@color/error" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delete_account_desc"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="2dp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_chevron_right"
+                        android:contentDescription="@string/arrow"
+                        app:tint="@color/gray_medium" />
 
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_chevron_right"
-                    android:contentDescription="Arrow" />
 
             </LinearLayout>
 

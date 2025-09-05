@@ -5,40 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="?attr/colorSurface"
+    android:background="@color/background_secondary"
     tools:context=".presenters.activities.ChangeProfilePicture">
 
     <!-- App Bar -->
-    <LinearLayout
-        android:id="@+id/header_layout"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/primary_color"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="4dp" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/text_on_primary"
+            app:title="Profile Picture"
+            app:titleTextColor="@color/text_on_primary" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:text="Profile Picture"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:gravity="start|center_vertical" />
-
-    </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
@@ -51,27 +38,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp">
 
-            <!-- Header -->
+            <!-- Header Text -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Choose a photo that represents you best"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="@color/text_color_primary"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:gravity="center"
-                android:layout_marginTop="60dp"
-                android:layout_marginBottom="32dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="32dp"
+                android:lineSpacingMultiplier="1.2" />
 
             <!-- Profile Image Section -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="4dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/background_primary"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="3dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -79,21 +67,22 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="40dp">
+                    android:paddingHorizontal="32dp"
+                    android:paddingVertical="40dp">
 
                     <!-- Profile Image Container -->
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp">
+                        android:layout_marginBottom="20dp">
 
                         <!-- Profile Image with Border -->
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="80dp"
-                            app:cardElevation="2dp"
-                            app:strokeWidth="4dp"
+                            app:cardElevation="4dp"
+                            app:strokeWidth="3dp"
                             app:strokeColor="@color/primary">
 
                             <de.hdodenhof.circleimageview.CircleImageView
@@ -102,18 +91,18 @@
                                 android:layout_height="160dp"
                                 android:src="@drawable/ic_profile"
                                 android:scaleType="centerCrop" />
-                            <!-- Loading Indicator -->
-                            <androidx.core.widget.ContentLoadingProgressBar
-                                android:id="@+id/progress_bar"
-                                style="?android:attr/progressBarStyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:visibility="gone"
-                                android:indeterminateTint="#AB1B0B"
-                               />
 
                         </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Loading Indicator -->
+                        <ProgressBar
+                            android:id="@+id/progress_bar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:visibility="gone"
+                            android:indeterminateTint="@color/primary" />
 
                         <!-- Change Photo FAB -->
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -121,25 +110,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|end"
-                            android:layout_marginEnd="4dp"
-                            android:layout_marginBottom="4dp"
-                            android:contentDescription="@string/change_profile_photo"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:contentDescription="Change profile photo"
                             app:fabSize="normal"
                             app:srcCompat="@drawable/ic_camera"
-                            app:elevation="8dp"
+                            app:backgroundTint="@color/secondary"
+                            app:tint="@color/text_on_primary"
+                            app:elevation="6dp"
                             app:borderWidth="0dp" />
 
                     </FrameLayout>
 
                     <!-- Status Text -->
-                    <com.google.android.material.textview.MaterialTextView
+                    <TextView
                         android:id="@+id/status_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tap the camera icon to change your photo"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="@color/text_color_primary"
-                        android:textSize="14dp"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
                         android:gravity="center"
                         android:maxLines="2" />
 
@@ -152,40 +142,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="20dp"
                 android:baselineAligned="false">
 
                 <!-- Take Photo Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_take_photo"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="52dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:text="Take Photo"
                     android:textAllCaps="false"
-                    android:textSize="14dp"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
                     app:icon="@drawable/ic_camera"
-                    app:iconGravity="textStart"
+                    app:iconGravity="start"
                     app:iconPadding="8dp"
-                    app:iconSize="20dp"
-                    style="@style/Widget.Material3.Button.OutlinedButton.Icon" />
+                    app:iconSize="18dp"
+                    app:iconTint="@color/primary"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="2dp"
+                    app:rippleColor="@color/selected" />
 
                 <!-- Gallery Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_choose_gallery"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="52dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:text="Gallery"
-                    android:textSize="14dp"
+                    android:textSize="14sp"
                     android:textAllCaps="false"
+                    android:textColor="@color/primary"
                     app:icon="@drawable/ic_gallery"
-                    app:iconGravity="textStart"
+                    app:iconGravity="start"
                     app:iconPadding="8dp"
-                    app:iconSize="20dp"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
+                    app:iconSize="18dp"
+                    app:iconTint="@color/primary"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="2dp"
+                    app:rippleColor="@color/selected" />
 
             </LinearLayout>
 
@@ -196,34 +198,35 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_cancel"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="52dp"
                     android:layout_weight="1"
-                    app:cornerRadius="20dp"
                     android:layout_marginEnd="8dp"
                     android:text="Cancel"
-                    app:backgroundTint="@color/white"
-                    app:strokeColor="#AB1B0B"
-                    app:strokeWidth="1dp"
-                    android:textColor="#AB1B0B"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:textColor="@color/error"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/error"
+                    app:strokeWidth="2dp"
+                    app:rippleColor="@color/ripple" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_save"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="52dp"
                     android:layout_weight="1"
-                    app:cornerRadius="20dp"
                     android:layout_marginStart="8dp"
                     android:text="Save Changes"
-                    app:strokeColor="@color/primary"
-                    android:backgroundTint="@color/white"
-                    app:strokeWidth="1dp"
-                    android:textColor="@color/primary" />
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_on_primary"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="12dp"
+                    app:rippleColor="@color/overlay_light" />
 
             </LinearLayout>
 
@@ -231,11 +234,11 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/surface"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
+                app:cardElevation="1dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/primary"
-                app:cardBackgroundColor="@color/white">
+                app:strokeColor="@color/gray_light">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -243,27 +246,28 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
+                    <!-- Tips Header -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/ic_bullet"
                             android:layout_marginEnd="12dp"
-                            app:tint="@color/primary" />
+                            app:tint="@color/accent" />
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Photo Tips"
-                            android:textSize="14dp"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="@color/text_color_primary" />
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
 
                     </LinearLayout>
 
@@ -273,38 +277,38 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="• Use good lighting for the best results"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:textColor="@color/text_color_primary"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="6dp"
                             android:drawablePadding="8dp" />
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="• Center your face in the frame"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:textColor="@color/text_color_primary"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp"
-                            android:layout_marginBottom="4dp" />
+                            android:layout_marginBottom="6dp" />
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="• Choose a professional, clear photo"
                             android:textSize="14sp"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:textColor="@color/text_color_primary" />
+                            android:textColor="@color/text_secondary" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

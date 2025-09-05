@@ -3,7 +3,6 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="app_logo_description">SOWProgramming Logo</string>
     <string name="app_tagline">Empowering Learning, Anywhere</string>
     <string name="course_image_description">Course Image</string>
     <string name="open_course_button_description">Open Course Button</string>
@@ -143,12 +142,111 @@
     <string name="learning_buddies">Learning Buddies</string>
     <string name="find_study_partners">Find study partners</string>
     <string name="invite_friends">Invite Friends</string>
+    <string name="about">About</string>
+    <string name="app_logo_description">SOWProgramming App Logo</string>
+    <string name="app_description_title">App Description</string>
+    <string name="app_description">SOWProgramming is an innovative learning platform designed to enhance your programming journey with AI-powered assistance, offline access, and comprehensive progress tracking.</string>
+    <string name="key_features_title">Key Features</string>
+    <string name="feature_ai_chatbot">AI Chatbot for Doubts</string>
+    <string name="feature_offline_access">Offline Course Access</string>
+    <string name="feature_quizzes_assignments">Quizzes and Assignments</string>
+    <string name="feature_progress_tracking">Progress Tracking</string>
+    <string name="developed_by_title">Developed By</string>
+    <string name="developer_mujahid">• Mujahid Husnain</string>
+    <string name="developer_mahnoor">• Mahnoor Ramazan</string>
+    <string name="developer_suleman">• Suleman Ali</string>
+    <string name="collaboration_title">Collaboration</string>
+    <string name="collaboration_puacp">• With PUACP – Punjab University Affiliated Colleges Program</string>
+    <string name="useful_links_title">Useful Links</string>
+    <string name="whatsapp_channel_title">• PUACP WhatsApp Channel</string>
+    <string name="it_community_title">• PUACP IT Community</string>
+    <string name="click_to_join">Click to Join</string>
+    <string name="contact_title">Contact</string>
+    <string name="email_label">• Email: </string>
+    <string name="email_address">SOWProgramming@gmail.com</string>
+    <string name="youtube_channel">• YouTube: Www.Youtube.Com/@SOWProgramming</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
     <!-- Account Settings Section -->
     <string name="privacy_settings">Privacy Settings</string>
     <string name="payment_methods">Payment Methods</string>
     <string name="subscription_details">Subscription Details</string>
     <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+
+    <!-- Assignment Detail Activity -->
+    <string name="assignment_details">Assignment Details</string>
+    <string name="sample_assignment_title">Assignment 1</string>
+    <string name="status_submitted">Submitted</string>
+    <string name="status_graded">Graded</string>
+    <string name="score_title">Score</string>
+    <string name="sample_score">85</string>
+    <string name="max_score">/ 100</string>
+    <string name="sample_percentage">85%</string>
+    <string name="submission_details_title">Submission Details</string>
+    <string name="status_label">Status</string>
+    <string name="submitted_on_label">Submitted On</string>
+    <string name="sample_submission_time">Monday, January 15, 2024 at 02:30 PM</string>
+    <string name="grading_status_label">Grading Status</string>
+    <string name="graded_by_instructor">Graded by instructor</string>
+    <string name="sample_graded_time">Graded on Tuesday, January 16, 2024</string>
+    <string name="instructor_feedback_title">Instructor Feedback</string>
+    <string name="sample_feedback">Great work! Your solution demonstrates a clear understanding of the concepts.</string>
+    <string name="submitted_images_title">Submitted Images</string>
+    <string name="sample_image_count">3 images submitted</string>
+    <string name="menu_description">Menu options</string>
+
+        <!-- Offline Course Activity -->
+        <string name="offline_courses_title">Offline Courses</string>
+        <string name="downloaded_courses_title">Downloaded Courses</string>
+        <string name="available_offline_description">Available for offline viewing</string>
+        <string name="no_offline_courses_title">No Offline Courses</string>
+        <string name="browse_courses">Browse Courses</string>
+
+        <!-- Accessibility descriptions -->
+        <string name="offline_icon_description">Offline courses icon</string>
+        <string name="no_offline_courses_description">No offline courses available illustration</string>
+        <string name="refresh_courses_description">Refresh offline courses</string>
+
+        <!-- Progress and status -->
+        <string name="loading_courses">Loading courses…</string>
+        <string name="course_count_format">%d courses available</string>
+
+    <string name="back">Back</string>
+    <string name="profile">Profile</string>
+    <string name="preferences">Preferences</string>
+    <string name="account">Account</string>
+    <string name="edit_personal_data">Edit Personal Data</string>
+    <string name="edit_personal_data_desc">Update your name, email, and other details</string>
+    <string name="change_profile_picture">Change Profile Picture</string>
+    <string name="change_profile_picture_desc">Update your profile photo</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_desc">Receive push notifications</string>
+    <string name="group_messaging">Group Messaging</string>
+    <string name="group_messaging_desc">Allow group messages</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_desc">Permanently delete your account and all data</string>
+    <string name="arrow">Arrow</string>
+    <!-- Sign Up Activity -->
+    <string name="create_account">Create Account</string>
+    <string name="signup_subtitle">Please fill in your details to get started</string>
+    <string name="app_logo_desc">NexCode Logo</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="tap_to_add_photo">Tap to add photo</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="gender">Gender</string>
+    <string name="academic_information">Academic Information</string>
+    <string name="degree_program">Degree Program</string>
+    <string name="current_semester">Current Semester</string>
+    <string name="security">Security</string>
+    <string name="password_requirements">Password must contain one digit, one uppercase, one lowercase, one special character and be 8+ characters long</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="terms_agreement">I agree to the Terms and Privacy Policy</string>
+    <string name="or_continue_with">Or continue with</string>
+    <string name="google_signin">Google Sign In</string>
+    <string name="already_have_account">Already have an account? </string>
+    <string name="sign_in">Sign In</string>
     <!-- Course Categories -->
     <string-array name="course_categories">
         <item>All</item>

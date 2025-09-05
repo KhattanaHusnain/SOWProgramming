@@ -130,11 +130,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
 
         holder.messageTimeCurrentUser.setText(chatMessage.getFormattedDateTime());
-        holder.usernameCurrentUser.setText("You");
 
-        // Setup profile image and click listener
-        setupProfileImage(holder.profileImageCurrentUser, currentUserEmail);
-        setupProfileClickListener(holder.profileImageCurrentUser, currentUserEmail);
+        // Show or hide username for current user (usually hidden)
+        if (holder.usernameCurrentUser != null) {
+            holder.usernameCurrentUser.setText("You");
+            holder.usernameCurrentUser.setVisibility(View.GONE); // Usually hidden for current user
+        }
+
+
 
         // Setup long press
         holder.setupLongPressListener(chatMessage, position, currentUserEmail, userRole, actionListener, context);
@@ -174,6 +177,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     private void setUsernameFromCache(TextView usernameView, String userEmail) {
+        if (usernameView == null) return;
+
         if (userCache.containsKey(userEmail)) {
             User userData = userCache.get(userEmail);
             if (userData != null && userData.getFullName() != null && !userData.getFullName().isEmpty()) {
@@ -183,10 +188,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 String emailName = userEmail.split("@")[0];
                 usernameView.setText(capitalizeFirst(emailName));
             }
+            usernameView.setVisibility(View.VISIBLE);
         } else {
             // Load user data to get name
             String emailName = userEmail.split("@")[0];
             usernameView.setText(capitalizeFirst(emailName));
+            usernameView.setVisibility(View.VISIBLE);
 
             if (profileClickListener != null) {
                 profileClickListener.loadUserData(userEmail, new UserDataCallback() {
@@ -319,6 +326,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         notifyDataSetChanged();
     }
 
+    public void preloadGroupMembers(List<String> memberEmails) {
+        // Pre-load user data for all group members to improve performance
+        if (profileClickListener != null) {
+            for (String email : memberEmails) {
+                if (!userCache.containsKey(email)) {
+                    profileClickListener.loadUserData(email, new UserDataCallback() {
+                        @Override
+                        public void onUserDataLoaded(User user) {
+                            cacheUserData(email, user);
+                        }
+
+                        @Override
+                        public void onUserDataLoadFailed(String error) {
+                            Log.w(TAG, "Failed to preload user data for: " + email);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
     public void clearCaches() {
         userCache.clear();
         for (Bitmap bitmap : profileImageCache.values()) {
@@ -346,7 +374,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         final TextView usernameCurrentUser;
         final TextView messageCurrentUser;
         final TextView messageTimeCurrentUser;
-        final ImageView profileImageCurrentUser;
 
         private ChatMessage currentMessage;
         private int currentPosition;
@@ -370,7 +397,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             usernameCurrentUser = itemView.findViewById(R.id.username_current_user);
             messageCurrentUser = itemView.findViewById(R.id.message_current_user);
             messageTimeCurrentUser = itemView.findViewById(R.id.message_time_current_user);
-            profileImageCurrentUser = itemView.findViewById(R.id.profile_image_current_user);
 
             // Enable text selection
             if (messageOthers != null) {

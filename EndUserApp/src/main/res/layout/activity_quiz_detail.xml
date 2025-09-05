@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/background_primary">
 
     <!-- Header -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="Quiz Details"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="?attr/homeAsUpIndicator" />
+            app:titleTextColor="@color/text_on_primary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@color/text_on_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -31,14 +35,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="32dp"
-        android:visibility="gone" />
+        android:indeterminateTint="@color/primary"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <!-- Content Layout -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,57 +54,64 @@
             android:padding="16dp">
 
             <!-- Quiz Summary Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:id="@+id/quizTitleText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Quiz Title"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp" />
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="12dp"
+                        tools:text="Introduction to Android Development Quiz" />
 
                     <!-- Status and Score Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:id="@+id/statusText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="PASSED"
-                            android:textSize="14sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             android:textColor="@color/white"
                             android:background="@drawable/bg_status_passed"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp"
-                            android:layout_marginEnd="16dp" />
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="8dp"
+                            android:layout_marginEnd="20dp"
+                            android:textAllCaps="true"
+                            tools:text="PASSED" />
 
                         <TextView
                             android:id="@+id/scoreText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="85%"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
-                            android:textColor="@color/colorPrimary" />
+                            android:textColor="@color/primary"
+                            tools:text="85%" />
 
                         <View
                             android:layout_width="0dp"
@@ -111,89 +125,107 @@
                             android:layout_height="wrap_content"
                             android:text="Pass: 70%"
                             android:textSize="14sp"
-                            android:textColor="@color/gray_600"
-                            android:gravity="end" />
+                            android:textColor="@color/text_secondary"
+                            android:gravity="end"
+                            tools:text="Pass: 70%" />
 
                     </LinearLayout>
 
-                    <!-- Details Grid -->
+                    <!-- Statistics Grid -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
+                        <!-- Correct Answers -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:background="@drawable/stat_item_background"
+                            android:padding="16dp">
 
                             <TextView
                                 android:id="@+id/correctAnswersText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="8"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/green" />
+                                android:textColor="@color/success"
+                                tools:text="8" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Correct"
                                 android:textSize="12sp"
-                                android:textColor="@color/gray_600" />
+                                android:textColor="@color/text_secondary"
+                                android:layout_marginTop="4dp" />
 
                         </LinearLayout>
 
+                        <!-- Total Questions -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:background="@drawable/stat_item_background"
+                            android:padding="16dp"
+                            android:layout_marginHorizontal="8dp">
 
                             <TextView
                                 android:id="@+id/totalQuestionsText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="10"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/blue" />
+                                android:textColor="@color/info"
+                                tools:text="10" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Total"
                                 android:textSize="12sp"
-                                android:textColor="@color/gray_600" />
+                                android:textColor="@color/text_secondary"
+                                android:layout_marginTop="4dp" />
 
                         </LinearLayout>
 
+                        <!-- Time Taken -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:background="@drawable/stat_item_background"
+                            android:padding="16dp">
 
                             <TextView
                                 android:id="@+id/timeTakenText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="05:30"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/orange" />
+                                android:textColor="@color/secondary"
+                                tools:text="05:30" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Time"
                                 android:textSize="12sp"
-                                android:textColor="@color/gray_600" />
+                                android:textColor="@color/text_secondary"
+                                android:layout_marginTop="4dp" />
 
                         </LinearLayout>
 
@@ -206,23 +238,41 @@
                         android:layout_height="wrap_content"
                         android:text="Completed on December 15, 2024 at 3:45 PM"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_600"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center" />
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:background="@drawable/date_background"
+                        android:padding="12dp"
+                        tools:text="Completed on December 15, 2024 at 3:45 PM" />
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Questions Header -->
-            <TextView
+            <!-- Questions Section Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Question-by-Question Review"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginBottom="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="20dp"
+                    android:background="@color/accent"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Question-by-Question Review"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+
+            </LinearLayout>
 
             <!-- Questions List -->
             <androidx.recyclerview.widget.RecyclerView
@@ -231,19 +281,50 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
-                android:paddingBottom="16dp" />
+                android:paddingBottom="16dp"
+                 />
 
             <!-- No Questions Message -->
-            <TextView
-                android:id="@+id/noQuestionsText"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/noQuestionsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No detailed question data available for this attempt."
-                android:textSize="14sp"
-                android:textColor="@color/gray_600"
-                android:gravity="center"
-                android:padding="32dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/gray_light"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="32dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_quiz_outline"
+                        android:layout_marginBottom="16dp"
+                        app:tint="@color/gray_medium"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/noQuestionsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No detailed question data available for this attempt."
+                        android:textSize="16sp"
+                        android:textColor="@color/text_secondary"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.2" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

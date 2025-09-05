@@ -5,25 +5,25 @@
     android:viewportHeight="100">
   <path
       android:pathData="M50,50m-45,0a45,45 0,1 1,90 0a45,45 0,1 1,-90 0"
-      android:fillColor="#EA4335"/>
+      android:fillColor="@color/error"/>
   <path
       android:pathData="M50,50m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0"
-      android:fillColor="#F06B59"/>
+      android:fillColor="@color/secondary"/>
   <path
       android:pathData="M50,20C42,20 35,27 35,35C35,40 37,44 40,47L40,48C40,48 40,51 40,52L40,55C40,57 42,59 44,59L56,59C58,59 60,57 60,55L60,52C60,51 60,48 60,48L60,47C63,44 65,40 65,35C65,27 58,20 50,20Z"
-      android:fillColor="#FFFFFF"/>
+      android:fillColor="@color/white"/>
   <path
       android:pathData="M44,59h12v3h-12z"
-      android:fillColor="#FFFFFF"/>
+      android:fillColor="@color/white"/>
   <path
       android:pathData="M46,62h8v3h-8z"
-      android:fillColor="#FFFFFF"/>
+      android:fillColor="@color/white"/>
   <path
       android:pathData="M48,65h4v3h-4z"
-      android:fillColor="#FFFFFF"/>
+      android:fillColor="@color/white"/>
   <path
       android:pathData="M50,50m-45,0a45,45 0,1 1,90 0a45,45 0,1 1,-90 0"
       android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#C5221F"/>
+      android:fillColor="@color/transparent"
+      android:strokeColor="@color/error"/>
 </vector>

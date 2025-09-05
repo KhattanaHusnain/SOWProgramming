@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Ignore;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
+import com.google.firebase.database.PropertyName;
 
 @Entity(
         tableName = "topics",
@@ -21,45 +22,59 @@ public class Topic {
 
     @PrimaryKey
     @ColumnInfo(name = "topicId")
+    @PropertyName("topicId")
     private int topicId;   // New explicit Topic ID (not auto-generated)
 
     @ColumnInfo(name = "courseId")
+    @PropertyName("courseId")
     private int courseId;
 
     @ColumnInfo(name = "name")
+    @PropertyName("name")
     private String name;
 
     @ColumnInfo(name = "description")
+    @PropertyName("description")
     private String description;
 
     @ColumnInfo(name = "content")
+    @PropertyName("content")
     private String content;
 
     @ColumnInfo(name = "videoID")
+    @PropertyName("videoID")
     private String videoID;
 
     @ColumnInfo(name = "createdAt")
+    @PropertyName("createdAt")
     private long createdAt;
 
     @ColumnInfo(name = "updatedAt")
+    @PropertyName("updatedAt")
     private long updatedAt;
 
     @ColumnInfo(name = "isPublic")
+    @PropertyName("isPublic")
     private boolean isPublic;
 
     @ColumnInfo(name = "tags")
+    @PropertyName("tags")
     private String tags;  // e.g., "OOP, Inheritance, Polymorphism"
 
     @ColumnInfo(name = "categories")
+    @PropertyName("categories")
     private String categories; // e.g., "Programming, Java"
 
     @ColumnInfo(name = "views")
+    @PropertyName("views")
     private int views;  // how many times this topic was viewed
 
     @ColumnInfo(name = "semester")
+    @PropertyName("semester")
     private String semester; // e.g., "Fall 2025"
 
     @ColumnInfo(name = "orderIndex")
+    @PropertyName("orderIndex")
     private int orderIndex; // for ordering topics inside a course
 
     // Default constructor required by Room
@@ -86,45 +101,59 @@ public class Topic {
     }
 
     // Getters and Setters
+    @PropertyName("topicId")
     public int getTopicId() { return topicId; }
     public void setTopicId(int topicId) { this.topicId = topicId; }
 
+    @PropertyName("courseId")
     public int getCourseId() { return courseId; }
     public void setCourseId(int courseId) { this.courseId = courseId; }
 
+    @PropertyName("name")
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    @PropertyName("description")
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    @PropertyName("content")
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 
+    @PropertyName("videoID")
     public String getVideoID() { return videoID; }
     public void setVideoID(String videoID) { this.videoID = videoID; }
 
+    @PropertyName("createdAt")
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 
+    @PropertyName("updatedAt")
     public long getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
 
+    @PropertyName("isPublic")
     public boolean isPublic() { return isPublic; }
     public void setPublic(boolean aPublic) { isPublic = aPublic; }
 
+    @PropertyName("tags")
     public String getTags() { return tags; }
     public void setTags(String tags) { this.tags = tags; }
 
+    @PropertyName("categories")
     public String getCategories() { return categories; }
     public void setCategories(String categories) { this.categories = categories; }
 
+    @PropertyName("views")
     public int getViews() { return views; }
     public void setViews(int views) { this.views = views; }
 
+    @PropertyName("semester")
     public String getSemester() { return semester; }
     public void setSemester(String semester) { this.semester = semester; }
 
+    @PropertyName("orderIndex")
     public int getOrderIndex() { return orderIndex; }
     public void setOrderIndex(int orderIndex) { this.orderIndex = orderIndex; }
 }

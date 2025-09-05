@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/background_secondary"
     android:orientation="vertical"
     tools:context=".presenters.activities.AssignmentHistoryActivity">
 
@@ -13,46 +13,51 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/text_on_primary"
             app:title="Assignment History"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/text_on_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Content Container -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
         <!-- Header Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/headerCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/background_primary"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Your Assignment Submissions"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="18sp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -62,7 +67,7 @@
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="Total Submissions: 0"
-                    android:textColor="@color/secondary_text_color"
+                    android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -75,33 +80,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/headerCard"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFilterStatus"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="All Status"
+                android:textAllCaps="false"
+                android:textColor="@color/primary"
                 android:textSize="12sp"
                 app:icon="@drawable/ic_filter"
-                app:iconSize="16dp" />
+                app:iconGravity="start"
+                app:iconSize="16dp"
+                app:iconTint="@color/primary"
+                app:rippleColor="@color/ripple"
+                app:strokeColor="@color/gray_light" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSortBy"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Sort: Recent"
+                android:textAllCaps="false"
+                android:textColor="@color/primary"
                 android:textSize="12sp"
                 app:icon="@drawable/ic_sort"
-                app:iconSize="16dp" />
+                app:iconGravity="start"
+                app:iconSize="16dp"
+                app:iconTint="@color/primary"
+                app:rippleColor="@color/ripple"
+                app:strokeColor="@color/gray_light" />
 
         </LinearLayout>
 
@@ -112,51 +128,77 @@
             android:layout_height="match_parent"
             android:layout_above="@id/paginationLayout"
             android:layout_below="@id/filterLayout"
-            android:layout_marginHorizontal="16dp"
             android:clipToPadding="false"
             android:paddingBottom="8dp"
+            android:scrollbars="vertical"
             tools:listitem="@layout/item_assignment_history" />
 
         <!-- Pagination Layout -->
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/paginationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/background_primary"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="1dp"
+            app:strokeWidth="0dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPrevious"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:text="Previous"
-                app:icon="@drawable/ic_back" />
-
-            <TextView
-                android:id="@+id/tvPageInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
                 android:gravity="center"
-                android:text="Page 1 of 1"
-                android:textColor="@color/secondary_text_color"
-                android:textSize="14sp" />
+                android:orientation="horizontal"
+                android:padding="12dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnNext"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:text="Next"
-                app:icon="@drawable/ic_chevron_right"
-                app:iconGravity="end" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrevious"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:enabled="false"
+                    android:text="Previous"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_back"
+                    app:iconGravity="start"
+                    app:iconSize="14dp"
+                    app:iconTint="@color/primary"
+                    app:rippleColor="@color/ripple"
+                    app:strokeColor="@color/gray_light" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvPageInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Page 1 of 1"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNext"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:enabled="false"
+                    android:text="Next"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_chevron_right"
+                    app:iconGravity="end"
+                    app:iconSize="14dp"
+                    app:iconTint="@color/primary"
+                    app:rippleColor="@color/ripple"
+                    app:strokeColor="@color/gray_light" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Empty State -->
         <LinearLayout
@@ -171,16 +213,17 @@
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_marginBottom="16dp"
-                android:alpha="0.5"
-                android:src="@drawable/ic_empty_courses" />
+                android:layout_marginBottom="24dp"
+                android:alpha="0.4"
+                android:src="@drawable/ic_empty_courses"
+                app:tint="@color/gray_medium" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="No Assignment Submissions"
-                android:textColor="@color/secondary_text_color"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -188,8 +231,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="You haven't submitted any assignments yet."
-                android:textColor="@color/secondary_text_color"
+                android:paddingHorizontal="32dp"
+                android:text="You haven't submitted any assignments yet.\nCheck back after completing some assignments!"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -200,6 +244,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:indeterminateTint="@color/primary"
             android:visibility="gone" />
 
     </RelativeLayout>

@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_secondary"
     android:orientation="vertical"
-    android:background="@color/background_color"
     tools:context=".presenters.activities.AssignmentDetailActivity">
 
     <!-- Toolbar -->
@@ -19,10 +19,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:title="Assignment Details"
-            app:titleTextColor="@android:color/white"
-            app:navigationIcon="@drawable/ic_back" />
+            android:background="@color/primary"
+            app:navigationIcon="@drawable/ic_back"
+            app:title="@string/assignment_details"
+            app:titleTextColor="@color/text_on_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,6 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:indeterminateTint="@color/primary"
                 android:visibility="gone" />
 
             <!-- Content Container -->
@@ -57,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -68,25 +69,25 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <View
                                 android:id="@+id/statusIndicator"
                                 android:layout_width="4dp"
                                 android:layout_height="40dp"
                                 android:layout_marginEnd="12dp"
-                                android:background="@color/accent_color" />
+                                android:background="@color/accent" />
 
                             <TextView
                                 android:id="@+id/tvAssignmentTitle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Assignment 1"
+                                android:text="@string/sample_assignment_title"
+                                android:textColor="@color/text_primary"
                                 android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/success_color" />
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -94,25 +95,25 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="12dp">
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="8dp"
-                                android:text="Submitted"
-                                app:chipBackgroundColor="@color/status_submitted_bg"
-                                android:textColor="@color/status_submitted_text" />
+                                android:text="@string/status_submitted"
+                                android:textColor="@color/text_on_primary"
+                                app:chipBackgroundColor="@color/status_submitted" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/chipChecked"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Graded"
-                                app:chipBackgroundColor="@color/success_color"
-                                android:textColor="@android:color/white" />
+                                android:text="@string/status_graded"
+                                android:textColor="@color/text_on_primary"
+                                app:chipBackgroundColor="@color/success" />
 
                         </LinearLayout>
 
@@ -127,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -138,35 +139,35 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Score"
+                            android:layout_marginBottom="12dp"
+                            android:text="@string/score_title"
+                            android:textColor="@color/text_secondary"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/secondary_text_color"
-                            android:layout_marginBottom="12dp" />
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/tvScore"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="85"
+                                android:text="@string/sample_score"
+                                android:textColor="@color/success"
                                 android:textSize="48sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/success_color" />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tvMaxScore"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="/ 100"
-                                android:textSize="24sp"
-                                android:textColor="@color/secondary_text_color"
-                                android:layout_marginStart="4dp" />
+                                android:layout_marginStart="4dp"
+                                android:text="@string/max_score"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="24sp" />
 
                             <View
                                 android:layout_width="0dp"
@@ -177,10 +178,10 @@
                                 android:id="@+id/tvPercentage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="85%"
+                                android:text="@string/sample_percentage"
+                                android:textColor="@color/success"
                                 android:textSize="32sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/success_color" />
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -195,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -206,25 +207,25 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Submission Details"
+                            android:layout_marginBottom="16dp"
+                            android:text="@string/submission_details_title"
+                            android:textColor="@color/text_secondary"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/secondary_text_color"
-                            android:layout_marginBottom="16dp" />
+                            android:textStyle="bold" />
 
                         <!-- Status Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+                            android:layout_marginBottom="12dp"
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_info"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/secondary_text_color" />
+                                android:src="@drawable/ic_info"
+                                app:tint="@color/text_secondary" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -235,18 +236,18 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Status"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/secondary_text_color" />
+                                    android:text="@string/status_label"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:id="@+id/tvStatus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Submitted"
+                                    android:text="@string/status_submitted"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/primary_text_color" />
+                                    android:textStyle="bold" />
 
                             </LinearLayout>
 
@@ -256,15 +257,15 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+                            android:layout_marginBottom="12dp"
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_time"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/secondary_text_color" />
+                                android:src="@drawable/ic_time"
+                                app:tint="@color/text_secondary" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -275,18 +276,18 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Submitted On"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/secondary_text_color" />
+                                    android:text="@string/submitted_on_label"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:id="@+id/tvSubmissionTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Monday, January 15, 2024 at 02:30 PM"
+                                    android:text="@string/sample_submission_time"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/primary_text_color" />
+                                    android:textStyle="bold" />
 
                             </LinearLayout>
 
@@ -296,15 +297,15 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+                            android:layout_marginBottom="12dp"
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_profile"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/secondary_text_color" />
+                                android:src="@drawable/ic_profile"
+                                app:tint="@color/text_secondary" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -315,26 +316,26 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Grading Status"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/secondary_text_color" />
+                                    android:text="@string/grading_status_label"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:id="@+id/tvCheckedStatus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Graded by instructor"
+                                    android:text="@string/graded_by_instructor"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/primary_text_color" />
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/tvGradedTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Graded on Tuesday, January 16, 2024"
+                                    android:text="@string/sample_graded_time"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="14sp"
-                                    android:textColor="@color/secondary_text_color"
                                     android:visibility="gone" />
 
                             </LinearLayout>
@@ -353,7 +354,7 @@
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:id="@+id/feedbackLayout"
@@ -365,25 +366,25 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp"
                             android:gravity="center_vertical"
-                            android:layout_marginBottom="12dp">
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_person"
                                 android:layout_marginEnd="12dp"
-                                app:tint="@color/accent_color" />
+                                android:src="@drawable/ic_person"
+                                app:tint="@color/accent" />
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Instructor Feedback"
+                                android:text="@string/instructor_feedback_title"
+                                android:textColor="@color/accent"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/accent_color" />
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -391,12 +392,12 @@
                             android:id="@+id/tvFeedback"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Great work! Your solution demonstrates a clear understanding of the concepts."
-                            android:textSize="16sp"
-                            android:textColor="@color/primary_text_color"
+                            android:background="@color/surface"
                             android:lineSpacingExtra="4dp"
                             android:padding="12dp"
-                            android:background="@drawable/status_background" />
+                            android:text="@string/sample_feedback"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
@@ -408,7 +409,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -419,26 +420,26 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:layout_marginBottom="16dp"
                             android:gravity="center_vertical"
-                            android:layout_marginBottom="16dp">
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Submitted Images"
+                                android:text="@string/submitted_images_title"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/secondary_text_color" />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tvImageCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3 images submitted"
+                                android:text="@string/sample_image_count"
+                                android:textColor="@color/accent"
                                 android:textSize="14sp"
-                                android:textColor="@color/accent_color"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -450,6 +451,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginVertical="16dp"
+                            android:indeterminateTint="@color/primary"
                             android:visibility="gone" />
 
                         <!-- Images Container -->

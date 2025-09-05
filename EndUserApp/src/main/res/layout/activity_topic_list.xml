@@ -5,22 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f5f5f5">
+    android:background="@color/background_secondary">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:backgroundTint="@color/primary">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:title="Course Topics"
-            app:titleTextColor="@android:color/white"
-            app:navigationIcon="?attr/homeAsUpIndicator" />
+            app:titleTextColor="@color/text_on_primary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@color/text_on_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,7 +38,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:elevation="2dp">
 
             <!-- Search Bar -->
@@ -45,8 +47,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:boxStrokeColor="?attr/colorPrimary"
-                app:hintTextColor="?attr/colorPrimary">
+                app:boxStrokeColor="@color/primary"
+                app:hintTextColor="@color/primary"
+                app:startIconTint="@color/gray_medium"
+                app:endIconTint="@color/gray_medium">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/searchEditText"
@@ -55,7 +59,11 @@
                     android:hint="Search topics..."
                     android:drawableStart="@android:drawable/ic_menu_search"
                     android:background="@drawable/search_background"
+                    android:backgroundTint="@color/surface"
                     android:drawablePadding="12dp"
+                    android:drawableTint="@color/gray_medium"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -80,8 +88,7 @@
                         android:layout_height="wrap_content"
                         android:text="Category"
                         android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:alpha="0.7"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp" />
 
                     <Spinner
@@ -89,6 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/card_background"
+                        android:backgroundTint="@color/gray_light"
                         android:padding="8dp" />
 
                 </LinearLayout>
@@ -106,8 +114,7 @@
                         android:layout_height="wrap_content"
                         android:text="Semester"
                         android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:alpha="0.7"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp" />
 
                     <Spinner
@@ -115,6 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/card_background"
+                        android:backgroundTint="@color/gray_light"
                         android:padding="8dp" />
 
                 </LinearLayout>
@@ -143,7 +151,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="16dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:elevation="4dp">
 
             <com.google.android.material.button.MaterialButton
@@ -152,6 +160,8 @@
                 android:layout_height="wrap_content"
                 android:text="Previous"
                 android:enabled="false"
+                android:textColor="@color/primary"
+                app:strokeColor="@color/primary"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
             <TextView
@@ -163,7 +173,7 @@
                 android:textAlignment="center"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/text_primary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNext"
@@ -171,6 +181,8 @@
                 android:layout_height="wrap_content"
                 android:text="Next"
                 android:enabled="false"
+                android:textColor="@color/primary"
+                app:strokeColor="@color/primary"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
         </LinearLayout>
@@ -181,6 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:indeterminateTint="@color/accent"
             android:visibility="visible" />
 
         <!-- Empty State -->
@@ -198,7 +211,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@android:drawable/ic_menu_info_details"
-                android:alpha="0.5" />
+                app:tint="@color/gray_medium" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -206,8 +219,7 @@
                 android:layout_marginTop="16dp"
                 android:text="No topics found"
                 android:textSize="18sp"
-                android:textColor="?attr/colorOnSurface"
-                android:alpha="0.7" />
+                android:textColor="@color/text_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -215,8 +227,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Try adjusting your search or filter criteria"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnSurface"
-                android:alpha="0.5" />
+                android:textColor="@color/text_hint" />
 
         </LinearLayout>
 

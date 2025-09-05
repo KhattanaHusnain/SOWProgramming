@@ -34,8 +34,8 @@ public class QuestionDetailAdapter extends RecyclerView.Adapter<QuestionDetailAd
 
     @Override
     public void onBindViewHolder(@NonNull QuestionDetailViewHolder holder, int position) {
-            QuestionAttempt questionAttempt = questionAttempts.get(position);
-            holder.bind(questionAttempt);
+        QuestionAttempt questionAttempt = questionAttempts.get(position);
+        holder.bind(questionAttempt);
     }
 
     @Override
@@ -102,12 +102,12 @@ public class QuestionDetailAdapter extends RecyclerView.Adapter<QuestionDetailAd
 
             if (questionAttempt.wasAnswered()) {
                 if (questionAttempt.isCorrect()) {
-                    userAnswerText.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    userAnswerText.setTextColor(ContextCompat.getColor(context, R.color.success));
                 } else {
-                    userAnswerText.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    userAnswerText.setTextColor(ContextCompat.getColor(context, R.color.error));
                 }
             } else {
-                userAnswerText.setTextColor(ContextCompat.getColor(context, R.color.gray_600));
+                userAnswerText.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             }
         }
 
@@ -135,15 +135,15 @@ public class QuestionDetailAdapter extends RecyclerView.Adapter<QuestionDetailAd
 
             if (isCorrectAnswer) {
                 optionView.setBackgroundResource(R.drawable.bg_option_correct);
-                optionView.setTextColor(ContextCompat.getColor(context, R.color.green));
+                optionView.setTextColor(ContextCompat.getColor(context, R.color.success));
                 optionView.setTypeface(null, android.graphics.Typeface.BOLD);
             } else if (isUserAnswer && !questionAttempt.isCorrect()) {
                 optionView.setBackgroundResource(R.drawable.bg_option_incorrect);
-                optionView.setTextColor(ContextCompat.getColor(context, R.color.red));
+                optionView.setTextColor(ContextCompat.getColor(context, R.color.error));
                 optionView.setTypeface(null, android.graphics.Typeface.BOLD);
             } else {
                 optionView.setBackgroundResource(R.drawable.bg_option_default);
-                optionView.setTextColor(ContextCompat.getColor(context, R.color.gray_700));
+                optionView.setTextColor(ContextCompat.getColor(context, R.color.text_secondary));
             }
 
             return optionView;

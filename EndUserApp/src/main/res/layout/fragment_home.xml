@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
-    android:background="@color/background_light"
+    android:background="@color/background_secondary"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -41,7 +41,7 @@
                         android:layout_height="64dp"
                         android:src="@drawable/ic_profile"
                         app:civ_border_width="3dp"
-                        app:civ_border_color="#002B5B"/>
+                        app:civ_border_color="@color/primary"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -57,7 +57,7 @@
                             android:text="Name"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:textColor="#002B5B"/>
+                            android:textColor="@color/primary"/>
 
                         <TextView
                             android:id="@+id/user_degree"
@@ -65,7 +65,7 @@
                             android:layout_height="wrap_content"
                             android:text="Information Technology"
                             android:textSize="14sp"
-                            android:textColor="#616161"
+                            android:textColor="@color/text_secondary"
                             android:layout_marginTop="2dp"/>
 
                         <TextView
@@ -74,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:text="Email"
                             android:textSize="12sp"
-                            android:textColor="#9E9E9E"
+                            android:textColor="@color/text_hint"
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
 
@@ -83,7 +83,8 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_notification"
-                        android:contentDescription="Notifications"/>
+                        android:contentDescription="Notifications"
+                        app:tint="@color/primary" />
                 </LinearLayout>
 
                 <!-- Dashboard Stats Card -->
@@ -95,7 +96,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
                     app:strokeWidth="0dp"
-                    app:cardBackgroundColor="#002B5B">
+                    app:cardBackgroundColor="@color/primary_light">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -108,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:text="Learning Dashboard"
                             android:textSize="18sp"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_on_primary"
                             android:textStyle="bold"/>
 
                         <!-- Stats Grid -->
@@ -131,7 +132,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
-                                    android:textColor="@color/white"
+                                    android:textColor="@color/text_on_primary"
                                     android:textSize="24sp"
                                     android:textStyle="bold"/>
 
@@ -139,7 +140,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Completed"
-                                    android:textColor="#B3FFFFFF"
+                                    android:textColor="@color/overlay_light"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 
@@ -156,7 +157,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
-                                    android:textColor="@color/white"
+                                    android:textColor="@color/text_on_primary"
                                     android:textSize="24sp"
                                     android:textStyle="bold"/>
 
@@ -164,7 +165,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Enrolled"
-                                    android:textColor="#B3FFFFFF"
+                                    android:textColor="@color/overlay_light"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 
@@ -181,7 +182,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
-                                    android:textColor="@color/white"
+                                    android:textColor="@color/text_on_primary"
                                     android:textSize="24sp"
                                     android:textStyle="bold"/>
 
@@ -189,7 +190,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Certificates"
-                                    android:textColor="#B3FFFFFF"
+                                    android:textColor="@color/overlay_light"
                                     android:textSize="12sp"/>
                             </LinearLayout>
                         </LinearLayout>
@@ -214,7 +215,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0%"
-                                    android:textColor="@color/white"
+                                    android:textColor="@color/text_on_primary"
                                     android:textSize="20sp"
                                     android:textStyle="bold"/>
 
@@ -222,7 +223,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Quiz Average"
-                                    android:textColor="#B3FFFFFF"
+                                    android:textColor="@color/overlay_light"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 
@@ -239,7 +240,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0%"
-                                    android:textColor="@color/white"
+                                    android:textColor="@color/text_on_primary"
                                     android:textSize="20sp"
                                     android:textStyle="bold"/>
 
@@ -247,7 +248,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Assignment Avg"
-                                    android:textColor="#B3FFFFFF"
+                                    android:textColor="@color/overlay_light"
                                     android:textSize="12sp"/>
                             </LinearLayout>
                         </LinearLayout>
@@ -266,7 +267,8 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/background_primary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -294,14 +296,14 @@
                             android:text="Popular Courses"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="#212121"/>
+                            android:textColor="@color/text_primary"/>
 
                         <TextView
                             android:id="@+id/see_all_popular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="See All"
-                            android:textColor="#1E88E5"
+                            android:textColor="@color/primary"
                             android:textSize="14sp"/>
                     </LinearLayout>
 
@@ -334,14 +336,14 @@
                             android:text="Recent Quizzes"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="#212121"/>
+                            android:textColor="@color/text_primary"/>
 
                         <TextView
                             android:id="@+id/see_all_quizzes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="See All"
-                            android:textColor="#1E88E5"
+                            android:textColor="@color/primary"
                             android:textSize="14sp"/>
                     </LinearLayout>
 
@@ -374,14 +376,14 @@
                             android:text="Recent Assignments"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="#212121"/>
+                            android:textColor="@color/text_primary"/>
 
                         <TextView
                             android:id="@+id/see_all_assignments"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="See All"
-                            android:textColor="#1E88E5"
+                            android:textColor="@color/primary"
                             android:textSize="14sp"/>
                     </LinearLayout>
 

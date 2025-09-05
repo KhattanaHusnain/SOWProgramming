@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.sowp.user'
-    compileSdk 36
+    compileSdkVersion 36
 
     defaultConfig {
         applicationId "com.sowp.user"
