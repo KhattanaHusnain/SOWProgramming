@@ -1,5 +1,6 @@
 package com.sowp.user.presenters.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -38,9 +41,14 @@ public class AssignmentDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "AssignmentDetailActivity";
 
+    // Intent Keys
+    public static final String EXTRA_ATTEMPT_ID = "attemptId";
+    public static final String EXTRA_ASSIGNMENT_ID = "assignmentId";
+    public static final String EXTRA_COURSE_ID = "courseId";
+
     // UI Components
-    private TextView tvAssignmentTitle, tvScore, tvPercentage, tvMaxScore, tvStatus,
-            tvSubmissionTime, tvCheckedStatus, tvImageCount, tvFeedback, tvGradedTime;
+    private TextView tvAssignmentTitle, tvScore, tvPercentage, tvMaxScore, tvStatus;
+    private TextView tvSubmissionTime, tvCheckedStatus, tvImageCount, tvFeedback, tvGradedTime;
     private Chip chipStatus, chipChecked;
     private LinearLayout imagesContainer, feedbackLayout;
     private ProgressBar progressBar, imageLoadingProgress;
@@ -60,24 +68,17 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_assignment_detail);
 
+        initializeActivity();
+        validateIntentData();
+        loadAssignmentDetails();
+    }
+
+    private void initializeActivity() {
         setupWindowInsets();
         initializeViews();
         setupToolbar();
-
         userRepository = new UserRepository(this);
-
-        // Get intent extras
-        attemptId = getIntent().getStringExtra("attemptId");
-        assignmentId = getIntent().getIntExtra("assignmentId", 0);
-        courseId = getIntent().getIntExtra("courseId", 0);
-
-        if (attemptId == null) {
-            showError("Invalid assignment attempt");
-            finish();
-            return;
-        }
-
-        loadAssignmentDetails();
+        extractIntentExtras();
     }
 
     private void setupWindowInsets() {
@@ -89,7 +90,15 @@ public class AssignmentDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        // Text Views
+        bindTextViews();
+        bindChips();
+        bindLayouts();
+        bindProgressBars();
+        bindCards();
+        bindOtherViews();
+    }
+
+    private void bindTextViews() {
         tvAssignmentTitle = findViewById(R.id.tvAssignmentTitle);
         tvScore = findViewById(R.id.tvScore);
         tvPercentage = findViewById(R.id.tvPercentage);
@@ -100,38 +109,58 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         tvImageCount = findViewById(R.id.tvImageCount);
         tvFeedback = findViewById(R.id.tvFeedback);
         tvGradedTime = findViewById(R.id.tvGradedTime);
+    }
 
-        // Chips
+    private void bindChips() {
         chipStatus = findViewById(R.id.chipStatus);
         chipChecked = findViewById(R.id.chipChecked);
+    }
 
-        // Layouts and containers
+    private void bindLayouts() {
         imagesContainer = findViewById(R.id.imagesContainer);
         feedbackLayout = findViewById(R.id.feedbackLayout);
+    }
 
-        // Progress bars
+    private void bindProgressBars() {
         progressBar = findViewById(R.id.progressBar);
         imageLoadingProgress = findViewById(R.id.imageLoadingProgress);
+    }
 
-        // Cards
+    private void bindCards() {
         scoreCard = findViewById(R.id.scoreCard);
         detailsCard = findViewById(R.id.detailsCard);
         imagesCard = findViewById(R.id.imagesCard);
         feedbackCard = findViewById(R.id.feedbackCard);
+    }
 
-        // Other views
+    private void bindOtherViews() {
         statusIndicator = findViewById(R.id.statusIndicator);
     }
 
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Assignment Details");
         }
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+    }
+
+    private void extractIntentExtras() {
+        Intent intent = getIntent();
+        attemptId = intent.getStringExtra(EXTRA_ATTEMPT_ID);
+        assignmentId = intent.getIntExtra(EXTRA_ASSIGNMENT_ID, 0);
+        courseId = intent.getIntExtra(EXTRA_COURSE_ID, 0);
+    }
+
+    private void validateIntentData() {
+        if (attemptId == null) {
+            showError("Invalid assignment attempt");
+            finish();
+        }
     }
 
     private void loadAssignmentDetails() {
@@ -158,63 +187,78 @@ public class AssignmentDetailActivity extends AppCompatActivity {
     private void populateDetails() {
         if (currentAttempt == null) return;
 
-        // Set assignment title
+        setAssignmentTitle();
+        setScoreInformation();
+        setStatusInformation();
+        setSubmissionTime();
+        setFeedbackInformation();
+        setImageInformation();
+        updateCardVisibility();
+        setStatusIndicatorColor(currentAttempt.getStatus());
+    }
+
+    private void setAssignmentTitle() {
         String title = currentAttempt.getAssignmentTitle();
-        if (title != null && !title.trim().isEmpty()) {
+        if (isValidString(title)) {
             tvAssignmentTitle.setText(title);
         } else {
             tvAssignmentTitle.setText(formatAssignmentId(currentAttempt.getAssignmentId()));
         }
+    }
 
-        // Set score information
+    private void setScoreInformation() {
         tvScore.setText(String.valueOf(currentAttempt.getScore()));
         tvMaxScore.setText("/ " + currentAttempt.getMaxScore());
         tvPercentage.setText(currentAttempt.getFormattedPercentage());
-
-        // Set score color based on percentage
         setScoreColor(currentAttempt.getPercentageScore());
+    }
 
-        // Set status
-        setupStatusChip(currentAttempt.getStatus());
-        tvStatus.setText(currentAttempt.getStatus());
+    private void setStatusInformation() {
+        String status = currentAttempt.getStatus();
+        setupStatusChip(status);
+        tvStatus.setText(status);
 
-        // Set checked status
-        setupCheckedChip(currentAttempt.isChecked());
-        if (currentAttempt.isChecked()) {
+        boolean isChecked = currentAttempt.isChecked();
+        setupCheckedChip(isChecked);
+
+        if (isChecked) {
             tvCheckedStatus.setText("Graded by instructor");
-            if (currentAttempt.getGradedAt() > 0) {
-                tvGradedTime.setText("Graded on " + currentAttempt.getFormattedGradedDate());
-                tvGradedTime.setVisibility(View.VISIBLE);
-            }
+            setGradedTime();
         } else {
             tvCheckedStatus.setText("Awaiting grading");
             tvGradedTime.setVisibility(View.GONE);
         }
-
-        // Set submission time
-        tvSubmissionTime.setText(formatSubmissionTime(currentAttempt.getSubmissionTimestamp()));
-
-        // Set feedback
-        setupFeedback();
-
-        // Set image count
-        int imageCount = currentAttempt.getSubmittedImagesCount();
-        tvImageCount.setText(imageCount + " image" + (imageCount != 1 ? "s" : "") + " submitted");
-
-        // Show/hide cards based on content
-        imagesCard.setVisibility(imageCount > 0 ? View.VISIBLE : View.GONE);
-
-        // Set status indicator color
-        setStatusIndicatorColor(currentAttempt.getStatus());
     }
 
-    private void setupFeedback() {
+    private void setGradedTime() {
+        if (currentAttempt.getGradedAt() > 0) {
+            tvGradedTime.setText("Graded on " + currentAttempt.getFormattedGradedDate());
+            tvGradedTime.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setSubmissionTime() {
+        tvSubmissionTime.setText(formatSubmissionTime(currentAttempt.getSubmissionTimestamp()));
+    }
+
+    private void setFeedbackInformation() {
         if (currentAttempt.hasFeedback()) {
             tvFeedback.setText(currentAttempt.getFeedback());
             feedbackCard.setVisibility(View.VISIBLE);
         } else {
             feedbackCard.setVisibility(View.GONE);
         }
+    }
+
+    private void setImageInformation() {
+        int imageCount = currentAttempt.getSubmittedImagesCount();
+        String imageText = imageCount + " image" + (imageCount != 1 ? "s" : "") + " submitted";
+        tvImageCount.setText(imageText);
+    }
+
+    private void updateCardVisibility() {
+        int imageCount = currentAttempt.getSubmittedImagesCount();
+        imagesCard.setVisibility(imageCount > 0 ? View.VISIBLE : View.GONE);
     }
 
     private String formatAssignmentId(int assignmentId) {
@@ -227,134 +271,129 @@ public class AssignmentDetailActivity extends AppCompatActivity {
     }
 
     private void setScoreColor(double percentage) {
-        int colorRes;
-        if (percentage >= 80) {
-            colorRes = R.color.success; // Updated from success_color to success
-        } else if (percentage >= 60) {
-            colorRes = R.color.warning; // Updated from warning_color to warning
-        } else {
-            colorRes = R.color.error; // Updated from error_color to error
-        }
-
+        int colorRes = getScoreColorResource(percentage);
         int color = ContextCompat.getColor(this, colorRes);
         tvScore.setTextColor(color);
         tvPercentage.setTextColor(color);
     }
 
+    private int getScoreColorResource(double percentage) {
+        if (percentage >= 80) {
+            return R.color.success;
+        } else if (percentage >= 60) {
+            return R.color.warning;
+        } else {
+            return R.color.error;
+        }
+    }
+
     private void setupStatusChip(String status) {
         chipStatus.setText(status);
 
-        int backgroundColorRes, textColorRes;
+        StatusColors colors = getStatusColors(status);
+        chipStatus.setChipBackgroundColorResource(colors.backgroundColorRes);
+        chipStatus.setTextColor(ContextCompat.getColor(this, colors.textColorRes));
+    }
+
+    private StatusColors getStatusColors(String status) {
         switch (status.toLowerCase()) {
             case "submitted":
-                backgroundColorRes = R.color.status_submitted; // Updated from status_submitted_bg
-                textColorRes = R.color.text_on_primary; // Updated from status_submitted_text
-                break;
+                return new StatusColors(R.color.status_submitted, R.color.text_on_primary);
             case "graded":
-                backgroundColorRes = R.color.success; // Updated from status_graded_bg
-                textColorRes = R.color.text_on_primary; // Updated from status_graded_text
-                break;
+                return new StatusColors(R.color.success, R.color.text_on_primary);
             case "failed":
-                backgroundColorRes = R.color.status_overdue; // Updated from status_late_bg
-                textColorRes = R.color.text_on_primary; // Updated from status_late_text
-                break;
+                return new StatusColors(R.color.status_overdue, R.color.text_on_primary);
             case "pending":
-                backgroundColorRes = R.color.status_in_progress; // Updated from status_pending_bg
-                textColorRes = R.color.text_on_primary; // Updated from status_pending_text
-                break;
+                return new StatusColors(R.color.status_in_progress, R.color.text_on_primary);
             default:
-                backgroundColorRes = R.color.gray_medium; // Updated from status_default_bg
-                textColorRes = R.color.text_on_primary; // Updated from status_default_text
-                break;
+                return new StatusColors(R.color.gray_medium, R.color.text_on_primary);
         }
-
-        chipStatus.setChipBackgroundColorResource(backgroundColorRes);
-        chipStatus.setTextColor(ContextCompat.getColor(this, textColorRes));
     }
 
     private void setupCheckedChip(boolean isChecked) {
         if (isChecked) {
-            chipChecked.setText("Graded");
-            chipChecked.setChipBackgroundColorResource(R.color.success); // Updated from success_color
-            chipChecked.setTextColor(ContextCompat.getColor(this, R.color.white)); // Updated to use white
-            chipChecked.setChipIcon(ContextCompat.getDrawable(this, R.drawable.ic_checked));
+            setupGradedChip();
         } else {
-            chipChecked.setText("Pending");
-            chipChecked.setChipBackgroundColorResource(R.color.warning); // Updated from warning_color
-            chipChecked.setTextColor(ContextCompat.getColor(this, R.color.white)); // Updated to use white
-            chipChecked.setChipIcon(ContextCompat.getDrawable(this, R.drawable.ic_pending));
+            setupPendingChip();
         }
+    }
+
+    private void setupGradedChip() {
+        chipChecked.setText("Graded");
+        chipChecked.setChipBackgroundColorResource(R.color.success);
+        chipChecked.setTextColor(ContextCompat.getColor(this, R.color.white));
+        chipChecked.setChipIcon(ContextCompat.getDrawable(this, R.drawable.ic_checked));
+    }
+
+    private void setupPendingChip() {
+        chipChecked.setText("Pending");
+        chipChecked.setChipBackgroundColorResource(R.color.warning);
+        chipChecked.setTextColor(ContextCompat.getColor(this, R.color.white));
+        chipChecked.setChipIcon(ContextCompat.getDrawable(this, R.drawable.ic_pending));
     }
 
     private void setStatusIndicatorColor(String status) {
-        int colorRes;
-        switch (status.toLowerCase()) {
-            case "submitted":
-                colorRes = R.color.status_submitted; // Updated from status_submitted_bg
-                break;
-            case "graded":
-                colorRes = R.color.success; // Updated from status_graded_bg
-                break;
-            case "failed":
-                colorRes = R.color.status_overdue; // Updated from status_late_bg
-                break;
-            case "pending":
-                colorRes = R.color.status_in_progress; // Updated from status_pending_bg
-                break;
-            default:
-                colorRes = R.color.gray_medium; // Updated from status_default_bg
-                break;
-        }
-
+        int colorRes = getStatusColorResource(status);
         statusIndicator.setBackgroundColor(ContextCompat.getColor(this, colorRes));
     }
 
-    private void loadSubmittedImages() {
-        if (currentAttempt == null || !currentAttempt.hasSubmittedImages()) {
-            return;
+    private int getStatusColorResource(String status) {
+        switch (status.toLowerCase()) {
+            case "submitted":
+                return R.color.status_submitted;
+            case "graded":
+                return R.color.success;
+            case "failed":
+                return R.color.status_overdue;
+            case "pending":
+                return R.color.status_in_progress;
+            default:
+                return R.color.gray_medium;
         }
+    }
+
+    private void loadSubmittedImages() {
+        if (!hasSubmittedImages()) return;
 
         List<String> imageBase64List = currentAttempt.getSubmittedImages();
         imageLoadingProgress.setVisibility(View.VISIBLE);
-
-        // Clear existing images
         imagesContainer.removeAllViews();
 
-        // Load each image in background thread
+        loadImagesInBackground(imageBase64List);
+    }
+
+    private boolean hasSubmittedImages() {
+        return currentAttempt != null && currentAttempt.hasSubmittedImages();
+    }
+
+    private void loadImagesInBackground(List<String> imageBase64List) {
         new Thread(() -> {
             for (int i = 0; i < imageBase64List.size(); i++) {
                 final int imageIndex = i + 1;
                 final String base64Image = imageBase64List.get(i);
                 final boolean isLast = i == imageBase64List.size() - 1;
 
-                if (base64Image != null && !base64Image.trim().isEmpty()) {
+                if (isValidString(base64Image)) {
                     loadSingleImage(base64Image, imageIndex, isLast);
                 } else {
-                    runOnUiThread(() -> {
-                        addErrorImageView("Invalid image data for Image " + imageIndex);
-                        if (isLast) imageLoadingProgress.setVisibility(View.GONE);
-                    });
+                    handleInvalidImage(imageIndex, isLast);
                 }
             }
         }).start();
     }
 
+    private void handleInvalidImage(int imageIndex, boolean isLast) {
+        runOnUiThread(() -> {
+            addErrorImageView("Invalid image data for Image " + imageIndex);
+            if (isLast) imageLoadingProgress.setVisibility(View.GONE);
+        });
+    }
+
     private void loadSingleImage(String base64Image, int imageIndex, boolean isLast) {
         try {
-            // Convert Base64 to Bitmap
-            byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-
+            Bitmap bitmap = decodeBase64ToBitmap(base64Image);
             runOnUiThread(() -> {
-                if (bitmap != null) {
-                    addImageView(bitmap, imageIndex);
-                } else {
-                    addErrorImageView("Failed to load Image " + imageIndex);
-                }
-
-                if (isLast) {
-                    imageLoadingProgress.setVisibility(View.GONE);
-                }
+                handleImageLoadResult(bitmap, imageIndex, isLast);
             });
         } catch (Exception e) {
             Log.e(TAG, "Error loading image " + imageIndex, e);
@@ -365,32 +404,54 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         }
     }
 
+    private Bitmap decodeBase64ToBitmap(String base64Image) {
+        byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    private void handleImageLoadResult(Bitmap bitmap, int imageIndex, boolean isLast) {
+        if (bitmap != null) {
+            addImageView(bitmap, imageIndex);
+        } else {
+            addErrorImageView("Failed to load Image " + imageIndex);
+        }
+
+        if (isLast) {
+            imageLoadingProgress.setVisibility(View.GONE);
+        }
+    }
+
     private void addImageView(Bitmap bitmap, int imageIndex) {
-        View imageItemView = LayoutInflater.from(this).inflate(R.layout.item_submitted_image, imagesContainer, false);
+        View imageItemView = LayoutInflater.from(this)
+                .inflate(R.layout.item_submitted_image, imagesContainer, false);
 
         ImageView imageView = imageItemView.findViewById(R.id.ivSubmittedImage);
         TextView tvImageTitle = imageItemView.findViewById(R.id.tvImageTitle);
         TextView tvImageSize = imageItemView.findViewById(R.id.tvImageSize);
 
-        // Set image
-        imageView.setImageBitmap(bitmap);
-
-        // Set title
-        tvImageTitle.setText("Image " + imageIndex);
-
-        // Calculate and display image size
-        long sizeInBytes = bitmap.getByteCount();
-        String sizeText = formatFileSize(sizeInBytes);
-        tvImageSize.setText(bitmap.getWidth() + " × " + bitmap.getHeight() + " • " + sizeText);
-
-        // Add click listener for full screen view
-        imageView.setOnClickListener(v -> showFullScreenImage(bitmap, "Image " + imageIndex));
+        setupImageView(imageView, bitmap, imageIndex);
+        setupImageInfo(tvImageTitle, tvImageSize, bitmap, imageIndex);
 
         imagesContainer.addView(imageItemView);
     }
 
+    private void setupImageView(ImageView imageView, Bitmap bitmap, int imageIndex) {
+        imageView.setImageBitmap(bitmap);
+        imageView.setOnClickListener(v -> showFullScreenImage(bitmap, "Image " + imageIndex));
+    }
+
+    private void setupImageInfo(TextView tvImageTitle, TextView tvImageSize, Bitmap bitmap, int imageIndex) {
+        tvImageTitle.setText("Image " + imageIndex);
+
+        long sizeInBytes = bitmap.getByteCount();
+        String sizeText = formatFileSize(sizeInBytes);
+        String dimensionsText = bitmap.getWidth() + " × " + bitmap.getHeight() + " • " + sizeText;
+        tvImageSize.setText(dimensionsText);
+    }
+
     private void addErrorImageView(String errorMessage) {
-        View errorView = LayoutInflater.from(this).inflate(R.layout.item_image_error, imagesContainer, false);
+        View errorView = LayoutInflater.from(this)
+                .inflate(R.layout.item_image_error, imagesContainer, false);
         TextView tvErrorMessage = errorView.findViewById(R.id.tvErrorMessage);
         tvErrorMessage.setText(errorMessage);
         imagesContainer.addView(errorView);
@@ -398,112 +459,48 @@ public class AssignmentDetailActivity extends AppCompatActivity {
 
     private String formatFileSize(long bytes) {
         if (bytes < 1024) return bytes + " B";
+
         int exp = (int) (Math.log(bytes) / Math.log(1024));
-        String pre = "KMGTPE".charAt(exp - 1) + "";
-        return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(1024, exp), pre);
+        String prefix = "KMGTPE".charAt(exp - 1) + "";
+        return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(1024, exp), prefix);
     }
 
     private void showFullScreenImage(Bitmap bitmap, String title) {
-        // Create full screen image dialog
-        androidx.appcompat.app.AlertDialog.Builder builder =
-                new androidx.appcompat.app.AlertDialog.Builder(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_fullscreen_image, null);
 
+        setupFullScreenDialog(dialogView, bitmap, title);
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        setupFullScreenImageDialog(dialog, dialogView);
+        dialog.show();
+    }
+
+    private void setupFullScreenDialog(View dialogView, Bitmap bitmap, String title) {
         ImageView fullImageView = dialogView.findViewById(R.id.ivFullscreenImage);
         TextView tvFullImageTitle = dialogView.findViewById(R.id.tvFullImageTitle);
         ImageView btnClose = dialogView.findViewById(R.id.btnCloseFullscreen);
 
         fullImageView.setImageBitmap(bitmap);
         tvFullImageTitle.setText(title);
+    }
 
-        builder.setView(dialogView);
-        androidx.appcompat.app.AlertDialog dialog = builder.create();
-
-        // Set close button click listener
+    private void setupFullScreenImageDialog(AlertDialog dialog, View dialogView) {
+        ImageView btnClose = dialogView.findViewById(R.id.btnCloseFullscreen);
         btnClose.setOnClickListener(v -> dialog.dismiss());
 
-        dialog.show();
-
-        // Make dialog full screen
         if (dialog.getWindow() != null) {
             dialog.getWindow().setFlags(
-                    android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
             );
             dialog.getWindow().setLayout(
-                    android.view.WindowManager.LayoutParams.MATCH_PARENT,
-                    android.view.WindowManager.LayoutParams.MATCH_PARENT
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT
             );
         }
-    }
-
-    private void shareAssignmentDetails() {
-        if (currentAttempt == null) return;
-
-        StringBuilder shareText = new StringBuilder();
-        shareText.append("Assignment Submission Details\n");
-        shareText.append("============================\n\n");
-
-        if (currentAttempt.getAssignmentTitle() != null) {
-            shareText.append("Assignment: ").append(currentAttempt.getAssignmentTitle()).append("\n");
-        }
-        shareText.append("Assignment ID: #").append(currentAttempt.getAssignmentId()).append("\n");
-        shareText.append("Score: ").append(currentAttempt.getScore()).append("/").append(currentAttempt.getMaxScore());
-        shareText.append(" (").append(currentAttempt.getFormattedPercentage()).append(")\n");
-        shareText.append("Status: ").append(currentAttempt.getStatus()).append("\n");
-        shareText.append("Grading Status: ").append(currentAttempt.isChecked() ? "Graded" : "Pending").append("\n");
-        shareText.append("Submitted: ").append(formatSubmissionTime(currentAttempt.getSubmissionTimestamp())).append("\n");
-
-        if (currentAttempt.isGraded()) {
-            shareText.append("Graded: ").append(currentAttempt.getFormattedGradedDate()).append("\n");
-        }
-
-        shareText.append("Images: ").append(currentAttempt.getSubmittedImagesCount()).append(" submitted\n");
-
-        if (currentAttempt.hasFeedback()) {
-            shareText.append("\nFeedback:\n").append(currentAttempt.getFeedback()).append("\n");
-        }
-
-        android.content.Intent shareIntent = new android.content.Intent(android.content.Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText.toString());
-        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Assignment Submission - " +
-                        (currentAttempt.getAssignmentTitle() != null ?
-                                currentAttempt.getAssignmentTitle() :
-                                formatAssignmentId(currentAttempt.getAssignmentId())));
-
-        startActivity(android.content.Intent.createChooser(shareIntent, "Share Assignment Details"));
-    }
-
-    private void showAssignmentStats() {
-        if (currentAttempt == null) return;
-
-        StringBuilder statsText = new StringBuilder();
-        statsText.append("Assignment Statistics\n\n");
-
-        if (currentAttempt.getAssignmentTitle() != null) {
-            statsText.append("Title: ").append(currentAttempt.getAssignmentTitle()).append("\n");
-        }
-        statsText.append("Assignment ID: #").append(currentAttempt.getAssignmentId()).append("\n");
-        statsText.append("Course ID: #").append(currentAttempt.getCourseId()).append("\n");
-        statsText.append("Score: ").append(currentAttempt.getScore()).append("/").append(currentAttempt.getMaxScore()).append("\n");
-        statsText.append("Percentage: ").append(currentAttempt.getFormattedPercentage()).append("\n");
-        statsText.append("Status: ").append(currentAttempt.getStatus()).append("\n");
-        statsText.append("Submitted: ").append(formatSubmissionTime(currentAttempt.getSubmissionTimestamp())).append("\n");
-
-        if (currentAttempt.isGraded()) {
-            statsText.append("Graded: ").append(currentAttempt.getFormattedGradedDate()).append("\n");
-        }
-
-        statsText.append("Images: ").append(currentAttempt.getSubmittedImagesCount()).append(" submitted\n");
-        statsText.append("Grading Status: ").append(currentAttempt.isChecked() ? "Graded" : "Pending").append("\n");
-
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Assignment Statistics")
-                .setMessage(statsText.toString())
-                .setPositiveButton("Close", null)
-                .show();
     }
 
     @Override
@@ -530,18 +527,125 @@ public class AssignmentDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void shareAssignmentDetails() {
+        if (currentAttempt == null) return;
+
+        String shareText = buildShareText();
+        String subject = buildShareSubject();
+
+        Intent shareIntent = createShareIntent(shareText, subject);
+        startActivity(Intent.createChooser(shareIntent, "Share Assignment Details"));
+    }
+
+    private String buildShareText() {
+        StringBuilder shareText = new StringBuilder();
+        shareText.append("Assignment Submission Details\n");
+        shareText.append("============================\n\n");
+
+        appendAssignmentInfo(shareText);
+        appendScoreInfo(shareText);
+        appendStatusInfo(shareText);
+        appendTimestampInfo(shareText);
+        appendImageInfo(shareText);
+        appendFeedbackInfo(shareText);
+
+        return shareText.toString();
+    }
+
+    private void appendAssignmentInfo(StringBuilder shareText) {
+        if (currentAttempt.getAssignmentTitle() != null) {
+            shareText.append("Assignment: ").append(currentAttempt.getAssignmentTitle()).append("\n");
+        }
+        shareText.append("Assignment ID: #").append(currentAttempt.getAssignmentId()).append("\n");
+    }
+
+    private void appendScoreInfo(StringBuilder shareText) {
+        shareText.append("Score: ").append(currentAttempt.getScore())
+                .append("/").append(currentAttempt.getMaxScore())
+                .append(" (").append(currentAttempt.getFormattedPercentage()).append(")\n");
+    }
+
+    private void appendStatusInfo(StringBuilder shareText) {
+        shareText.append("Status: ").append(currentAttempt.getStatus()).append("\n");
+        shareText.append("Grading Status: ").append(currentAttempt.isChecked() ? "Graded" : "Pending").append("\n");
+    }
+
+    private void appendTimestampInfo(StringBuilder shareText) {
+        shareText.append("Submitted: ").append(formatSubmissionTime(currentAttempt.getSubmissionTimestamp())).append("\n");
+
+        if (currentAttempt.isGraded()) {
+            shareText.append("Graded: ").append(currentAttempt.getFormattedGradedDate()).append("\n");
+        }
+    }
+
+    private void appendImageInfo(StringBuilder shareText) {
+        shareText.append("Images: ").append(currentAttempt.getSubmittedImagesCount()).append(" submitted\n");
+    }
+
+    private void appendFeedbackInfo(StringBuilder shareText) {
+        if (currentAttempt.hasFeedback()) {
+            shareText.append("\nFeedback:\n").append(currentAttempt.getFeedback()).append("\n");
+        }
+    }
+
+    private String buildShareSubject() {
+        return "Assignment Submission - " +
+                (currentAttempt.getAssignmentTitle() != null ?
+                        currentAttempt.getAssignmentTitle() :
+                        formatAssignmentId(currentAttempt.getAssignmentId()));
+    }
+
+    private Intent createShareIntent(String shareText, String subject) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        return shareIntent;
+    }
+
+    private void showAssignmentStats() {
+        if (currentAttempt == null) return;
+
+        String statsText = buildStatsText();
+        new AlertDialog.Builder(this)
+                .setTitle("Assignment Statistics")
+                .setMessage(statsText)
+                .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private String buildStatsText() {
+        StringBuilder statsText = new StringBuilder();
+        statsText.append("Assignment Statistics\n\n");
+
+        appendAssignmentInfo(statsText);
+        statsText.append("Course ID: #").append(currentAttempt.getCourseId()).append("\n");
+        appendScoreInfo(statsText);
+        statsText.append("Percentage: ").append(currentAttempt.getFormattedPercentage()).append("\n");
+        appendStatusInfo(statsText);
+        appendTimestampInfo(statsText);
+        appendImageInfo(statsText);
+        statsText.append("Grading Status: ").append(currentAttempt.isChecked() ? "Graded" : "Pending").append("\n");
+
+        return statsText.toString();
+    }
+
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         scoreCard.setVisibility(show ? View.GONE : View.VISIBLE);
         detailsCard.setVisibility(show ? View.GONE : View.VISIBLE);
 
         if (!show && currentAttempt != null) {
-            if (currentAttempt.hasSubmittedImages()) {
-                imagesCard.setVisibility(View.VISIBLE);
-            }
-            if (currentAttempt.hasFeedback()) {
-                feedbackCard.setVisibility(View.VISIBLE);
-            }
+            updateCardVisibilityAfterLoad();
+        }
+    }
+
+    private void updateCardVisibilityAfterLoad() {
+        if (currentAttempt.hasSubmittedImages()) {
+            imagesCard.setVisibility(View.VISIBLE);
+        }
+        if (currentAttempt.hasFeedback()) {
+            feedbackCard.setVisibility(View.VISIBLE);
         }
     }
 
@@ -553,5 +657,19 @@ public class AssignmentDetailActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private boolean isValidString(String str) {
+        return str != null && !str.trim().isEmpty();
+    }
+
+    private static class StatusColors {
+        final int backgroundColorRes;
+        final int textColorRes;
+
+        StatusColors(int backgroundColorRes, int textColorRes) {
+            this.backgroundColorRes = backgroundColorRes;
+            this.textColorRes = textColorRes;
+        }
     }
 }
