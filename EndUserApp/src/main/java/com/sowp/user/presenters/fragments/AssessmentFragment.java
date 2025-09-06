@@ -3,13 +3,11 @@ package com.sowp.user.presenters.fragments;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,10 +30,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class AssessmentFragment extends Fragment implements CourseAdapter.OnCourseClickListener {
-    private static final String TAG = "AssessmentFragment";
     private static final int PAGE_SIZE = 10;
 
-    // Views
     private TextView quizAvgTextView;
     private TextView assignmentAvgTextView;
     private TextView totalCoursesTextView;
@@ -44,7 +40,6 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     private ProgressBar loadingProgressBar;
     private TextView emptyStateTextView;
 
-    // Data and repositories
     private UserRepository userRepository;
     private CourseRepository courseRepository;
     private CourseAdapter courseAdapter;
@@ -52,7 +47,6 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     private List<Course> enrolledCourses;
     private User currentUser;
 
-    // Pagination
     private int currentPage = 0;
     private boolean isLoading = false;
     private boolean hasMoreData = true;
@@ -91,7 +85,6 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
         coursesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         coursesRecyclerView.setAdapter(courseAdapter);
 
-        // Add pagination scroll listener
         coursesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -139,8 +132,6 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
             @Override
             public void onFailure(String message) {
                 showLoading(false);
-                showError("Failed to load user data: " + message);
-                Log.e(TAG, "Failed to load user data: " + message);
             }
         });
     }
@@ -148,15 +139,12 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     private void updateUserPerformance(User user) {
         if (getContext() == null) return;
 
-        // Update quiz average
         float quizAvg = user.getQuizzesAvg();
         quizAvgTextView.setText(String.format(Locale.getDefault(), "%.1f%%", quizAvg));
 
-        // Update assignment average
         float assignmentAvg = user.getAssignmentAvg();
         assignmentAvgTextView.setText(String.format(Locale.getDefault(), "%.1f%%", assignmentAvg));
 
-        // Update total enrolled courses count
         List<Integer> enrolledCourseIds = user.getEnrolledCourses();
         int totalEnrolled = enrolledCourseIds != null ? enrolledCourseIds.size() : 0;
         totalCoursesTextView.setText(String.valueOf(totalEnrolled));
@@ -175,8 +163,6 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
             @Override
             public void onFailure(String message) {
                 showLoading(false);
-                showError("Failed to load courses: " + message);
-                Log.e(TAG, "Failed to load courses: " + message);
             }
         });
     }
@@ -230,12 +216,10 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
                 showLoading(false);
                 swipeRefreshLayout.setRefreshing(false);
 
-                // Check if we have more data
                 if (endIndex >= allCourses.size()) {
                     hasMoreData = false;
                 }
 
-                // Show empty state if no courses
                 showEmptyState(enrolledCourses.isEmpty());
             });
         }
@@ -256,10 +240,10 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
         builder.setItems(options, (dialog, which) -> {
             Intent intent;
             switch (which) {
-                case 0: // Quizzes
+                case 0:
                     intent = new Intent(getContext(), ViewQuizzesActivity.class);
                     break;
-                case 1: // Assignments
+                case 1:
                     intent = new Intent(getContext(), ViewAssignmentsActivity.class);
                     break;
                 default:
@@ -296,12 +280,6 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
                 coursesRecyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
             }
         });
-    }
-
-    private void showError(String message) {
-        if (getContext() != null) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void refreshData() {

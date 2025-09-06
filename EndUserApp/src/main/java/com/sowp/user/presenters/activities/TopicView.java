@@ -17,7 +17,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.sowp.user.R;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.snackbar.Snackbar;
 
 public class TopicView extends AppCompatActivity {
     private WebView topicContent;
@@ -36,27 +35,20 @@ public class TopicView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_view);
 
-        // Initialize views
         initializeViews();
 
-        // Setup toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Configure WebView
         configureWebView();
 
-        // Setup SwipeRefreshLayout
         setupSwipeRefresh();
 
-        // Retrieve data from intent
         retrieveIntentData();
 
-        // Load topic content
         loadTopicContent();
 
-        // Setup video button
         setupVideoButton();
     }
 
@@ -83,9 +75,9 @@ public class TopicView extends AppCompatActivity {
 
     private void setupSwipeRefresh() {
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.primary,        // instead of R.color.colorPrimary
-                R.color.accent,         // instead of R.color.colorAccent
-                R.color.primary_dark    // instead of R.color.colorPrimaryDark
+                R.color.primary,
+                R.color.accent,
+                R.color.primary_dark
         );
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -99,7 +91,6 @@ public class TopicView extends AppCompatActivity {
         topicContentHtml = intent.getStringExtra("TOPIC_CONTENT");
         topicVideoId = intent.getStringExtra("VIDEO_ID");
 
-        // Set default values if data is missing
         if (topicName == null || topicName.isEmpty()) {
             topicName = "Topic";
         }
@@ -109,30 +100,23 @@ public class TopicView extends AppCompatActivity {
     }
 
     private void loadTopicContent() {
-        // Show loading indicator
         progressBar.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setRefreshing(true);
 
-        // Set toolbar title
         getSupportActionBar().setTitle(topicName);
 
-        // Load topic content with improved styling
         topicContent.loadDataWithBaseURL(null, topicContentHtml, "text/html", "UTF-8", null);
     }
 
     private void setupVideoButton() {
         btnWatchVideo.setOnClickListener(v -> {
             if (topicVideoId != null && !topicVideoId.isEmpty()) {
-                // Launch video activity with video ID
                 Intent videoIntent = new Intent(this, VideoPlayerActivity.class);
                 videoIntent.putExtra("VIDEO_ID", topicVideoId);
                 startActivity(videoIntent);
-            } else {
-                Snackbar.make(coordinatorLayout, "Video not available", Snackbar.LENGTH_SHORT).show();
             }
         });
 
-        // Hide video button if no video ID is provided
         if (topicVideoId == null || topicVideoId.isEmpty()) {
             btnWatchVideo.setVisibility(View.GONE);
         }
@@ -141,9 +125,6 @@ public class TopicView extends AppCompatActivity {
     private void showError(String message) {
         progressBar.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(false);
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
-                .setAction("Retry", v -> loadTopicContent())
-                .show();
     }
 
     @Override
@@ -178,7 +159,6 @@ public class TopicView extends AppCompatActivity {
         super.onDestroy();
     }
 
-    // Custom WebViewClient to handle errors and loading
     private class TopicWebViewClient extends WebViewClient {
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {

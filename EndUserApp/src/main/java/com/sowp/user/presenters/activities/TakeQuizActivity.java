@@ -31,7 +31,6 @@ import java.util.Map;
 
 public class TakeQuizActivity extends AppCompatActivity {
 
-    // UI Components
     private TextView questionText;
     private TextView timerText;
     private TextView questionCountText;
@@ -41,21 +40,19 @@ public class TakeQuizActivity extends AppCompatActivity {
     private Button nextButton;
     private Button submitButton;
 
-    // Repositories and Utils
     private UserRepository userRepository;
     private UserAuthenticationUtils userAuthenticationUtils;
 
-    // Quiz Data
     private List<Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
     private int correctAnswers = 0;
-    private final int timeLimit = 30; // Fixed 30 seconds per question
+    private final int timeLimit = 30;
     private CountDownTimer timer;
     private String quizId;
     private String courseId;
     private String quizTitle;
     private int totalQuestions = 0;
-    private int passingScore = 60; // Default passing score
+    private int passingScore = 60;
     private FirebaseFirestore db;
     private Map<String, String> userAnswers = new HashMap<>();
     private Map<String, Boolean> answerCorrectness = new HashMap<>();
@@ -69,19 +66,15 @@ public class TakeQuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_quiz);
 
-        // Initialize UI elements
         initializeViews();
 
         userRepository = new UserRepository(this);
         userAuthenticationUtils = new UserAuthenticationUtils(this);
 
-        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
 
-        // Record quiz start time
         quizStartTime = System.currentTimeMillis();
 
-        // Get quiz and course ID from intent
         quizId = getIntent().getStringExtra("QUIZ_ID");
         courseId = getIntent().getStringExtra("COURSE_ID");
 
@@ -92,7 +85,6 @@ public class TakeQuizActivity extends AppCompatActivity {
             showErrorAndFinish("Error: Quiz or Course ID not found");
         }
 
-        // Set button click listeners
         nextButton.setOnClickListener(v -> handleNextButton());
         submitButton.setOnClickListener(v -> showSubmitConfirmation());
     }
@@ -107,7 +99,6 @@ public class TakeQuizActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.nextButton);
         submitButton = findViewById(R.id.submitButton);
 
-        // Set initial timer color
         timerText.setTextColor(ContextCompat.getColor(this, R.color.text_primary));
     }
 
@@ -125,13 +116,11 @@ public class TakeQuizActivity extends AppCompatActivity {
                             totalQuestions = totalQuestionsLong.intValue();
                         }
 
-                        // Get passing score
                         Long passScore = documentSnapshot.getLong("passingScore");
                         if (passScore != null) {
                             passingScore = passScore.intValue();
                         }
 
-                        // Set title in ActionBar
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setTitle(quizTitle);
                             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -151,15 +140,13 @@ public class TakeQuizActivity extends AppCompatActivity {
                 .collection("questions")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    questions.clear(); // Clear existing questions
+                    questions.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Question question = document.toObject(Question.class);
 
-                        // Handle document ID conversion safely
                         try {
                             question.setId(Integer.parseInt(document.getId()));
                         } catch (NumberFormatException e) {
-                            // If document ID is not numeric, use hash code or sequential numbering
                             question.setId(questions.size() + 1);
                         }
 
@@ -181,17 +168,13 @@ public class TakeQuizActivity extends AppCompatActivity {
         if (index < questions.size()) {
             Question currentQuestion = questions.get(index);
 
-            // Update progress
             updateProgress(index);
 
-            // Display question text and count
             questionText.setText(currentQuestion.getText());
             questionCountText.setText("Question " + (index + 1) + " of " + questions.size());
 
-            // Clear previous options
             optionsGroup.removeAllViews();
 
-            // Add options as radio buttons with modern styling
             List<String> options = currentQuestion.getOptions();
             if (options != null && !options.isEmpty()) {
                 for (int i = 0; i < options.size(); i++) {
@@ -201,13 +184,11 @@ public class TakeQuizActivity extends AppCompatActivity {
                     radioButton.setTextSize(16);
                     radioButton.setPadding(16, 16, 16, 16);
 
-                    // Apply modern styling
                     radioButton.setBackgroundResource(R.drawable.option_background);
                     radioButton.setButtonTintList(ContextCompat.getColorStateList(this, R.color.primary));
 
                     optionsGroup.addView(radioButton);
 
-                    // Check if user already answered this question
                     String questionIdStr = String.valueOf(currentQuestion.getId());
                     String savedAnswer = userAnswers.get(questionIdStr);
                     if (savedAnswer != null && savedAnswer.equals(options.get(i))) {
@@ -216,7 +197,6 @@ public class TakeQuizActivity extends AppCompatActivity {
                 }
             }
 
-            // Show/hide buttons based on position
             if (index == questions.size() - 1) {
                 nextButton.setVisibility(View.GONE);
                 submitButton.setVisibility(View.VISIBLE);
@@ -225,7 +205,6 @@ public class TakeQuizActivity extends AppCompatActivity {
                 submitButton.setVisibility(View.GONE);
             }
 
-            // Start timer for this question
             startTimer();
         }
     }
@@ -239,7 +218,6 @@ public class TakeQuizActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        // Cancel previous timer if exists
         if (timer != null) {
             timer.cancel();
         }
@@ -251,7 +229,6 @@ public class TakeQuizActivity extends AppCompatActivity {
                 long seconds = millisUntilFinished / 1000;
                 timerText.setText("Time: " + seconds + "s");
 
-                // Change color based on remaining time
                 if (seconds <= 10) {
                     timerText.setTextColor(Color.RED);
                 } else if (seconds <= 20) {
@@ -267,7 +244,6 @@ public class TakeQuizActivity extends AppCompatActivity {
                 timerText.setText("Time's up!");
                 timerText.setTextColor(Color.RED);
 
-                // Auto-move to next question or submit if last question
                 handleTimeUp();
             }
         }.start();
@@ -279,10 +255,8 @@ public class TakeQuizActivity extends AppCompatActivity {
             isTimerRunning = false;
         }
 
-        // Save user's answer for current question
         saveCurrentAnswer();
 
-        // Move to next question
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.size()) {
             displayQuestion(currentQuestionIndex);
@@ -290,18 +264,12 @@ public class TakeQuizActivity extends AppCompatActivity {
     }
 
     private void handleTimeUp() {
-        // Save current answer (if any) and mark as time expired
         saveCurrentAnswer();
 
-        // Show time up message
-        Toast.makeText(this, "Time's up! Moving to next question", Toast.LENGTH_SHORT).show();
-
-        // Move to next question or submit if last question
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.size()) {
             displayQuestion(currentQuestionIndex);
         } else {
-            // Auto-submit quiz
             submitQuiz();
         }
     }
@@ -317,32 +285,27 @@ public class TakeQuizActivity extends AppCompatActivity {
                 if (selectedButton != null) {
                     String answer = selectedButton.getText().toString();
 
-                    // Only count if this is a new answer or different from previous
                     String previousAnswer = userAnswers.get(questionId);
                     boolean previouslyCorrect = answerCorrectness.getOrDefault(questionId, false);
 
                     userAnswers.put(questionId, answer);
 
-                    // Check if answer is correct and store correctness
                     boolean isCorrect = answer.equals(currentQuestion.getCorrectAnswer());
                     answerCorrectness.put(questionId, isCorrect);
 
-                    // Adjust correct answer count
                     if (previousAnswer != null && previouslyCorrect && !isCorrect) {
-                        correctAnswers--; // Previously correct, now wrong
+                        correctAnswers--;
                     } else if ((previousAnswer == null || !previouslyCorrect) && isCorrect) {
-                        correctAnswers++; // Previously wrong or unanswered, now correct
+                        correctAnswers++;
                     }
                 }
             } else {
-                // No answer selected - mark as unanswered and incorrect
                 String previousAnswer = userAnswers.get(questionId);
                 boolean previouslyCorrect = answerCorrectness.getOrDefault(questionId, false);
 
                 userAnswers.put(questionId, "");
                 answerCorrectness.put(questionId, false);
 
-                // Adjust correct answer count if previously was correct
                 if (previousAnswer != null && previouslyCorrect) {
                     correctAnswers--;
                 }
@@ -362,32 +325,25 @@ public class TakeQuizActivity extends AppCompatActivity {
     private void submitQuiz() {
         quizCompleted = true;
 
-        // Save answer for the last question if user hasn't moved past it
         if (currentQuestionIndex < questions.size()) {
             saveCurrentAnswer();
         }
 
-        // Cancel timer
         if (timer != null) {
             timer.cancel();
             isTimerRunning = false;
         }
 
-        // Record quiz end time
         quizEndTime = System.currentTimeMillis();
         long timeTaken = quizEndTime - quizStartTime;
 
-        // Calculate score percentage
         int totalQuestions = questions.size();
         int score = (totalQuestions > 0) ? (correctAnswers * 100) / totalQuestions : 0;
 
-        // Check if user passed the quiz
         boolean passed = score >= passingScore;
 
-        // Create detailed quiz attempt data
         Map<String, Object> quizAttempt = createQuizAttemptData(score, passed, timeTaken);
 
-        // Update user progress in Firestore with detailed information
         userRepository.submitQuizAttempt(quizAttempt, new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
@@ -398,14 +354,11 @@ public class TakeQuizActivity extends AppCompatActivity {
                 userRepository.updateQuizAverage(new UserRepository.UserCallback() {
                     @Override
                     public void onSuccess(User user) {
-                        // Quiz average updated successfully
                         finish();
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        Toast.makeText(TakeQuizActivity.this, "Failed to update average: " + message,
-                                Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -413,8 +366,6 @@ public class TakeQuizActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(TakeQuizActivity.this, "Failed to submit quiz: " + message,
-                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -423,10 +374,8 @@ public class TakeQuizActivity extends AppCompatActivity {
     private Map<String, Object> createQuizAttemptData(int score, boolean passed, long timeTaken) {
         Map<String, Object> attemptData = new HashMap<>();
 
-        // Generate unique attempt ID
         String attemptId = courseId+"_"+quizId+"_"+System.currentTimeMillis();
 
-        // Basic quiz information
         attemptData.put("attemptId", attemptId);
         attemptData.put("quizId", Integer.parseInt(quizId));
         attemptData.put("courseId", Integer.parseInt(courseId));
@@ -442,14 +391,13 @@ public class TakeQuizActivity extends AppCompatActivity {
         attemptData.put("startTime", quizStartTime);
         attemptData.put("endTime", quizEndTime);
 
-        // Detailed answers for each question
         List<Map<String, Object>> detailedAnswers = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++) {
             Question question = questions.get(i);
             String questionId = String.valueOf(question.getId());
 
             Map<String, Object> answerDetail = new HashMap<>();
-            answerDetail.put("questionId", question.getId()); // Store as integer
+            answerDetail.put("questionId", question.getId());
             answerDetail.put("questionText", question.getText() != null ? question.getText() : "");
             answerDetail.put("questionNumber", i + 1);
             answerDetail.put("userAnswer", userAnswers.getOrDefault(questionId, ""));
@@ -480,7 +428,6 @@ public class TakeQuizActivity extends AppCompatActivity {
     }
 
     private void showErrorAndFinish(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -515,7 +462,6 @@ public class TakeQuizActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (timer != null && !quizCompleted) {
-            // Pause timer when activity is not visible
             timer.cancel();
             isTimerRunning = false;
         }
@@ -525,7 +471,6 @@ public class TakeQuizActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!quizCompleted && !questions.isEmpty() && !isTimerRunning && currentQuestionIndex < questions.size()) {
-            // Resume timer when activity becomes visible again
             startTimer();
         }
     }

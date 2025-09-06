@@ -1,7 +1,6 @@
 package com.sowp.user.presenters.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 import com.sowp.user.models.ChatMessage;
 import com.sowp.user.R;
 import com.sowp.user.adapters.ChatAdapter;
@@ -29,8 +27,6 @@ import java.util.List;
 public class ChatFragment extends Fragment implements
         ChatAdapter.OnMessageActionListener,
         ChatAdapter.OnUserProfileClickListener {
-
-    private static final String TAG = "ChatFragment";
 
     private RecyclerView chatRecyclerView;
     private EditText messageInput;
@@ -75,9 +71,7 @@ public class ChatFragment extends Fragment implements
             }
 
             @Override
-            public void onFailure(String message) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            }
+            public void onFailure(String message) {}
         });
 
         return view;
@@ -162,9 +156,7 @@ public class ChatFragment extends Fragment implements
                 } else {
                     chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "Error scrolling to bottom", e);
-            }
+            } catch (Exception e) {}
         }
     }
 
@@ -176,8 +168,6 @@ public class ChatFragment extends Fragment implements
                 messageInput.setText("");
                 shouldAutoScroll = true;
                 isUserScrolling = false;
-            } else if (message.isEmpty()) {
-                Toast.makeText(getContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -190,9 +180,7 @@ public class ChatFragment extends Fragment implements
             }
 
             @Override
-            public void onError(String error) {
-                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-            }
+            public void onError(String error) {}
         });
     }
 
@@ -216,9 +204,7 @@ public class ChatFragment extends Fragment implements
             }
 
             @Override
-            public void onFailure(String error) {
-                Toast.makeText(getContext(), "Error sending message: " + error, Toast.LENGTH_SHORT).show();
-            }
+            public void onFailure(String error) {}
         });
     }
 
@@ -244,9 +230,7 @@ public class ChatFragment extends Fragment implements
             }
 
             @Override
-            public void onFailure(String error) {
-                Toast.makeText(getContext(), "Failed to load messages: " + error, Toast.LENGTH_SHORT).show();
-            }
+            public void onFailure(String error) {}
         });
     }
 
@@ -255,34 +239,24 @@ public class ChatFragment extends Fragment implements
             @Override
             public void onCheckComplete(int oldMessageCount) {
                 if (oldMessageCount > 0) {
-                    Log.d(TAG, "Found " + oldMessageCount + " old messages. Starting cleanup...");
                     messageRepository.performAutomaticCleanup(new MessageRepository.CleanupCallback() {
                         @Override
                         public void onCheckComplete(int oldMessageCount) {}
 
                         @Override
-                        public void onCheckFailed(String error) {
-                            Log.e(TAG, "Cleanup check failed: " + error);
-                        }
+                        public void onCheckFailed(String error) {}
 
                         @Override
-                        public void onCleanupComplete(int deletedCount) {
-                            Log.d(TAG, "Cleanup completed. Deleted " + deletedCount + " messages");
-                        }
+                        public void onCleanupComplete(int deletedCount) {}
 
                         @Override
-                        public void onCleanupFailed(String error) {
-                            Log.e(TAG, "Cleanup failed: " + error);
-                        }
+                        public void onCleanupFailed(String error) {}
                     });
-                } else {
-                    Log.d(TAG, "No old messages to clean up");
                 }
             }
 
             @Override
             public void onCheckFailed(String error) {
-                Log.e(TAG, "Failed to check old messages: " + error);
                 messageRepository.performAutomaticCleanup(null);
             }
 
@@ -309,8 +283,6 @@ public class ChatFragment extends Fragment implements
         if (getActivity() != null && !getActivity().isFinishing()) {
             if (userData != null) {
                 userProfilePopup.showProfile(userData);
-            } else {
-                Toast.makeText(getContext(), "User profile not available", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -336,7 +308,6 @@ public class ChatFragment extends Fragment implements
                                 callback.onUserDataLoadFailed("Failed to parse user data");
                             }
                         } catch (Exception e) {
-                            Log.e(TAG, "Error parsing user data", e);
                             callback.onUserDataLoadFailed("Error parsing user data: " + e.getMessage());
                         }
                     } else {
@@ -344,7 +315,6 @@ public class ChatFragment extends Fragment implements
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Failed to load user data", e);
                     callback.onUserDataLoadFailed("Failed to load user data: " + e.getMessage());
                 });
     }
@@ -376,21 +346,15 @@ public class ChatFragment extends Fragment implements
             messageRepository.deleteMessageForUser(message.getId(), currentUserEmail,
                     new MessageRepository.DeleteMessageCallback() {
                         @Override
-                        public void onSuccess() {
-                            Toast.makeText(getContext(), "Message deleted", Toast.LENGTH_SHORT).show();
-                        }
+                        public void onSuccess() {}
 
                         @Override
-                        public void onFailure(String error) {
-                            Toast.makeText(getContext(), "Failed to delete message: " + error,
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        public void onFailure(String error) {}
                     });
         } else {
             if (position < chatMessages.size()) {
                 chatMessages.remove(position);
                 chatAdapter.notifyItemRemoved(position);
-                Toast.makeText(getContext(), "Message deleted locally", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -400,21 +364,15 @@ public class ChatFragment extends Fragment implements
             messageRepository.deleteMessageForEveryone(message.getId(),
                     new MessageRepository.DeleteMessageCallback() {
                         @Override
-                        public void onSuccess() {
-                            Toast.makeText(getContext(), "Message deleted for everyone", Toast.LENGTH_SHORT).show();
-                        }
+                        public void onSuccess() {}
 
                         @Override
-                        public void onFailure(String error) {
-                            Toast.makeText(getContext(), "Failed to delete message: " + error,
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        public void onFailure(String error) {}
                     });
         } else {
             if (position < chatMessages.size()) {
                 chatMessages.remove(position);
                 chatAdapter.notifyItemRemoved(position);
-                Toast.makeText(getContext(), "Message deleted locally", Toast.LENGTH_SHORT).show();
             }
         }
     }

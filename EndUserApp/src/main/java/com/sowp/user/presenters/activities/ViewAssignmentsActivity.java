@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,12 +27,10 @@ import com.sowp.user.models.Assignment;
 import com.sowp.user.presenters.activities.SubmitAssignmentActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ViewAssignmentsActivity extends AppCompatActivity implements AssignmentAdapter.OnAssignmentClickListener {
 
-    // UI Components
     private ImageView btnBack;
     private TextView tvCourseTitle, tvCourseCode, tvAssignmentCount, tvPageInfo;
     private TextInputEditText etSearch;
@@ -44,7 +40,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
     private ProgressBar progressBar;
     private Button btnPrevious, btnNext;
 
-    // Data
     private FirebaseFirestore firestore;
     private AssignmentAdapter assignmentAdapter;
     private List<Assignment> allAssignments;
@@ -53,13 +48,11 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
     private String courseTitle = "";
     private String courseCode = "";
 
-    // Pagination
     private static final int PAGE_SIZE = 10;
     private int currentPage = 1;
     private int totalPages = 1;
     private boolean isLoading = false;
 
-    // Filter options
     private String[] filterOptions = {"All Assignments", "High Score (90+)", "Medium Score (70-89)", "Low Score (<70)", "With Images", "No Images", "Recent First", "Oldest First"};
     private String currentFilter = "All Assignments";
     private String searchQuery = "";
@@ -69,22 +62,18 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_assignments);
 
-        // Get course ID from intent
         courseId = getIntent().getIntExtra("COURSE_ID", 0);
         if (courseId == 0) {
-            Toast.makeText(this, "Invalid course ID", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Initialize components
         initializeViews();
         setupFirestore();
         setupRecyclerView();
         setupSpinner();
         setupClickListeners();
 
-        // Load data
         loadCourseDetails();
         loadAssignments();
     }
@@ -134,7 +123,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
             btnBack.setOnClickListener(v -> onBackPressed());
         }
 
-        // Search functionality
         if (etSearch != null) {
             etSearch.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -151,7 +139,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
             });
         }
 
-        // Pagination buttons
         if (btnPrevious != null) {
             btnPrevious.setOnClickListener(v -> {
                 if (currentPage > 1) {
@@ -190,9 +177,7 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
                         }
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to load course details", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> {});
     }
 
     private void loadAssignments() {
@@ -216,11 +201,9 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
                         for (DocumentSnapshot document : task.getResult()) {
                             Assignment assignment = document.toObject(Assignment.class);
                             if (assignment != null) {
-                                // Set the assignment ID from the document ID
                                 try {
                                     assignment.setId(Integer.parseInt(document.getId()));
                                 } catch (NumberFormatException e) {
-                                    // Handle case where document ID is not numeric
                                     assignment.setId(document.getId().hashCode());
                                 }
                                 assignment.setCourseId(Integer.parseInt(String.valueOf(courseId)));
@@ -233,11 +216,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
 
                         applyFiltersAndPagination();
                     } else {
-                        String errorMessage = "Failed to load assignments";
-                        if (task.getException() != null) {
-                            errorMessage += ": " + task.getException().getMessage();
-                        }
-                        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
                         showEmptyState();
                     }
                 });
@@ -249,7 +227,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
         for (Assignment assignment : allAssignments) {
             if (assignment == null) continue;
 
-            // Search filter
             boolean matchesSearch = true;
             if (!searchQuery.isEmpty()) {
                 String title = assignment.getTitle() != null ? assignment.getTitle().toLowerCase() : "";
@@ -261,7 +238,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
                         semester.contains(searchQuery.toLowerCase());
             }
 
-            // Category filter
             boolean matchesFilter = true;
             switch (currentFilter) {
                 case "All Assignments":
@@ -284,7 +260,7 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
                     break;
                 case "Recent First":
                 case "Oldest First":
-                    matchesFilter = true; // These are sorting options, not filters
+                    matchesFilter = true;
                     break;
             }
 
@@ -293,7 +269,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
             }
         }
 
-        // Apply sorting
         switch (currentFilter) {
             case "Recent First":
                 tempFilteredAssignments.sort((a1, a2) -> Long.compare(a2.getCreatedAt(), a1.getCreatedAt()));
@@ -302,7 +277,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
                 tempFilteredAssignments.sort((a1, a2) -> Long.compare(a1.getCreatedAt(), a2.getCreatedAt()));
                 break;
             default:
-                // Keep default order (by orderIndex)
                 tempFilteredAssignments.sort((a1, a2) -> Integer.compare(a1.getOrderIndex(), a2.getOrderIndex()));
                 break;
         }
@@ -311,7 +285,7 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
         filteredAssignments.addAll(tempFilteredAssignments);
 
         calculatePagination();
-        currentPage = 1; // Reset to first page when filter changes
+        currentPage = 1;
         updatePaginatedDisplay();
         updatePaginationControls();
         updateAssignmentCount();
@@ -412,7 +386,6 @@ public class ViewAssignmentsActivity extends AppCompatActivity implements Assign
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload assignments when returning from other activities
         loadAssignments();
     }
 }

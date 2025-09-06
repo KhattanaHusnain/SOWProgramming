@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,10 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TopicList extends AppCompatActivity {
-    private static final String TAG = "TopicList";
     private static final int ITEMS_PER_PAGE = 10;
 
-    // UI Components
     private RecyclerView recyclerView;
     private View emptyView;
     private ProgressBar progressBar;
@@ -44,24 +40,20 @@ public class TopicList extends AppCompatActivity {
     private Spinner categorySpinner, semesterSpinner;
     private Toolbar toolbar;
 
-    // Adapters and Data
     private TopicListAdapter adapter;
     private TopicRepository topicRepository;
     private UserRepository userRepository;
 
-    // Data and State
     private int courseId;
     private String[] topicCategories;
     private List<Topic> allTopics = new ArrayList<>();
     private List<Topic> filteredTopics = new ArrayList<>();
 
-    // Pagination variables
     private int currentPage = 0;
     private int totalPages = 0;
     private int totalItems = 0;
     private boolean isLoading = false;
 
-    // Filter variables
     private String currentSearchQuery = "";
     private String selectedCategory = "All Categories";
     private String selectedSemester = "All Semesters";
@@ -71,16 +63,13 @@ public class TopicList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
 
-        // Initialize repositories
         topicRepository = new TopicRepository();
         userRepository = new UserRepository(this);
 
-        // Get intent data
         courseId = getIntent().getIntExtra("courseID", 0);
         String categoriesString = getIntent().getStringExtra("topicCategories");
         if (categoriesString != null && !categoriesString.isEmpty()) {
             topicCategories = categoriesString.split(",");
-            // Trim whitespace
             for (int i = 0; i < topicCategories.length; i++) {
                 topicCategories[i] = topicCategories[i].trim();
             }
@@ -88,16 +77,13 @@ public class TopicList extends AppCompatActivity {
             topicCategories = new String[0];
         }
 
-        // Initialize components
         initializeComponents();
         setupUI();
 
-        // Load topics
         loadTopicsFromFirestore();
     }
 
     private void initializeComponents() {
-        // Find views
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recycler_view);
         emptyView = findViewById(R.id.empty_view);
@@ -205,7 +191,6 @@ public class TopicList extends AppCompatActivity {
     }
 
     private void setupSemesterFilter() {
-        // We'll populate this after loading topics to get unique semesters
         List<String> semesters = new ArrayList<>();
         semesters.add("All Semesters");
 
@@ -243,21 +228,15 @@ public class TopicList extends AppCompatActivity {
                 allTopics.clear();
                 allTopics.addAll(topics);
 
-                Log.d(TAG, "Successfully loaded " + allTopics.size() + " topics");
-
-                // Update semester filter with unique semesters from topics
                 updateSemesterFilter();
 
-                // Apply filters and display
                 applyFiltersAndSearch();
                 setLoadingState(false);
             }
 
             @Override
             public void onFailure(String message) {
-                Log.e(TAG, "Error loading topics: " + message);
                 setLoadingState(false);
-                showError("Failed to load topics: " + message);
                 showEmptyState(true);
             }
         });
@@ -267,7 +246,6 @@ public class TopicList extends AppCompatActivity {
         List<String> semesters = new ArrayList<>();
         semesters.add("All Semesters");
 
-        // Get unique semesters from topics
         for (Topic topic : allTopics) {
             if (topic.getSemester() != null && !topic.getSemester().isEmpty()) {
                 if (!semesters.contains(topic.getSemester())) {
@@ -291,21 +269,18 @@ public class TopicList extends AppCompatActivity {
             }
         }
 
-        // Reset to first page and recalculate pagination
         currentPage = 0;
         calculatePagination();
         displayCurrentPage();
     }
 
     private boolean matchesFilters(Topic topic) {
-        // Search filter
         if (!currentSearchQuery.isEmpty()) {
             if (!topicMatchesSearch(topic, currentSearchQuery.toLowerCase())) {
                 return false;
             }
         }
 
-        // Category filter
         if (!selectedCategory.equals("All Categories")) {
             if (topic.getCategories() == null ||
                     !topic.getCategories().toLowerCase().contains(selectedCategory.toLowerCase())) {
@@ -313,7 +288,6 @@ public class TopicList extends AppCompatActivity {
             }
         }
 
-        // Semester filter
         if (!selectedSemester.equals("All Semesters")) {
             if (topic.getSemester() == null ||
                     !topic.getSemester().equals(selectedSemester)) {
@@ -329,22 +303,18 @@ public class TopicList extends AppCompatActivity {
             return true;
         }
 
-        // Search in topic name
         if (topic.getName() != null && topic.getName().toLowerCase().contains(searchQuery)) {
             return true;
         }
 
-        // Search in description
         if (topic.getDescription() != null && topic.getDescription().toLowerCase().contains(searchQuery)) {
             return true;
         }
 
-        // Search in tags
         if (topic.getTags() != null && topic.getTags().toLowerCase().contains(searchQuery)) {
             return true;
         }
 
-        // Search in categories
         if (topic.getCategories() != null && topic.getCategories().toLowerCase().contains(searchQuery)) {
             return true;
         }
@@ -394,7 +364,6 @@ public class TopicList extends AppCompatActivity {
     }
 
     private void updatePaginationUI() {
-        // Update page info text
         if (totalItems == 0) {
             pageInfo.setText("No topics found");
         } else {
@@ -406,7 +375,6 @@ public class TopicList extends AppCompatActivity {
             pageInfo.setText(info);
         }
 
-        // Update button states
         btnPrevious.setEnabled(canGoPreviousPage());
         btnNext.setEnabled(canGoNextPage());
     }
@@ -439,36 +407,26 @@ public class TopicList extends AppCompatActivity {
         recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
     private void updateTopicViews(Topic topic) {
         if (topic == null) return;
 
-        // Update views in TopicRepository
         topicRepository.updateTopicViews(courseId, topic.getOrderIndex(), new TopicRepository.UpdateCallback() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "Topic views updated successfully");
             }
 
             @Override
             public void onFailure(String message) {
-                Log.e(TAG, "Failed to update topic views: " + message);
             }
         });
 
-        // Update user's course progress
         userRepository.addViewedTopic(courseId, topic.getOrderIndex(), new UserRepository.UserCallback() {
             @Override
             public void onSuccess(com.sowp.user.models.User user) {
-                Log.d(TAG, "User progress updated successfully");
             }
 
             @Override
             public void onFailure(String message) {
-                Log.e(TAG, "Failed to update user progress: " + message);
             }
         });
     }
@@ -490,7 +448,6 @@ public class TopicList extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh data when returning from topic view
         if (!allTopics.isEmpty()) {
             loadTopicsFromFirestore();
         }
@@ -506,7 +463,6 @@ public class TopicList extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (adapter != null) {
-            // Clean up adapter if needed
         }
     }
 }
