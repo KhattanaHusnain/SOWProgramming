@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -70,7 +69,6 @@ public class QuizDetailActivity extends AppCompatActivity {
         contentLayout = findViewById(R.id.contentLayout);
         noQuestionsText = findViewById(R.id.noQuestionsText);
 
-        // Validate that all required views were found
         if (progressBar == null || contentLayout == null) {
             throw new RuntimeException("Required views not found in layout");
         }
@@ -102,7 +100,6 @@ public class QuizDetailActivity extends AppCompatActivity {
 
     private void loadQuizDetails() {
         if (attemptId == null || attemptId.isEmpty()) {
-            Toast.makeText(this, "Invalid quiz attempt", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -117,7 +114,7 @@ public class QuizDetailActivity extends AppCompatActivity {
                     if (quizAttempt != null) {
                         populateQuizDetails(quizAttempt);
                     } else {
-                        showError("Quiz attempt data not found");
+                        showError();
                     }
                 });
             }
@@ -126,7 +123,7 @@ public class QuizDetailActivity extends AppCompatActivity {
             public void onFailure(String message) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    showError("Error loading quiz details: " + message);
+                    showError();
                 });
             }
         });
@@ -134,13 +131,11 @@ public class QuizDetailActivity extends AppCompatActivity {
 
     private void populateQuizDetails(QuizAttempt quizAttempt) {
         try {
-            // Basic quiz information
             if (quizTitleText != null) {
                 quizTitleText.setText(quizAttempt.getQuizTitle() != null ?
                         quizAttempt.getQuizTitle() : "Unknown Quiz");
             }
 
-            // Status with background
             if (statusText != null) {
                 statusText.setText(quizAttempt.getStatusText());
                 if (quizAttempt.isPassed()) {
@@ -150,7 +145,6 @@ public class QuizDetailActivity extends AppCompatActivity {
                 }
             }
 
-            // Score and statistics
             if (scoreText != null) {
                 scoreText.setText(quizAttempt.getScorePercentage());
             }
@@ -167,13 +161,11 @@ public class QuizDetailActivity extends AppCompatActivity {
                 timeTakenText.setText(quizAttempt.getFormattedTimeTaken());
             }
 
-            // Passing score
             if (passingScoreText != null) {
                 passingScoreText.setText(String.format(Locale.getDefault(),
                         "Pass: %.0f%%", quizAttempt.getPassingScore()));
             }
 
-            // Completion date
             if (dateText != null) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy 'at' h:mm a", Locale.getDefault());
@@ -184,11 +176,10 @@ public class QuizDetailActivity extends AppCompatActivity {
                 }
             }
 
-            // Setup questions RecyclerView
             setupQuestionsRecyclerView(quizAttempt);
 
         } catch (Exception e) {
-            showError("Error displaying quiz details: " + e.getMessage());
+            showError();
         }
     }
 
@@ -196,7 +187,6 @@ public class QuizDetailActivity extends AppCompatActivity {
         if (questionsRecyclerView == null) return;
 
         if (quizAttempt.getAnswers() != null && !quizAttempt.getAnswers().isEmpty()) {
-            // Show RecyclerView, hide no questions message
             questionsRecyclerView.setVisibility(View.VISIBLE);
             if (noQuestionsText != null) {
                 noQuestionsText.setVisibility(View.GONE);
@@ -206,7 +196,6 @@ public class QuizDetailActivity extends AppCompatActivity {
             questionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             questionsRecyclerView.setAdapter(adapter);
         } else {
-            // Hide RecyclerView, show no questions message
             questionsRecyclerView.setVisibility(View.GONE);
             if (noQuestionsText != null) {
                 noQuestionsText.setVisibility(View.VISIBLE);
@@ -224,20 +213,15 @@ public class QuizDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        // Instead of finishing immediately, you might want to show a retry button
-        // or let the user go back manually
+    private void showError() {
         finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Clean up any resources if needed
         adapter = null;
         if (userRepository != null) {
-            // Cancel any pending operations if your repository supports it
             userRepository = null;
         }
     }

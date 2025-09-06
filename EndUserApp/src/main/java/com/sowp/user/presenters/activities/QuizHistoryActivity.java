@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,7 +29,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
     private ProgressBar progressBar;
     private LinearLayout emptyStateLayout;
     private LinearLayout contentLayout;
-    private MaterialCardView paginationCard; // Changed from LinearLayout to MaterialCardView
+    private MaterialCardView paginationCard;
     private TextView totalAttemptsText;
     private TextView averageScoreText;
     private TextView passedQuizzesText;
@@ -68,7 +67,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         progressBar = findViewById(R.id.progressBar);
         emptyStateLayout = findViewById(R.id.emptyStateLayout);
         contentLayout = findViewById(R.id.contentLayout);
-        paginationCard = findViewById(R.id.paginationCard); // Changed to match XML ID
+        paginationCard = findViewById(R.id.paginationCard);
         totalAttemptsText = findViewById(R.id.totalAttemptsText);
         averageScoreText = findViewById(R.id.averageScoreText);
         passedQuizzesText = findViewById(R.id.passedQuizzesText);
@@ -139,7 +138,6 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
                 runOnUiThread(() -> {
                     showLoading(false);
                     showEmptyState();
-                    Toast.makeText(QuizHistoryActivity.this, "Error loading quiz history: " + message, Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -174,9 +172,9 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
 
     private void updatePaginationControls() {
         if (totalPages <= 1) {
-            paginationCard.setVisibility(View.GONE); // Changed from paginationLayout to paginationCard
+            paginationCard.setVisibility(View.GONE);
         } else {
-            paginationCard.setVisibility(View.VISIBLE); // Changed from paginationLayout to paginationCard
+            paginationCard.setVisibility(View.VISIBLE);
             previousButton.setEnabled(currentPage > 0);
             nextButton.setEnabled(currentPage < totalPages - 1);
             pageIndicator.setText(String.format("Page %d of %d", currentPage + 1, Math.max(totalPages, 1)));
@@ -221,7 +219,7 @@ public class QuizHistoryActivity extends AppCompatActivity implements QuizHistor
         progressBar.setVisibility(View.GONE);
         contentLayout.setVisibility(View.GONE);
         emptyStateLayout.setVisibility(View.VISIBLE);
-        paginationCard.setVisibility(View.GONE); // Changed from paginationLayout to paginationCard
+        paginationCard.setVisibility(View.GONE);
     }
 
     private void showContent() {
