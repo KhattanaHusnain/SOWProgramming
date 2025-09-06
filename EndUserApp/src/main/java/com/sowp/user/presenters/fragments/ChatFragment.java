@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +28,8 @@ import java.util.List;
 
 public class ChatFragment extends Fragment implements
         ChatAdapter.OnMessageActionListener,
-        ChatAdapter.OnUserProfileClickListener {
+        ChatAdapter.OnUserProfileClickListener,
+        DefaultLifecycleObserver {
 
     private RecyclerView chatRecyclerView;
     private EditText messageInput;
@@ -47,6 +50,12 @@ public class ChatFragment extends Fragment implements
     private boolean isUserScrolling = false;
     private boolean shouldAutoScroll = true;
     private int lastMessageCount = 0;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,6 +84,38 @@ public class ChatFragment extends Fragment implements
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStart(owner);
+    }
+
+    @Override
+    public void onResume(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onResume(owner);
+        shouldAutoScroll = true;
+        if (chatRecyclerView != null && chatMessages != null && chatMessages.size() > 0) {
+            scrollToBottom(false);
+        }
+    }
+
+    @Override
+    public void onPause(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onPause(owner);
+        isUserScrolling = false;
+        shouldAutoScroll = false;
+    }
+
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStop(owner);
+    }
+
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onDestroy(owner);
+        cleanup();
     }
 
     private void initializeViews(View view) {
@@ -377,16 +418,20 @@ public class ChatFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    private void cleanup() {
+        isUserScrolling = false;
+        shouldAutoScroll = false;
+        lastMessageCount = 0;
 
-        if (chatAdapter != null) chatAdapter.clearCaches();
+        if (chatAdapter != null) {
+            chatAdapter.clearCaches();
+            chatAdapter = null;
+        }
+
         if (userProfilePopup != null) {
             userProfilePopup.cleanup();
             userProfilePopup = null;
         }
-        if (chatRecyclerView != null) chatRecyclerView.setAdapter(null);
 
         if (messageRepository != null) {
             if (modeListener != null) {
@@ -397,6 +442,34 @@ public class ChatFragment extends Fragment implements
                 messageRepository.removeMessageListener(messagesListener);
                 messagesListener = null;
             }
+            messageRepository = null;
         }
+
+        userRepository = null;
+        firestore = null;
+
+        if (chatMessages != null) {
+            chatMessages.clear();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (chatRecyclerView != null) {
+            chatRecyclerView.setAdapter(null);
+        }
+
+        chatRecyclerView = null;
+        messageInput = null;
+        sendButton = null;
+        chatMessages = null;
+        currentUserEmail = null;
+        layoutManager = null;
+        userRole = "User";
+
+        cleanup();
+        getLifecycle().removeObserver(this);
     }
 }

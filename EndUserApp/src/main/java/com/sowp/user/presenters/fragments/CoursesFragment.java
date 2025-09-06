@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,12 +34,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseClickListener {
+public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseClickListener, DefaultLifecycleObserver {
 
-    private static final String TAG = "CoursesFragment";
     private static final int PAGE_SIZE = 10;
 
-    // UI Components
     private EditText searchEditText;
     private Button filterToggleButton;
     private CardView filterLayout;
@@ -53,18 +51,22 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     private RecyclerView coursesRecyclerView;
     private LinearLayout emptyStateLayout;
 
-    // Data and State
     private CourseAdapter courseAdapter;
     private CourseRepository courseRepository;
     private List<Course> allCourses = new ArrayList<>();
     private List<Course> displayedCourses = new ArrayList<>();
     private boolean isLoading = false;
 
-    // Filter State
     private String currentSearchQuery = "";
     private String selectedCategory = "All";
     private String selectedLevel = "All";
     private boolean showOnlyPublic = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(this);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,11 +76,40 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initializeViews(view);
         setupRecyclerView();
         setupSearchAndFilters();
         loadCourses();
+    }
+
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStart(owner);
+    }
+
+    @Override
+    public void onResume(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onResume(owner);
+        if (displayedCourses.isEmpty()) {
+            loadCourses();
+        }
+    }
+
+    @Override
+    public void onPause(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onPause(owner);
+        isLoading = false;
+    }
+
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStop(owner);
+    }
+
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onDestroy(owner);
+        cleanup();
     }
 
     private void initializeViews(View view) {
@@ -97,7 +128,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         coursesRecyclerView = view.findViewById(R.id.coursesRecyclerView);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
 
-        // Initially hide filter layout
         filterLayout.setVisibility(View.GONE);
     }
 
@@ -106,7 +136,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         coursesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         coursesRecyclerView.setAdapter(courseAdapter);
 
-        // Add scroll listener for pagination
         coursesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -126,7 +155,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     }
 
     private void setupSearchAndFilters() {
-        // Search functionality
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -141,10 +169,8 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void afterTextChanged(Editable s) {}
         });
 
-        // Filter toggle
         filterToggleButton.setOnClickListener(v -> toggleFilters());
 
-        // Category filter
         categorySpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -156,7 +182,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
-        // Level filter
         levelSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
@@ -168,16 +193,12 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
-        // Public only filter
         publicOnlyCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             showOnlyPublic = isChecked;
             applyFiltersAndSearch();
         });
 
-        // Clear filters button
         clearFiltersButton.setOnClickListener(v -> clearFilters());
-
-        // Refresh button
         refreshButton.setOnClickListener(v -> refreshCourses());
     }
 
@@ -193,18 +214,14 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
 
     private void loadCourses() {
         if (isLoading) {
-            Log.d(TAG, "Already loading, skipping request");
             return;
         }
 
-        Log.d(TAG, "Starting to load courses");
         setLoadingState(true);
 
         courseRepository.loadCourses(new CourseRepository.Callback() {
             @Override
             public void onSuccess(List<Course> courses) {
-                Log.d(TAG, "Courses loaded successfully: " + courses.size() + " courses");
-
                 if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
                         handleCoursesLoaded(courses);
@@ -214,11 +231,9 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
 
             @Override
             public void onFailure(String message) {
-                Log.e(TAG, "Failed to load courses: " + message);
-
                 if (getActivity() != null && isAdded()) {
                     getActivity().runOnUiThread(() -> {
-                        handleLoadFailure(message);
+                        handleLoadFailure();
                     });
                 }
             }
@@ -228,42 +243,27 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     private void handleCoursesLoaded(List<Course> courses) {
         allCourses.clear();
         allCourses.addAll(courses);
-
-        Log.d(TAG, "All courses populated: " + allCourses.size());
-
-        // Apply filters and update display
         applyFiltersAndSearch();
         setLoadingState(false);
     }
 
-    private void handleLoadFailure(String message) {
+    private void handleLoadFailure() {
         setLoadingState(false);
-        showError("Failed to load courses: " + message);
     }
 
     private void applyFiltersAndSearch() {
         if (allCourses.isEmpty()) {
-            Log.d(TAG, "No courses to filter");
             updateUI();
             return;
         }
 
-        Log.d(TAG, "Applying filters - Total courses: " + allCourses.size());
-
-        // Get all filtered courses
         List<Course> filteredCourses = getFilteredCourses();
-        Log.d(TAG, "Filtered courses: " + filteredCourses.size());
-
-        // Update displayed courses with pagination
         displayedCourses.clear();
         int endIndex = Math.min(PAGE_SIZE, filteredCourses.size());
         if (endIndex > 0) {
             displayedCourses.addAll(filteredCourses.subList(0, endIndex));
         }
 
-        Log.d(TAG, "Displayed courses: " + displayedCourses.size());
-
-        // Update UI
         updateUI();
     }
 
@@ -276,19 +276,15 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     private boolean courseMatchesFilters(Course course) {
         if (course == null) return false;
 
-        // Search filter
         boolean matchesSearch = currentSearchQuery.isEmpty() ||
                 courseMatchesSearchQuery(course, currentSearchQuery);
 
-        // Category filter
         boolean matchesCategory = selectedCategory.equals("All") ||
                 (course.getCategoryArray() != null && course.getCategoryArray().contains(selectedCategory));
 
-        // Level filter
         boolean matchesLevel = selectedLevel.equals("All") ||
                 (course.getLevel() != null && selectedLevel.equals(course.getLevel()));
 
-        // Public filter
         boolean matchesPublic = !showOnlyPublic || course.isPublic();
 
         return matchesSearch && matchesCategory && matchesLevel && matchesPublic;
@@ -317,8 +313,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
 
             courseAdapter.notifyItemRangeInserted(insertPosition, newCourses.size());
             updateResultsCount();
-
-            Log.d(TAG, "Loaded more courses: " + newCourses.size() + ", Total displayed: " + displayedCourses.size());
         }
     }
 
@@ -336,7 +330,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             int totalFiltered = getFilteredCourses().size();
             String countText = String.format("Showing %d of %d courses", displayedCourses.size(), totalFiltered);
             resultsCountTextView.setText(countText);
-            Log.d(TAG, countText);
         }
     }
 
@@ -353,35 +346,27 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     }
 
     private void clearFilters() {
-        // Reset UI components
         searchEditText.setText("");
         categorySpinner.setSelection(0);
         levelSpinner.setSelection(0);
         publicOnlyCheckBox.setChecked(false);
 
-        // Reset filter state
         currentSearchQuery = "";
         selectedCategory = "All";
         selectedLevel = "All";
         showOnlyPublic = false;
 
-        // Reapply filters (which will show all courses)
         applyFiltersAndSearch();
     }
 
     private void refreshCourses() {
-        Log.d(TAG, "Refreshing courses");
-
-        // Clear all data
         allCourses.clear();
         displayedCourses.clear();
 
-        // Notify adapter of changes
         if (courseAdapter != null) {
             courseAdapter.notifyDataSetChanged();
         }
 
-        // Reload courses
         loadCourses();
     }
 
@@ -401,23 +386,23 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         }
     }
 
-    private void showError(String message) {
-        if (getContext() != null) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-        }
-        Log.e(TAG, "Error: " + message);
-    }
-
     @Override
     public void onCourseClick(Course course) {
         if (course != null && course.getId() != 0) {
-            Log.d(TAG, "Course clicked: " + course.getTitle() + " (ID: " + course.getId() + ")");
-
             Intent intent = new Intent(getContext(), Description.class);
             intent.putExtra("COURSE_ID", course.getId());
             startActivity(intent);
-        } else {
-            Log.w(TAG, "Invalid course clicked");
+        }
+    }
+
+    private void cleanup() {
+        isLoading = false;
+
+        if (allCourses != null) {
+            allCourses.clear();
+        }
+        if (displayedCourses != null) {
+            displayedCourses.clear();
         }
     }
 
@@ -425,7 +410,6 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     public void onDestroyView() {
         super.onDestroyView();
 
-        // Clean up references
         searchEditText = null;
         filterToggleButton = null;
         filterLayout = null;
@@ -441,12 +425,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         courseAdapter = null;
         courseRepository = null;
 
-        // Clear data lists
-        if (allCourses != null) {
-            allCourses.clear();
-        }
-        if (displayedCourses != null) {
-            displayedCourses.clear();
-        }
+        cleanup();
+        getLifecycle().removeObserver(this);
     }
 }

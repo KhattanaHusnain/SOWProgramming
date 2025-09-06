@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AssessmentFragment extends Fragment implements CourseAdapter.OnCourseClickListener {
+public class AssessmentFragment extends Fragment implements CourseAdapter.OnCourseClickListener, DefaultLifecycleObserver {
     private static final int PAGE_SIZE = 10;
 
     private TextView quizAvgTextView;
@@ -59,8 +61,71 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
         initRepositories();
         setupRecyclerView();
         setupSwipeRefresh();
-        loadData();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getLifecycle().addObserver(this);
+        loadData();
+    }
+
+    @Override
+    public void onCreate(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onCreate(owner);
+    }
+
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStart(owner);
+    }
+
+    @Override
+    public void onResume(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onResume(owner);
+    }
+
+    @Override
+    public void onPause(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onPause(owner);
+    }
+
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStop(owner);
+    }
+
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onDestroy(owner);
+        cleanup();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getLifecycle().removeObserver(this);
+        cleanup();
+    }
+
+    private void cleanup() {
+        if (userRepository != null) {
+            userRepository = null;
+        }
+        if (courseRepository != null) {
+            courseRepository = null;
+        }
+        if (allCourses != null) {
+            allCourses.clear();
+            allCourses = null;
+        }
+        if (enrolledCourses != null) {
+            enrolledCourses.clear();
+            enrolledCourses = null;
+        }
+        currentUser = null;
+        courseAdapter = null;
     }
 
     private void initViews(View view) {
@@ -121,9 +186,13 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     }
 
     private void loadUserData() {
+        if (userRepository == null) return;
+
         userRepository.loadUserData(new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
+                if (!isAdded()) return;
+
                 currentUser = user;
                 updateUserPerformance(user);
                 loadAllCourses();
@@ -131,13 +200,14 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
 
             @Override
             public void onFailure(String message) {
+                if (!isAdded()) return;
                 showLoading(false);
             }
         });
     }
 
     private void updateUserPerformance(User user) {
-        if (getContext() == null) return;
+        if (!isAdded() || getContext() == null) return;
 
         float quizAvg = user.getQuizzesAvg();
         quizAvgTextView.setText(String.format(Locale.getDefault(), "%.1f%%", quizAvg));
@@ -151,9 +221,13 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     }
 
     private void loadAllCourses() {
+        if (courseRepository == null) return;
+
         courseRepository.loadCourses(new CourseRepository.Callback() {
             @Override
             public void onSuccess(List<Course> courses) {
+                if (!isAdded()) return;
+
                 allCourses.clear();
                 allCourses.addAll(courses);
                 filterEnrolledCourses();
@@ -162,6 +236,7 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
 
             @Override
             public void onFailure(String message) {
+                if (!isAdded()) return;
                 showLoading(false);
             }
         });
@@ -208,8 +283,10 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
         List<Course> pageData = allCourses.subList(startIndex, endIndex);
         enrolledCourses.addAll(pageData);
 
-        if (getActivity() != null) {
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(() -> {
+                if (!isAdded()) return;
+
                 courseAdapter.notifyDataSetChanged();
                 currentPage++;
                 isLoading = false;
@@ -231,13 +308,15 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     }
 
     private void showAssessmentTypeDialog(Course course) {
-        if (getContext() == null) return;
+        if (!isAdded() || getContext() == null) return;
 
         String[] options = {"Quizzes", "Assignments"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Choose Assessment Type");
         builder.setItems(options, (dialog, which) -> {
+            if (!isAdded()) return;
+
             Intent intent;
             switch (which) {
                 case 0:
@@ -259,7 +338,7 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     }
 
     private void showLoading(boolean show) {
-        if (getActivity() == null) return;
+        if (!isAdded() || getActivity() == null) return;
 
         getActivity().runOnUiThread(() -> {
             if (loadingProgressBar != null) {
@@ -269,7 +348,7 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     }
 
     private void showEmptyState(boolean show) {
-        if (getActivity() == null) return;
+        if (!isAdded() || getActivity() == null) return;
 
         getActivity().runOnUiThread(() -> {
             if (emptyStateTextView != null) {
@@ -283,6 +362,8 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
     }
 
     public void refreshData() {
+        if (!isAdded()) return;
+
         currentPage = 0;
         hasMoreData = true;
         enrolledCourses.clear();

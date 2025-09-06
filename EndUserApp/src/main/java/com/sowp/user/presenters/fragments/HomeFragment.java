@@ -7,17 +7,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.sowp.user.R;
 import com.sowp.user.adapters.CourseAdapter;
@@ -41,14 +43,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    private static final String TAG = "HomeFragment";
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DefaultLifecycleObserver {
     private static final long REFRESH_DELAY_MS = 1000;
 
     private UserRepository userRepository;
@@ -57,24 +55,20 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private AssignmentRepository assignmentRepository;
     private UserAuthenticationUtils userAuthenticationUtils;
 
-    // Firebase
     private FirebaseAuth auth;
 
-    // Profile Views
     private CircleImageView profileImage;
     private TextView userFullName;
     private TextView userDegree;
     private TextView userEmail;
     private ImageView notificationBell;
 
-    // Dashboard Stats Views
     private TextView completedCoursesCount;
     private TextView enrolledCoursesCount;
     private TextView certificatesCount;
     private TextView quizScore;
     private TextView assignmentScore;
 
-    // RecyclerViews and Adapters
     private RecyclerView coursesRecyclerView;
     private RecyclerView quizzesRecyclerView;
     private RecyclerView assignmentsRecyclerView;
@@ -83,33 +77,64 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private QuizAdapter quizAdapter;
     private AssignmentAdapter assignmentAdapter;
 
-    // See All buttons
     private TextView seeAllPopular;
     private TextView seeAllQuizzes;
     private TextView seeAllAssignments;
 
-    // SwipeRefreshLayout
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    // Track refresh state
     private boolean isRefreshing = false;
     private int refreshTasksCompleted = 0;
     private final int totalRefreshTasks = 4;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         initialize(view);
         loadUserData();
         loadDashboardData();
         setupClickListeners();
-
         return view;
     }
 
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStart(owner);
+    }
+
+    @Override
+    public void onResume(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onResume(owner);
+        refreshUserData();
+    }
+
+    @Override
+    public void onPause(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onPause(owner);
+        isRefreshing = false;
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStop(owner);
+    }
+
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onDestroy(owner);
+        cleanup();
+    }
+
     private void initialize(View view) {
-        // Initialize Firebase
         userRepository = new UserRepository(getContext());
         userAuthenticationUtils = new UserAuthenticationUtils(getContext());
         courseRepository = new CourseRepository(getContext());
@@ -118,45 +143,38 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         auth = FirebaseAuth.getInstance();
 
-        // Initialize SwipeRefreshLayout
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.primary,        // instead of R.color.colorPrimary
-                R.color.accent,         // instead of R.color.colorAccent
-                R.color.primary_dark    // instead of R.color.colorPrimaryDark
+                R.color.primary,
+                R.color.accent,
+                R.color.primary_dark
         );
 
-        // Profile Views
         profileImage = view.findViewById(R.id.profile_image);
         userFullName = view.findViewById(R.id.user_full_name);
         userDegree = view.findViewById(R.id.user_degree);
         userEmail = view.findViewById(R.id.user_email);
         notificationBell = view.findViewById(R.id.notification_bell);
 
-        // Dashboard Stats Views
         completedCoursesCount = view.findViewById(R.id.completed_courses_count);
         enrolledCoursesCount = view.findViewById(R.id.enrolled_courses_count);
         certificatesCount = view.findViewById(R.id.certificates_count);
         quizScore = view.findViewById(R.id.quiz_score);
         assignmentScore = view.findViewById(R.id.assignment_score);
 
-        // RecyclerViews
         coursesRecyclerView = view.findViewById(R.id.courses_recycler_view);
         quizzesRecyclerView = view.findViewById(R.id.quizzes_recycler_view);
         assignmentsRecyclerView = view.findViewById(R.id.assignments_recycler_view);
 
-        // See All buttons
         seeAllPopular = view.findViewById(R.id.see_all_popular);
         seeAllQuizzes = view.findViewById(R.id.see_all_quizzes);
         seeAllAssignments = view.findViewById(R.id.see_all_assignments);
 
-        // Initialize RecyclerViews
         setupRecyclerViews();
     }
 
     private void setupRecyclerViews() {
-        // Setup Courses RecyclerView
         coursesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         coursesRecyclerView.setNestedScrollingEnabled(false);
         courseAdapter = new CourseAdapter(getContext(), new ArrayList<>(), new CourseAdapter.OnCourseClickListener() {
@@ -167,7 +185,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
         coursesRecyclerView.setAdapter(courseAdapter);
 
-        // Setup Quizzes RecyclerView
         quizzesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         quizzesRecyclerView.setNestedScrollingEnabled(false);
         quizAdapter = new QuizAdapter(getContext(), new ArrayList<>(), new QuizAdapter.OnQuizClickListener() {
@@ -178,7 +195,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
         quizzesRecyclerView.setAdapter(quizAdapter);
 
-        // Setup Assignments RecyclerView
         assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         assignmentsRecyclerView.setNestedScrollingEnabled(false);
         assignmentAdapter = new AssignmentAdapter(getContext(), new ArrayList<>(), new AssignmentAdapter.OnAssignmentClickListener() {
@@ -196,8 +212,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         isRefreshing = true;
         refreshTasksCompleted = 0;
-
-        Log.d(TAG, "Starting refresh...");
         refreshAllData();
     }
 
@@ -210,7 +224,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void refreshUserData() {
         if (!userAuthenticationUtils.isUserLoggedIn()) {
-            Log.w(TAG, "Current user ID is null");
             onRefreshTaskCompleted();
             return;
         }
@@ -225,9 +238,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                if (isRefreshing) {
-                    Toast.makeText(getContext(), "Failed to refresh profile: " + message, Toast.LENGTH_SHORT).show();
-                }
                 setDefaultUserData();
                 onRefreshTaskCompleted();
             }
@@ -244,9 +254,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                if (isRefreshing) {
-                    Toast.makeText(getContext(), "Failed to refresh courses: " + message, Toast.LENGTH_SHORT).show();
-                }
                 onRefreshTaskCompleted();
             }
         });
@@ -262,9 +269,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                if (isRefreshing) {
-                    Toast.makeText(getContext(), "Failed to refresh quizzes: " + message, Toast.LENGTH_SHORT).show();
-                }
                 onRefreshTaskCompleted();
             }
         });
@@ -280,9 +284,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                if (isRefreshing) {
-                    Toast.makeText(getContext(), "Failed to refresh assignments: " + message, Toast.LENGTH_SHORT).show();
-                }
                 onRefreshTaskCompleted();
             }
         });
@@ -297,14 +298,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 isRefreshing = false;
-                Log.d(TAG, "Refresh completed");
             }, REFRESH_DELAY_MS);
         }
     }
 
     private void loadUserData() {
         if (!userAuthenticationUtils.isUserLoggedIn()) {
-            Log.w(TAG, "Current user ID is null");
             return;
         }
 
@@ -317,7 +316,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 setDefaultUserData();
             }
         });
@@ -338,7 +336,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -352,7 +349,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -366,7 +362,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -376,14 +371,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         userDegree.setText(user.getDegree() != null ? user.getDegree() : "No Degree Assigned");
         userEmail.setText(user.getEmail() != null ? user.getEmail() : "No Email Assigned");
 
-        // Set profile image from Base64 string
         if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
             try {
                 byte[] decodedString = Base64.decode(user.getPhoto(), Base64.DEFAULT);
                 Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 profileImage.setImageBitmap(decodedBitmap);
             } catch (Exception e) {
-                Log.e(TAG, "Error decoding profile image", e);
                 profileImage.setImageResource(R.drawable.ic_profile);
             }
         } else {
@@ -405,7 +398,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         userEmail.setText(auth.getCurrentUser() != null ? auth.getCurrentUser().getEmail() : "");
         profileImage.setImageResource(R.drawable.ic_profile);
 
-        // Reset dashboard stats
         completedCoursesCount.setText("0");
         enrolledCoursesCount.setText("0");
         certificatesCount.setText("0");
@@ -414,36 +406,28 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void displayCourses(List<Course> courses) {
-        // Limit to 2 courses for home screen
         List<Course> limitedCourses = courses.size() > 2 ? courses.subList(0, 2) : courses;
         courseAdapter.updateData(limitedCourses);
     }
 
     private void displayQuizzes(List<Quiz> quizzes) {
-        // Limit to 2 quizzes for home screen
         List<Quiz> limitedQuizzes = quizzes.size() > 2 ? quizzes.subList(0, 2) : quizzes;
         quizAdapter.updateData(limitedQuizzes);
     }
 
     private void displayAssignments(List<Assignment> assignments) {
-        // Limit to 2 assignments for home screen
         List<Assignment> limitedAssignments = assignments.size() > 2 ? assignments.subList(0, 2) : assignments;
         assignmentAdapter.updateData(limitedAssignments);
     }
 
     private void setupClickListeners() {
-        // Profile image click - open profile
         profileImage.setOnClickListener(v -> openProfile());
-
-        // Notification bell click
         notificationBell.setOnClickListener(v -> openNotifications());
 
-        // See All buttons
         seeAllPopular.setOnClickListener(v -> navigateToAllCourses());
         seeAllQuizzes.setOnClickListener(v -> navigateToAllQuizzes());
         seeAllAssignments.setOnClickListener(v -> navigateToAllAssignments());
 
-        // Dashboard stats click listeners for detailed views
         completedCoursesCount.setOnClickListener(v -> navigateToCompletedCourses());
         enrolledCoursesCount.setOnClickListener(v -> navigateToEnrolledCourses());
         certificatesCount.setOnClickListener(v -> navigateToCertificates());
@@ -451,13 +435,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         assignmentScore.setOnClickListener(v -> navigateToAssignmentHistory());
     }
 
-    // Navigation methods
     private void openProfile() {
         ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_profile);
     }
 
     private void openNotifications() {
-        // Navigate to notifications screen
     }
 
     private void navigateToAllCourses() {
@@ -473,15 +455,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void navigateToCompletedCourses() {
-        // Navigate to completed courses screen
     }
 
     private void navigateToEnrolledCourses() {
-        // Navigate to enrolled courses screen
     }
 
     private void navigateToCertificates() {
-        // Navigate to certificates screen
     }
 
     private void navigateToQuizHistory() {
@@ -495,17 +474,56 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void openCourse(Course course) {
-        // Navigate to course details screen
         Intent intent = new Intent(getContext(), Description.class);
         intent.putExtra("COURSE_ID", course.getId());
         startActivity(intent);
     }
 
     private void openQuiz(Quiz quiz) {
-        // Navigate to quiz details/taking screen
     }
 
     private void openAssignment(Assignment assignment) {
-        // Navigate to assignment details/submission screen
+    }
+
+    private void cleanup() {
+        isRefreshing = false;
+        refreshTasksCompleted = 0;
+
+        courseAdapter = null;
+        quizAdapter = null;
+        assignmentAdapter = null;
+
+        userRepository = null;
+        courseRepository = null;
+        quizRepository = null;
+        assignmentRepository = null;
+        userAuthenticationUtils = null;
+        auth = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        profileImage = null;
+        userFullName = null;
+        userDegree = null;
+        userEmail = null;
+        notificationBell = null;
+        completedCoursesCount = null;
+        enrolledCoursesCount = null;
+        certificatesCount = null;
+        quizScore = null;
+        assignmentScore = null;
+        coursesRecyclerView = null;
+        quizzesRecyclerView = null;
+        assignmentsRecyclerView = null;
+        seeAllPopular = null;
+        seeAllQuizzes = null;
+        seeAllAssignments = null;
+        swipeRefreshLayout = null;
+
+        cleanup();
+        getLifecycle().removeObserver(this);
     }
 }
