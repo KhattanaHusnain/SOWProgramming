@@ -13,34 +13,31 @@ import com.sowp.user.utils.NetworkUtils;
 import com.sowp.user.utils.UserAuthenticationUtils;
 
 public class SplashScreen extends AppCompatActivity {
-    // UI elements
     private ImageView logo;
     private TextView appName;
     private TextView tagline;
     private TextView versionText;
     private ProgressBar loadingIndicator;
     private UserAuthenticationUtils userAuthenticationUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Apply the splash screen theme
         setTheme(R.style.SplashTheme);
         setContentView(R.layout.activity_splash_screen);
-        // Initialize UI elements
-        initialize();
-        // Check and load data in background
 
-        // Navigate after delay
+        initialize();
 
         new Thread(() -> {
             try {
-                Thread.sleep(3000); // Increased to 3 seconds to give more time for data loading
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             goToNextScreen();
         }).start();
     }
+
     private void initialize() {
         logo = findViewById(R.id.logo);
         appName = findViewById(R.id.app_name);
@@ -49,12 +46,9 @@ public class SplashScreen extends AppCompatActivity {
         loadingIndicator = findViewById(R.id.loading_indicator);
         userAuthenticationUtils = new UserAuthenticationUtils(this);
     }
+
     private void goToNextScreen() {
-        // Only proceed if we haven't already navigated away
         if(!NetworkUtils.isNetworkAvailable(this)) {
-//            Intent intent = new Intent(this, OfflineCourseActivity.class);
-//            startActivity(intent);
-//            finish();
         } else {
             Intent intent = userAuthenticationUtils.isUserLoggedIn()
                     ? new Intent(this, Main.class)

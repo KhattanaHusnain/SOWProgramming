@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,10 +40,8 @@ import java.util.Locale;
 
 public class SubmitAssignmentActivity extends AppCompatActivity {
 
-    private static final String TAG = "SubmitAssignmentActivity";
     private static final int PICK_IMAGES_REQUEST = 1;
 
-    // UI Components
     private TextView titleTextView;
     private TextView descriptionTextView;
     private TextView dueDateTextView;
@@ -61,14 +57,12 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private RecyclerView selectedImagesRecyclerView;
 
-    // Data
     private int courseId;
     private int assignmentId;
     private Assignment assignment;
     private List<Uri> selectedImageUris = new ArrayList<>();
     private SelectedImagesAdapter selectedImagesAdapter;
 
-    // Repositories
     private AssignmentRepository assignmentRepository;
     private UserRepository userRepository;
     private FirebaseAuth firebaseAuth;
@@ -117,7 +111,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         }
 
         if (courseId == 0 || assignmentId == 0) {
-            Toast.makeText(this, "Invalid assignment data", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -157,7 +150,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
                     assignment = targetAssignment;
                     setupUI();
                 } else {
-                    Toast.makeText(SubmitAssignmentActivity.this, "Assignment not found", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
@@ -165,7 +157,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 showLoading(false);
-                Toast.makeText(SubmitAssignmentActivity.this, "Failed to load assignment: " + message, Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -232,7 +223,7 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
                     assignmentImagesContainer.addView(imageView);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error loading assignment image", e);
+                // Silent error handling
             }
         }
     }
@@ -260,7 +251,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
             int count = data.getClipData().getItemCount();
             for (int i = 0; i < count; i++) {
                 Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                // Only add if not already selected
                 if (!selectedImageUris.contains(imageUri)) {
                     newImageUris.add(imageUri);
                     selectedImageUris.add(imageUri);
@@ -268,7 +258,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
             }
         } else if (data.getData() != null) {
             Uri imageUri = data.getData();
-            // Only add if not already selected
             if (!selectedImageUris.contains(imageUri)) {
                 newImageUris.add(imageUri);
                 selectedImageUris.add(imageUri);
@@ -277,13 +266,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
         selectedImagesAdapter.notifyDataSetChanged();
         updateUIState();
-
-        if (newImageUris.isEmpty()) {
-            Toast.makeText(this, "No new images selected (duplicates ignored)", Toast.LENGTH_SHORT).show();
-        } else {
-            String message = newImageUris.size() + " new image(s) added. Total: " + selectedImageUris.size();
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void updateUIState() {
@@ -296,12 +278,10 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
     private void submitAssignment() {
         if (selectedImageUris.isEmpty()) {
-            Toast.makeText(this, "Please select at least one image", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (firebaseAuth.getCurrentUser() == null) {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -315,11 +295,7 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
                 List<String> base64Images = convertImagesToBase64();
                 runOnUiThread(() -> submitToFirestore(base64Images));
             } catch (Exception e) {
-                runOnUiThread(() -> {
-                    Log.e(TAG, "Error processing images", e);
-                    Toast.makeText(this, "Error processing images: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    showLoading(false);
-                });
+                runOnUiThread(() -> showLoading(false));
             }
         }).start();
     }
@@ -374,14 +350,13 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         try {
             outputStream.close();
         } catch (IOException e) {
-            Log.w(TAG, "Error closing output stream", e);
+            // Silent error handling
         }
 
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     private void submitToFirestore(List<String> base64Images) {
-        // Create AssignmentAttempt object with all necessary data
         AssignmentAttempt attemptData = createAssignmentAttempt(base64Images);
 
         userRepository.submitAssignmentAttempt(
@@ -411,7 +386,7 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         attempt.setCourseId(courseId);
         attempt.setChecked(false);
         attempt.setMaxScore((int) assignment.getScore());
-        attempt.setScore(0); // Initial score
+        attempt.setScore(0);
         attempt.setStatus("Submitted");
         attempt.setSubmissionTimestamp(currentTime);
         attempt.setSubmittedImages(base64Images);
@@ -423,7 +398,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
     private void handleSubmissionSuccess() {
         showLoading(false);
-        Toast.makeText(this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show();
 
         statusTextView.setText("Status: Submitted");
         selectImagesButton.setVisibility(View.GONE);
@@ -434,8 +408,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
     private void handleSubmissionFailure(Exception e) {
         showLoading(false);
-        Log.e(TAG, "Error submitting assignment", e);
-        Toast.makeText(this, "Failed to submit assignment. Please try again.", Toast.LENGTH_SHORT).show();
     }
 
     private void showLoading(boolean show) {
@@ -444,7 +416,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         selectImagesButton.setEnabled(!show);
     }
 
-    // RecyclerView Adapter for selected images
     private class SelectedImagesAdapter extends RecyclerView.Adapter<SelectedImagesAdapter.ImageViewHolder> {
 
         @NonNull
@@ -468,12 +439,12 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
         class ImageViewHolder extends RecyclerView.ViewHolder {
             private ImageView imageView;
-            private ImageView removeButton; // Changed from Button to ImageView
+            private ImageView removeButton;
 
             public ImageViewHolder(@NonNull View itemView) {
                 super(itemView);
                 imageView = itemView.findViewById(R.id.selectedImageView);
-                removeButton = itemView.findViewById(R.id.removeImageButton); // This will now work correctly
+                removeButton = itemView.findViewById(R.id.removeImageButton);
             }
 
             public void bind(Uri imageUri, int position) {
@@ -486,7 +457,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                     imageView.setImageBitmap(bitmap);
                 } catch (IOException e) {
-                    Log.e(TAG, "Error loading image preview", e);
                     imageView.setImageResource(android.R.drawable.ic_menu_gallery);
                 }
             }
@@ -497,9 +467,6 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, selectedImageUris.size());
                     updateUIState();
-
-                    String message = "Image removed. " + selectedImageUris.size() + " remaining";
-                    Toast.makeText(SubmitAssignmentActivity.this, message, Toast.LENGTH_SHORT).show();
                 });
             }
         }

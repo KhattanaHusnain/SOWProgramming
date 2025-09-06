@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -46,7 +44,6 @@ import java.util.Objects;
 
 public class SignUp extends AppCompatActivity {
 
-    // UI Components
     private ImageButton backButton;
     private TextInputEditText nameInput, emailInput, phoneInput, dobInput, passwordInput, confirmPasswordInput;
     private AutoCompleteTextView genderInput, degreeInput, semesterInput;
@@ -58,7 +55,7 @@ public class SignUp extends AppCompatActivity {
     private CardView profilePictureCard;
     private ImageView profilePicture;
     private ProgressBar progressSign;
-    // Data arrays
+
     private String[] genderOptions = {"Male", "Female"};
     private String[] degreeOptions = {
             "Computer Science", "Software Engineering",
@@ -67,11 +64,9 @@ public class SignUp extends AppCompatActivity {
     };
     private String[] semesterOptions = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "Graduated"};
 
-    // Image handling
     private String profileImageBase64 = "";
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    // Activity result launchers
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ActivityResultLauncher<String> permissionLauncher;
 
@@ -86,21 +81,13 @@ public class SignUp extends AppCompatActivity {
         userRepository = new UserRepository(this);
         userAuthenticationUtils = new UserAuthenticationUtils(this);
 
-        // Initialize activity result launchers
         initializeActivityResultLaunchers();
-
-        // Initialize UI components
         initializeViews();
-
-        // Setup dropdowns
         setupDropdowns();
-
-        // Set up click listeners
         setupClickListeners();
     }
 
     private void initializeActivityResultLaunchers() {
-        // Image picker launcher
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -113,21 +100,17 @@ public class SignUp extends AppCompatActivity {
                 }
         );
 
-        // Permission launcher
         permissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
                         openImagePicker();
-                    } else {
-                        Toast.makeText(this, "Permission denied. Cannot access gallery.", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
     }
 
     private void initializeViews() {
-        // Find all views by their IDs
         backButton = findViewById(R.id.back_button);
         nameInput = findViewById(R.id.name_input);
         emailInput = findViewById(R.id.email_input);
@@ -149,17 +132,14 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void setupDropdowns() {
-        // Setup Gender dropdown
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, genderOptions);
         genderInput.setAdapter(genderAdapter);
 
-        // Setup Degree dropdown
         ArrayAdapter<String> degreeAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, degreeOptions);
         degreeInput.setAdapter(degreeAdapter);
 
-        // Setup Semester dropdown
         ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, semesterOptions);
         semesterInput.setAdapter(semesterAdapter);
@@ -170,10 +150,8 @@ public class SignUp extends AppCompatActivity {
         dobInput.setOnClickListener(v -> showDatePicker());
         signupButton.setOnClickListener(view -> {
             validateAndCreateAccount();
-
         });
 
-        // Profile picture click listener
         profilePictureCard.setOnClickListener(v -> checkPermissionAndOpenGallery());
 
         googleButton.setOnClickListener(v -> {
@@ -188,7 +166,6 @@ public class SignUp extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(SignUp.this, "Google Sign Up Failed", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -203,12 +180,10 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void checkPermissionAndOpenGallery() {
-        // Check if we have permission to read external storage
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             openImagePicker();
         } else {
-            // Request permission
             permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
@@ -221,26 +196,16 @@ public class SignUp extends AppCompatActivity {
 
     private void handleSelectedImage(Uri imageUri) {
         try {
-            // Load and display the image
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
             if (bitmap != null) {
-                // Resize bitmap to reduce size (optional)
                 Bitmap resizedBitmap = resizeBitmap(bitmap, 300, 300);
-
-                // Set the image to ImageView
                 profilePicture.setImageBitmap(resizedBitmap);
                 profilePicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-                // Convert to Base64
                 profileImageBase64 = bitmapToBase64(resizedBitmap);
-
-                Toast.makeText(this, "Profile picture selected", Toast.LENGTH_SHORT).show();
             }
         } catch (FileNotFoundException e) {
-            Log.e("ImageSelection", "Error loading image: " + e.getMessage());
-            Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -282,7 +247,6 @@ public class SignUp extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-
     private String getTextFromEditText(TextInputEditText editText) {
         return editText.getText() != null ? editText.getText().toString().trim() : "";
     }
@@ -304,7 +268,6 @@ public class SignUp extends AppCompatActivity {
         }
 
         if (!termsCheckbox.isChecked()) {
-            Toast.makeText(this, "Please agree to the Terms and Privacy Policy", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -316,12 +279,9 @@ public class SignUp extends AppCompatActivity {
 
             @Override
             public void onSuccess() {
-                // Pass the profile image base64 to createUser method
                 userRepository.createUser(email, password, fullName, profileImageBase64, phone, gender, dob, degree, semester, "User", notifications, System.currentTimeMillis(), new UserRepository.RegistrationCallback() {
                     @Override
                     public void onSuccess() {
-                        Log.d("User Creation", "User Creation Successful");
-                        // Registration successful
                         userAuthenticationUtils.logoutUser();
                         Intent intent = new Intent(SignUp.this, Login.class);
                         intent.putExtra("email", email);
@@ -332,18 +292,14 @@ public class SignUp extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String message) {
-                        // Registration failed
                         resetSignupButton();
-                        Toast.makeText(SignUp.this, "User Creation failed: " + message, Toast.LENGTH_LONG).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(String message) {
-                // Registration failed
                 resetSignupButton();
-                Toast.makeText(SignUp.this, "Registration failed: " + message, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -360,67 +316,116 @@ public class SignUp extends AppCompatActivity {
         finish();
     }
 
-    public boolean validateInputs()
-    {
+    public boolean validateInputs() {
+        String name = getTextFromEditText(nameInput);
+        String email = getTextFromEditText(emailInput);
+        String phone = getTextFromEditText(phoneInput);
+        String dob = getTextFromEditText(dobInput);
+        String password = getTextFromEditText(passwordInput);
+        String confirmPassword = getTextFromEditText(confirmPasswordInput);
 
-        if (TextUtils.isEmpty(getTextFromEditText(nameInput))) {
+        if (TextUtils.isEmpty(name)) {
             nameInput.setError("Name is required");
             nameInput.requestFocus();
             return false;
         }
-        if (nameInput.getText().toString().split("\\s+").length < 2) {
-            Toast.makeText(this, "Please enter your full name (first and last name)", Toast.LENGTH_SHORT).show();
-            nameInput.setError("First and Last both names are required");
+
+        if (!name.matches("^[a-zA-Z\\s]+$")) {
+            nameInput.setError("Name can only contain English letters and spaces");
+            nameInput.requestFocus();
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(emailInput))) {
+        if (name.split("\\s+").length < 2) {
+            nameInput.setError("First and Last both names are required");
+            nameInput.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(email)) {
             emailInput.setError("Email is required");
             emailInput.requestFocus();
             return false;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailInput.getText().toString()).matches()) {
-            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.setError("Enter Valid Email Address");
+            emailInput.requestFocus();
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(phoneInput))) {
+        if (TextUtils.isEmpty(phone)) {
             phoneInput.setError("Phone Number is required");
             phoneInput.requestFocus();
             return false;
         }
 
-        if ((phoneInput.getText()).toString().length() < 10 || !phoneInput.getText().toString().matches("\\d+")) {
-            Toast.makeText(this, "Please enter a valid phone number (at least 10 digits)", Toast.LENGTH_SHORT).show();
-            phoneInput.setError("Enter Valid Phone Number");
+        if (!isValidPakistaniPhoneNumber(phone)) {
+            phoneInput.setError("Enter Valid Pakistani Phone Number");
+            phoneInput.requestFocus();
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(dobInput))) {
+        if (TextUtils.isEmpty(dob)) {
             dobInput.setError("Date Of Birth is required");
             dobInput.requestFocus();
             return false;
         }
 
-        if (TextUtils.isEmpty(getTextFromEditText(passwordInput))) {
+        if (TextUtils.isEmpty(password)) {
             passwordInput.setError("Password is required");
             passwordInput.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(getTextFromEditText(confirmPasswordInput))) {
+
+        if (!isValidPassword(password)) {
+            passwordInput.setError("Password must be 8+ chars with uppercase, lowercase, number & special char");
+            passwordInput.requestFocus();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(confirmPassword)) {
             confirmPasswordInput.setError("Confirm Password is required");
             confirmPasswordInput.requestFocus();
             return false;
         }
 
-        if (!passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            confirmPasswordInput.setError("Password do not matched");
+        if (!password.equals(confirmPassword)) {
+            confirmPasswordInput.setError("Passwords do not match");
+            confirmPasswordInput.requestFocus();
             return false;
         }
+
         return true;
     }
 
+    private boolean isValidPakistaniPhoneNumber(String phone) {
+        String[] validPatterns = {
+                "^\\+923\\d{9}$",          // +923130781581
+                "^923\\d{9}$",             // 923130781581
+                "^03\\d{9}$",              // 03130781581
+                "^3\\d{9}$",               // 3130781581
+                "^00923\\d{9}$"            // 00923130781581
+        };
+
+        for (String pattern : validPatterns) {
+            if (phone.matches(pattern)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUppercase = password.matches(".*[A-Z].*");
+        boolean hasLowercase = password.matches(".*[a-z].*");
+        boolean hasNumber = password.matches(".*\\d.*");
+        boolean hasSpecialChar = password.matches(".*[!@#$%^&*(),.?\":{}|<>'~`=/-].*");
+
+        return hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
+    }
 }

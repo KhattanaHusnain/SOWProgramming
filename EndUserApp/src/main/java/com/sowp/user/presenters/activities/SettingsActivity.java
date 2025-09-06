@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +41,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        // Initialize views
         layout_edit_personal_data = findViewById(R.id.layout_edit_personal_data);
         layout_change_profile_picture = findViewById(R.id.layout_change_profile_picture);
         layout_delete_account = findViewById(R.id.layout_delete_account);
@@ -51,13 +49,11 @@ public class SettingsActivity extends AppCompatActivity {
         switch_group_messaging = findViewById(R.id.switch_group_messaging);
         groupMsgToggle = findViewById(R.id.groupMsgToggle);
 
-        // Initialize Firebase components
         userRepository = new UserRepository(this);
         database = FirebaseDatabase.getInstance();
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Load user data and set switch states
         userRepository.loadUserData(new UserRepository.UserCallback() {
             @Override
             public void onSuccess(User user) {
@@ -68,19 +64,18 @@ public class SettingsActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(String message) {
-                Toast.makeText(SettingsActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
 
         database.getReference("group_chat/mode").get().addOnSuccessListener(snapshot -> {
-                    if (snapshot.exists()) {
-                        Boolean mode = snapshot.getValue(Boolean.class);
-                        if (mode != null) {
-                            switch_group_messaging.setChecked(mode);
-                        }
-                    }
-                });
-        // Back button click listener
+            if (snapshot.exists()) {
+                Boolean mode = snapshot.getValue(Boolean.class);
+                if (mode != null) {
+                    switch_group_messaging.setChecked(mode);
+                }
+            }
+        });
+
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Group messaging switch
         switch_group_messaging.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +90,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Notifications switch
         switch_notifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +97,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Edit personal data click listener
         layout_edit_personal_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,7 +104,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Change profile picture click listener
         layout_change_profile_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,7 +111,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Delete account click listener
         layout_delete_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,12 +145,10 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle("Confirm Your Password");
         builder.setMessage("For security reasons, please enter your password to confirm account deletion:");
 
-        // Create password input field
         final EditText passwordInput = new EditText(this);
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordInput.setHint("Enter your password");
 
-        // Add some padding to the input field
         LinearLayout container = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -177,8 +165,6 @@ public class SettingsActivity extends AppCompatActivity {
                 String password = passwordInput.getText().toString().trim();
                 if (!password.isEmpty()) {
                     reAuthenticateAndDelete(password);
-                } else {
-                    Toast.makeText(SettingsActivity.this, "Please enter your password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -198,26 +184,17 @@ public class SettingsActivity extends AppCompatActivity {
     private void reAuthenticateAndDelete(String password) {
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null && currentUser.getEmail() != null) {
-            // Create credential with email and password
             AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), password);
 
-            // Re-authenticate user
             currentUser.reauthenticate(credential)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(Task<Void> task) {
                             if (task.isSuccessful()) {
-                                // Re-authentication successful, now delete account
                                 deleteUserAccount();
-                            } else {
-                                Toast.makeText(SettingsActivity.this,
-                                        "Authentication failed. Please check your password and try again.",
-                                        Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-        } else {
-            Toast.makeText(this, "Unable to authenticate user", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -226,35 +203,25 @@ public class SettingsActivity extends AppCompatActivity {
         if (currentUser != null) {
             String userId = currentUser.getUid();
 
-            // First delete user data from Firestore
             firestore.collection("User").document(userId).delete()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(Task<Void> task) {
                             if (task.isSuccessful()) {
-                                // Then delete the user authentication account
                                 currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(SettingsActivity.this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
-                                            // Navigate to login screen or main activity
                                             Intent intent = new Intent(SettingsActivity.this, Login.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
                                             finish();
-                                        } else {
-                                            Toast.makeText(SettingsActivity.this, "Failed to delete account: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
-                            } else {
-                                Toast.makeText(SettingsActivity.this, "Failed to delete user data: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-        } else {
-            Toast.makeText(this, "No user logged in", Toast.LENGTH_SHORT).show();
         }
     }
 }
