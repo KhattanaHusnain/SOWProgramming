@@ -2,7 +2,6 @@ package com.sowp.user.presenters.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -15,8 +14,7 @@ import com.sowp.user.repositories.firebase.UserRepository;
 
 public class Authentication extends AppCompatActivity {
 
-    private Button loginButton;
-    private Button signupButton;
+    private Button loginButton, signupButton;
     private ImageButton googleLoginButton;
     private UserRepository userRepository;
 
@@ -25,66 +23,51 @@ public class Authentication extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
-        // Initialize views
-        initialize();
-
-        // Set click listeners
-        setUpClickListeners();
-
+        initializeViews();
+        setupClickListeners();
     }
 
-    private void initialize() {
+    private void initializeViews() {
         loginButton = findViewById(R.id.login_button);
         signupButton = findViewById(R.id.signup_button);
         googleLoginButton = findViewById(R.id.google_login);
         userRepository = new UserRepository(this);
     }
 
-    private void setUpClickListeners() {
+    private void setupClickListeners() {
         loginButton.setOnClickListener(v -> navigateToLogin());
-        signupButton.setOnClickListener(new View.OnClickListener() {
+        signupButton.setOnClickListener(v -> navigateToSignup());
+        googleLoginButton.setOnClickListener(v -> signInWithGoogle());
+    }
+
+    private void signInWithGoogle() {
+        userRepository.signInWithGoogle(new UserRepository.GoogleSignInCallback() {
             @Override
-            public void onClick(View view) {
-                navigateToSignup();
+            public void onSuccess(User user) {
+                navigateToMain();
             }
-        });
-        googleLoginButton.setOnClickListener(v -> {
-            userRepository.signInWithGoogle(new UserRepository.GoogleSignInCallback() {
 
-                @Override
-                public void onSuccess(User user) {
-                    navigateToMain();
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Authentication.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
+            @Override
+            public void onFailure(String message) {
+                runOnUiThread(() ->
+                        Toast.makeText(Authentication.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show()
+                );
+            }
         });
     }
 
     private void navigateToLogin() {
-        Intent intent = new Intent(this, Login.class);
-        startActivity(intent);
+        startActivity(new Intent(this, Login.class));
         finish();
     }
 
     private void navigateToSignup() {
-        Intent intent = new Intent(this, SignUp.class);
-        startActivity(intent);
+        startActivity(new Intent(this, SignUp.class));
         finish();
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(Authentication.this, Main.class);
-        startActivity(intent);
+        startActivity(new Intent(this, Main.class));
         finish();
     }
-
 }
