@@ -3,7 +3,6 @@ package com.sowp.user.presenters.activities;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,18 +38,14 @@ public class ForgotPassword extends AppCompatActivity {
 
     private void setUpClickListeners() {
         backButton.setOnClickListener(v -> finish());
-        resetButton.setOnClickListener(v -> {
-            resetPassword();
-        });
+        resetButton.setOnClickListener(v -> resetPassword());
     }
+
     private void resetPassword() {
-        // Clear previous errors
         emailInputLayout.setError(null);
 
-        // Get input value
         String email = emailInput.getText().toString().trim();
 
-        // Validate email
         if (email.isEmpty()) {
             emailInputLayout.setError("Email is required");
             return;
@@ -59,19 +54,14 @@ public class ForgotPassword extends AppCompatActivity {
             return;
         }
 
-        // Show loading state
         resetButton.setEnabled(false);
         resetButton.setText("Sending...");
 
-        // Send password reset email
         userAuthenticationUtils.sendResetPasswordLink(email, new UserAuthenticationUtils.Callback() {
             @Override
             public void onSuccess() {
                 resetButton.setEnabled(true);
                 resetButton.setText("Reset Password");
-                Toast.makeText(ForgotPassword.this,
-                        "Password reset email sent. Check your inbox.",
-                        Toast.LENGTH_LONG).show();
                 finish();
             }
 
@@ -81,10 +71,6 @@ public class ForgotPassword extends AppCompatActivity {
                 resetButton.setText("Reset Password");
                 if (message.contains("no user record")) {
                     emailInputLayout.setError("No account found with this email");
-                } else {
-                    Toast.makeText(ForgotPassword.this,
-                            "Failed to send reset email: " + message,
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

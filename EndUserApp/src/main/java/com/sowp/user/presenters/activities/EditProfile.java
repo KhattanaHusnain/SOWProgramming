@@ -3,7 +3,6 @@ package com.sowp.user.presenters.activities;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,11 +33,9 @@ public class EditProfile extends AppCompatActivity {
     private FirebaseAuth auth;
     private String email;
 
-    // UI Components
     private TextView tvFullName, tvGender, tvSemester, tvPhone, tvDegree, tvDateOfBirth;
     private ImageButton btnEditFullName, btnEditGender, btnEditSemester, btnEditPhone, btnEditDegree, btnEditDateOfBirth;
 
-    // Data arrays
     private String[] genderOptions = {"Male", "Female"};
     private String[] semesterOptions = {"1st Semester", "2nd Semester", "3rd Semester", "4th Semester",
             "5th Semester", "6th Semester", "7th Semester", "8th Semester", "Graduated"};
@@ -50,7 +46,6 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
@@ -58,7 +53,6 @@ public class EditProfile extends AppCompatActivity {
         if (currentUser != null) {
             email = currentUser.getEmail();
         } else {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -107,13 +101,7 @@ public class EditProfile extends AppCompatActivity {
                         tvPhone.setText(document.getString("phone") != null ? document.getString("phone") : "Not set");
                         tvDegree.setText(document.getString("degree") != null ? document.getString("degree") : "Not set");
                         tvDateOfBirth.setText(document.getString("birthdate") != null ? document.getString("birthdate") : "Not set");
-                    } else {
-                        Log.d("EditProfile", "No such document");
-                        Toast.makeText(EditProfile.this, "User profile not found", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Log.d("EditProfile", "get failed with ", task.getException());
-                    Toast.makeText(EditProfile.this, "Error loading profile", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -139,7 +127,6 @@ public class EditProfile extends AppCompatActivity {
             editText.setVisibility(View.VISIBLE);
             spinner.setVisibility(View.GONE);
 
-            // Set current value
             String currentValue = getCurrentFieldValue(field);
             editText.setText(currentValue.equals("Not set") ? "" : currentValue);
         } else {
@@ -179,8 +166,6 @@ public class EditProfile extends AppCompatActivity {
             if (!newValue.isEmpty()) {
                 updateFirestoreField(field, newValue);
                 dialog.dismiss();
-            } else {
-                Toast.makeText(this, "Please enter a value", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -192,7 +177,6 @@ public class EditProfile extends AppCompatActivity {
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
 
-        // Parse current date if exists
         String currentDate = tvDateOfBirth.getText().toString();
         if (!currentDate.equals("Not set") && !currentDate.equals("Loading...")) {
             try {
@@ -203,7 +187,6 @@ public class EditProfile extends AppCompatActivity {
                             Integer.parseInt(dateParts[2]));
                 }
             } catch (Exception e) {
-                Log.e("DatePicker", "Error parsing date", e);
             }
         }
 
@@ -252,11 +235,7 @@ public class EditProfile extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(EditProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                             updateUIField(field, value);
-                        } else {
-                            Toast.makeText(EditProfile.this, "Error updating profile", Toast.LENGTH_SHORT).show();
-                            Log.e("EditProfile", "Error updating document", task.getException());
                         }
                     }
                 });

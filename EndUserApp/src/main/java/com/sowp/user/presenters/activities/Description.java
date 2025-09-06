@@ -8,7 +8,6 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -220,7 +219,6 @@ public class Description extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
                 if (onComplete != null) onComplete.run();
             }
         });
@@ -272,20 +270,17 @@ public class Description extends AppCompatActivity {
                     public void onSuccess(User user) {
                         isEnrolled = true;
                         updateEnrollButton();
-                        Toast.makeText(Description.this, "Successfully enrolled!", Toast.LENGTH_SHORT).show();
                         navigateToTopicList();
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        Toast.makeText(Description.this, "Failed to enroll: " + message, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -311,12 +306,10 @@ public class Description extends AppCompatActivity {
             public void onSuccess(User user) {
                 isEnrolled = false;
                 updateEnrollButton();
-                Toast.makeText(Description.this, "Successfully unenrolled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(Description.this, "Failed to unenroll: " + message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -360,7 +353,6 @@ public class Description extends AppCompatActivity {
 
                 @Override
                 public void onFailure(String message) {
-                    Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -373,7 +365,6 @@ public class Description extends AppCompatActivity {
 
                 @Override
                 public void onFailure(String message) {
-                    Toast.makeText(Description.this, message, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -415,12 +406,8 @@ public class Description extends AppCompatActivity {
                     runOnUiThread(() -> {
                         isOfflineAvailable = false;
                         updateOfflineButton();
-                        Toast.makeText(Description.this, "Course removed from offline storage", Toast.LENGTH_SHORT).show();
                     });
                 } catch (Exception e) {
-                    runOnUiThread(() ->
-                            Toast.makeText(Description.this, "Error removing course: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                    );
                 }
             });
         } else {
@@ -430,13 +417,9 @@ public class Description extends AppCompatActivity {
                     runOnUiThread(() -> {
                         isOfflineAvailable = true;
                         updateOfflineButton();
-                        Toast.makeText(Description.this, "Course added to offline storage", Toast.LENGTH_SHORT).show();
                         loadTopicsForOfflineStorage();
                     });
                 } catch (Exception e) {
-                    runOnUiThread(() ->
-                            Toast.makeText(Description.this, "Error adding course: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                    );
                 }
             });
         }
@@ -450,16 +433,12 @@ public class Description extends AppCompatActivity {
                     try {
                         topicDao.insertAll(topics);
                     } catch (Exception e) {
-                        runOnUiThread(() ->
-                                Toast.makeText(Description.this, "Error saving topics: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                        );
                     }
                 });
             }
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(Description.this, "Failed to load topics: " + message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -478,7 +457,6 @@ public class Description extends AppCompatActivity {
                     isOfflineAvailable = false;
                     updateOfflineButton();
                     if (onComplete != null) onComplete.run();
-                    Toast.makeText(Description.this, "Error checking offline status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
         });
