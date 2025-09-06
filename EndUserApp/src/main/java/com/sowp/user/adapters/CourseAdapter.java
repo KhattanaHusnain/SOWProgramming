@@ -1,7 +1,6 @@
 package com.sowp.user.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -15,10 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sowp.user.presenters.activities.Description;
 import com.sowp.user.R;
 import com.sowp.user.models.Course;
-import com.sowp.user.presenters.activities.OfflineTopicListActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

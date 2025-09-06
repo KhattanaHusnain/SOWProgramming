@@ -100,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
         layout_edit_personal_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SettingsActivity.this, EditProfile.class));
+                startActivity(new Intent(SettingsActivity.this, EditProfileActivity.class));
             }
         });
 

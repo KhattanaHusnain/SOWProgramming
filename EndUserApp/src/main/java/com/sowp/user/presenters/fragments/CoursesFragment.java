@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sowp.user.adapters.CourseAdapter;
 import com.sowp.user.R;
 import com.sowp.user.models.Course;
-import com.sowp.user.presenters.activities.Description;
+import com.sowp.user.presenters.activities.CourseDescriptionActivity;
 import com.sowp.user.repositories.firebase.CourseRepository;
 
 import java.util.ArrayList;
@@ -389,7 +389,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     @Override
     public void onCourseClick(Course course) {
         if (course != null && course.getId() != 0) {
-            Intent intent = new Intent(getContext(), Description.class);
+            Intent intent = new Intent(getContext(), CourseDescriptionActivity.class);
             intent.putExtra("COURSE_ID", course.getId());
             startActivity(intent);
         }

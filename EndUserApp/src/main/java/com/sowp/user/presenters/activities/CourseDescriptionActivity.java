@@ -34,7 +34,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Description extends AppCompatActivity {
+public class CourseDescriptionActivity extends AppCompatActivity {
     private ExecutorService executor;
 
     private ImageView ivCourseIllustration;
@@ -286,7 +286,7 @@ public class Description extends AppCompatActivity {
     }
 
     private void navigateToTopicList() {
-        Intent intent = new Intent(Description.this, TopicList.class);
+        Intent intent = new Intent(CourseDescriptionActivity.this, TopicList.class);
         intent.putExtra("courseID", courseId);
         startActivity(intent);
     }

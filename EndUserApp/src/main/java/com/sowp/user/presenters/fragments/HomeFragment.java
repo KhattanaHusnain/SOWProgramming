@@ -31,7 +31,7 @@ import com.sowp.user.models.Course;
 import com.sowp.user.models.User;
 
 import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
-import com.sowp.user.presenters.activities.Description;
+import com.sowp.user.presenters.activities.CourseDescriptionActivity;
 import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.presenters.activities.QuizHistoryActivity;
 import com.sowp.user.repositories.firebase.AssignmentRepository;
@@ -474,7 +474,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void openCourse(Course course) {
-        Intent intent = new Intent(getContext(), Description.class);
+        Intent intent = new Intent(getContext(), CourseDescriptionActivity.class);
         intent.putExtra("COURSE_ID", course.getId());
         startActivity(intent);
     }

@@ -96,7 +96,7 @@
             android:exported="false"
             android:theme="@style/Theme.SOWProgramming" />
         <activity
-            android:name=".presenters.activities.EditProfile"
+            android:name=".presenters.activities.EditProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.SOWProgramming" />
         <activity
@@ -108,7 +108,7 @@
             android:exported="false"
             android:theme="@style/Theme.SOWProgramming" />
         <activity
-            android:name=".presenters.activities.Description"
+            android:name=".presenters.activities.CourseDescriptionActivity"
             android:exported="false"
             android:theme="@style/Theme.SOWProgramming" />
         <activity
