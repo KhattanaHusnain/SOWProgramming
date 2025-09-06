@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
@@ -26,33 +27,25 @@ import java.util.List;
 
 public class AssignmentHistoryActivity extends AppCompatActivity {
 
-    private static final String TAG = "AssignmentHistoryActivity";
+    private static final int ITEMS_PER_PAGE = 10;
+    private static final String[] FILTER_OPTIONS = {"All Status", "Submitted", "Graded", "Failed", "Checked"};
+    private static final String[] SORT_OPTIONS = {"Sort: Recent", "Sort: Score", "Sort: Status", "Sort: Assignment"};
+    private static final String[] SORT_VALUES = {"Recent", "Score", "Status", "Assignment"};
 
-    private Toolbar toolbar;
     private RecyclerView recyclerViewAssignments;
-    private TextView tvTotalSubmissions;
-    private TextView tvPageInfo;
-    private MaterialButton btnFilterStatus;
-    private MaterialButton btnSortBy;
-    private MaterialButton btnPrevious;
-    private MaterialButton btnNext;
+    private TextView tvTotalSubmissions, tvPageInfo;
+    private MaterialButton btnFilterStatus, btnSortBy, btnPrevious, btnNext;
     private ProgressBar progressBar;
-    private View emptyStateLayout;
+    private View emptyStateLayout, paginationLayout;
 
     private AssignmentHistoryAdapter adapter;
-    private List<AssignmentAttempt> allAttempts;
     private List<AssignmentAttempt> filteredAttempts;
     private UserRepository userRepository;
 
-    // Pagination
-    private static final int ITEMS_PER_PAGE = 10;
-    private int currentPage = 1; // Display page (1-based)
-    private int totalItems = 0;
+    private int currentPage = 1;
     private int totalPages = 1;
-
-    // Filter and sort options
     private String currentStatusFilter = "All Status";
-    private String currentSortOrder = "Recent"; // Recent, Score, Status, Assignment
+    private String currentSortOrder = "Recent";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,25 +53,25 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_assignment_history);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
+        setupWindowInsets();
         initViews();
         setupToolbar();
         setupRecyclerView();
         setupClickListeners();
 
-        // Initialize UserRepository
         userRepository = new UserRepository(this);
-
         loadAssignmentHistory();
     }
 
+    private void setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
     private void initViews() {
-        toolbar = findViewById(R.id.toolbar);
         recyclerViewAssignments = findViewById(R.id.recyclerViewAssignments);
         tvTotalSubmissions = findViewById(R.id.tvTotalSubmissions);
         tvPageInfo = findViewById(R.id.tvPageInfo);
@@ -88,15 +81,16 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
         btnNext = findViewById(R.id.btnNext);
         progressBar = findViewById(R.id.progressBar);
         emptyStateLayout = findViewById(R.id.emptyStateLayout);
+        paginationLayout = findViewById(R.id.paginationLayout);
     }
 
     private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
@@ -115,7 +109,7 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
 
     private void loadAssignmentHistory() {
         showLoading(true);
-        currentPage = 1; // Reset to first page
+        currentPage = 1;
         loadAssignmentPage();
     }
 
@@ -123,7 +117,7 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
         String filterStatus = currentStatusFilter.equals("All Status") ? null : currentStatusFilter;
 
         userRepository.getAllAssignmentAttempts(
-                currentPage - 1, // Convert to 0-based for repository
+                currentPage - 1,
                 ITEMS_PER_PAGE,
                 currentSortOrder,
                 filterStatus,
@@ -131,15 +125,9 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(List<AssignmentAttempt> attempts) {
                         showLoading(false);
-                        allAttempts = attempts;
                         filteredAttempts = new ArrayList<>(attempts);
-
-                        // Calculate total items and pages based on received data
-                        totalItems = attempts.size();
-                        totalPages = Math.max(1, (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE));
-
+                        calculatePagination(attempts.size());
                         updateUI();
-                        updatePaginationUI();
                     }
 
                     @Override
@@ -152,15 +140,24 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
         );
     }
 
+    private void calculatePagination(int totalItems) {
+        totalPages = Math.max(1, (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE));
+    }
+
     private void updateUI() {
-        if (filteredAttempts == null || filteredAttempts.isEmpty()) {
+        if (isEmptyResult()) {
             showEmptyState(true);
             tvTotalSubmissions.setText("Total Submissions: 0");
         } else {
             showEmptyState(false);
             tvTotalSubmissions.setText("Total Submissions: " + filteredAttempts.size());
             adapter.updateAttempts(filteredAttempts);
+            updatePaginationUI();
         }
+    }
+
+    private boolean isEmptyResult() {
+        return filteredAttempts == null || filteredAttempts.isEmpty();
     }
 
     private void updatePaginationUI() {
@@ -186,16 +183,14 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
     }
 
     private void showFilterDialog() {
-        String[] filterOptions = {"All Status", "Submitted", "Graded", "Failed", "Checked"};
-
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Filter by Status");
-        builder.setSingleChoiceItems(filterOptions, getCurrentFilterIndex(), (dialog, which) -> {
-            String newFilter = filterOptions[which];
+        builder.setSingleChoiceItems(FILTER_OPTIONS, getCurrentFilterIndex(), (dialog, which) -> {
+            String newFilter = FILTER_OPTIONS[which];
             if (!newFilter.equals(currentStatusFilter)) {
                 currentStatusFilter = newFilter;
                 btnFilterStatus.setText(newFilter);
-                loadAssignmentHistory(); // Reload with new filter
+                loadAssignmentHistory();
             }
             dialog.dismiss();
         });
@@ -204,9 +199,8 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
     }
 
     private int getCurrentFilterIndex() {
-        String[] filterOptions = {"All Status", "Submitted", "Graded", "Failed", "Checked"};
-        for (int i = 0; i < filterOptions.length; i++) {
-            if (filterOptions[i].equals(currentStatusFilter)) {
+        for (int i = 0; i < FILTER_OPTIONS.length; i++) {
+            if (FILTER_OPTIONS[i].equals(currentStatusFilter)) {
                 return i;
             }
         }
@@ -214,17 +208,14 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
     }
 
     private void showSortDialog() {
-        String[] sortOptions = {"Sort: Recent", "Sort: Score", "Sort: Status", "Sort: Assignment"};
-        String[] sortValues = {"Recent", "Score", "Status", "Assignment"};
-
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Sort By");
-        builder.setSingleChoiceItems(sortOptions, getCurrentSortIndex(), (dialog, which) -> {
-            String newSort = sortValues[which];
+        builder.setSingleChoiceItems(SORT_OPTIONS, getCurrentSortIndex(), (dialog, which) -> {
+            String newSort = SORT_VALUES[which];
             if (!newSort.equals(currentSortOrder)) {
                 currentSortOrder = newSort;
-                btnSortBy.setText(sortOptions[which]);
-                loadAssignmentHistory(); // Reload with new sort
+                btnSortBy.setText(SORT_OPTIONS[which]);
+                loadAssignmentHistory();
             }
             dialog.dismiss();
         });
@@ -233,9 +224,8 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
     }
 
     private int getCurrentSortIndex() {
-        String[] sortValues = {"Recent", "Score", "Status", "Assignment"};
-        for (int i = 0; i < sortValues.length; i++) {
-            if (sortValues[i].equals(currentSortOrder)) {
+        for (int i = 0; i < SORT_VALUES.length; i++) {
+            if (SORT_VALUES[i].equals(currentSortOrder)) {
                 return i;
             }
         }
@@ -243,20 +233,18 @@ public class AssignmentHistoryActivity extends AppCompatActivity {
     }
 
     private void showError(String message) {
-        runOnUiThread(() -> {
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        });
+        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_LONG).show());
     }
 
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         recyclerViewAssignments.setVisibility(show ? View.GONE : View.VISIBLE);
-        findViewById(R.id.paginationLayout).setVisibility(show ? View.GONE : View.VISIBLE);
+        paginationLayout.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     private void showEmptyState(boolean show) {
         emptyStateLayout.setVisibility(show ? View.VISIBLE : View.GONE);
         recyclerViewAssignments.setVisibility(show ? View.GONE : View.VISIBLE);
-        findViewById(R.id.paginationLayout).setVisibility(show ? View.GONE : View.VISIBLE);
+        paginationLayout.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 }
