@@ -1,7 +1,5 @@
 package com.sowp.user.repositories.firebase;
 
-import android.util.Log;
-
 import com.sowp.user.models.Topic;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -12,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicRepository {
-    private static final String TAG = "TopicRepository";
-
     FirebaseFirestore firestore;
     List<Topic> topics;
 
@@ -32,6 +28,11 @@ public class TopicRepository {
         void onFailure(String message);
     }
 
+    public interface SingleTopicCallback {
+        void onSuccess(Topic topic);
+        void onFailure(String message);
+    }
+
     public void loadTopicsOfCourse(int courseId, Callback callback) {
         firestore.collection("Course")
                 .document(String.valueOf(courseId))
@@ -39,7 +40,7 @@ public class TopicRepository {
                 .orderBy("orderIndex", Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    topics.clear(); // Clear existing topics first
+                    topics.clear();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         try {
@@ -48,15 +49,12 @@ public class TopicRepository {
                                 topics.add(topic);
                             }
                         } catch (Exception e) {
-                            Log.w(TAG, "Error parsing topic document: " + doc.getId(), e);
                         }
                     }
 
-                    Log.d(TAG, "Loaded " + topics.size() + " topics for course " + courseId);
-                    callback.onSuccess(new ArrayList<>(topics)); // Return a copy
+                    callback.onSuccess(new ArrayList<>(topics));
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading topics for course " + courseId, e);
                     callback.onFailure(e.getMessage());
                 });
     }
@@ -69,7 +67,6 @@ public class TopicRepository {
                 .collection("Topics")
                 .orderBy("orderIndex", Query.Direction.ASCENDING);
 
-        // Apply semester filter at database level if specified
         if (semesterFilter != null && !semesterFilter.equals("All Semesters")) {
             query = query.whereEqualTo("semester", semesterFilter);
         }
@@ -85,21 +82,17 @@ public class TopicRepository {
                                 filteredTopics.add(topic);
                             }
                         } catch (Exception e) {
-                            Log.w(TAG, "Error parsing topic document: " + doc.getId(), e);
                         }
                     }
 
-                    Log.d(TAG, "Loaded " + filteredTopics.size() + " filtered topics for course " + courseId);
                     callback.onSuccess(filteredTopics);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading filtered topics for course " + courseId, e);
                     callback.onFailure(e.getMessage());
                 });
     }
 
     private boolean matchesClientSideFilters(Topic topic, String searchQuery, String categoryFilter) {
-        // Search filter
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             String search = searchQuery.toLowerCase();
             boolean matchesSearch = false;
@@ -119,7 +112,6 @@ public class TopicRepository {
             }
         }
 
-        // Category filter
         if (categoryFilter != null && !categoryFilter.equals("All Categories")) {
             if (topic.getCategories() == null ||
                     !topic.getCategories().toLowerCase().contains(categoryFilter.toLowerCase())) {
@@ -140,24 +132,19 @@ public class TopicRepository {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot topicDoc = queryDocumentSnapshots.getDocuments().get(0);
 
-                        // Increment views count
                         topicDoc.getReference()
                                 .update("views", FieldValue.increment(1))
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d(TAG, "Successfully updated views for topic " + topicOrderIndex);
                                     callback.onSuccess();
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e(TAG, "Failed to update views for topic " + topicOrderIndex, e);
                                     callback.onFailure("Failed to update topic views: " + e.getMessage());
                                 });
                     } else {
-                        Log.w(TAG, "Topic with orderIndex " + topicOrderIndex + " not found");
                         callback.onFailure("Topic not found");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error finding topic to update views", e);
                     callback.onFailure("Error finding topic: " + e.getMessage());
                 });
     }
@@ -182,10 +169,5 @@ public class TopicRepository {
                     }
                 })
                 .addOnFailureListener(e -> callback.onFailure("Error loading topic: " + e.getMessage()));
-    }
-
-    public interface SingleTopicCallback {
-        void onSuccess(Topic topic);
-        void onFailure(String message);
     }
 }
