@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.gson.Gson;
 import com.sowp.user.R;
 import com.sowp.user.adapters.NotificationsAdapter;
 import com.sowp.user.models.Notification;
