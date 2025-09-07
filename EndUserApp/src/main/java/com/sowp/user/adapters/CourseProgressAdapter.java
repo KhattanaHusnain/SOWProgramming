@@ -49,21 +49,25 @@ public class CourseProgressAdapter extends RecyclerView.Adapter<CourseProgressAd
     }
 
     public void setProgressList(List<CourseProgress> progressList) {
-        this.progressList = progressList != null ? progressList : new ArrayList<>();
+        // Create a defensive copy to avoid concurrent modification
+        this.progressList = progressList != null ? new ArrayList<>(progressList) : new ArrayList<>();
         notifyDataSetChanged();
     }
 
     public void addProgressList(List<CourseProgress> newProgressList) {
         if (newProgressList != null && !newProgressList.isEmpty()) {
             int startPosition = this.progressList.size();
-            this.progressList.addAll(newProgressList);
-            notifyItemRangeInserted(startPosition, newProgressList.size());
+            // Create a defensive copy before adding
+            List<CourseProgress> newItems = new ArrayList<>(newProgressList);
+            this.progressList.addAll(newItems);
+            notifyItemRangeInserted(startPosition, newItems.size());
         }
     }
 
     public void clearList() {
-        this.progressList.clear();
-        notifyDataSetChanged();
+        int itemCount = this.progressList.size();
+        this.progressList = new ArrayList<>(); // Create new list instead of clearing
+        notifyItemRangeRemoved(0, itemCount);
     }
 
     @NonNull

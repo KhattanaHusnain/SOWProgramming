@@ -187,7 +187,11 @@ public class CoursesProgressActivity extends AppCompatActivity implements Course
     private void loadCourseProgress() {
         if (isLoading) return;
 
-        isLoading = true;
+        // Use synchronized block to prevent concurrent access
+        synchronized (this) {
+            if (isLoading) return;
+            isLoading = true;
+        }
 
         // Load a large number to get all data, then handle pagination locally
         int loadLimit = 1000; // Load all available data
@@ -195,27 +199,37 @@ public class CoursesProgressActivity extends AppCompatActivity implements Course
         userRepository.getAllCourseProgress(currentFilter, loadLimit, new UserRepository.CourseProgressListCallback() {
             @Override
             public void onSuccess(List<CourseProgress> progressList) {
-                isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
-                showLoading(false);
+                synchronized (CoursesProgressActivity.this) {
+                    isLoading = false;
+                }
 
-                // Store all data
-                allProgressData = new ArrayList<>(progressList);
+                runOnUiThread(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    showLoading(false);
 
-                // Show first page
-                displayPageData();
+                    // Store all data with defensive copy
+                    allProgressData = progressList != null ? new ArrayList<>(progressList) : new ArrayList<>();
 
-                updateEmptyState(allProgressData.isEmpty());
+                    // Show first page
+                    displayPageData();
+
+                    updateEmptyState(allProgressData.isEmpty());
+                });
             }
 
             @Override
             public void onFailure(String message) {
-                isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
-                showLoading(false);
+                synchronized (CoursesProgressActivity.this) {
+                    isLoading = false;
+                }
 
-                showToast("Failed to load course progress: " + message);
-                updateEmptyState(true);
+                runOnUiThread(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    showLoading(false);
+
+                    showToast("Failed to load course progress: " + message);
+                    updateEmptyState(true);
+                });
             }
         });
     }
@@ -333,26 +347,6 @@ public class CoursesProgressActivity extends AppCompatActivity implements Course
         Intent intent = new Intent(this, CourseDescriptionActivity.class);
         intent.putExtra("COURSE_ID", courseProgress.getCourseId());
         startActivity(intent);
-    }
-
-    private void showCourseProgressDialog(CourseProgress courseProgress) {
-        // Create and show a dialog with detailed progress information
-        String message = String.format(
-                "Course: %s\nStatus: %s\nProgress: %d topics viewed\nRating: %.1f/5.0",
-                courseProgress.getCourseName(),
-                courseProgress.getStatusString(),
-                courseProgress.getViewedTopics() != null ? courseProgress.getViewedTopics().size() : 0,
-                courseProgress.getUserRating()
-        );
-
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Course Progress Details")
-                .setMessage(message)
-                .setPositiveButton("View Course", (dialog, which) -> {
-                    onViewDetailsClick(courseProgress);
-                })
-                .setNegativeButton("Close", null)
-                .show();
     }
 
     @Override
