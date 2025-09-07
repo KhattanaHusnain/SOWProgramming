@@ -72,6 +72,7 @@ dependencies {
     implementation libs.androidx.appcompat
     annotationProcessor libs.room.compiler
     testImplementation libs.junit
+    implementation libs.gson
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation libs.coordinatorlayout
