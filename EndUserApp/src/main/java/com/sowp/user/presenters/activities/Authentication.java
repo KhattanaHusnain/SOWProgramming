@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sowp.user.R;
 import com.sowp.user.models.User;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.UserRepository;
 
 public class Authentication extends AppCompatActivity {
 

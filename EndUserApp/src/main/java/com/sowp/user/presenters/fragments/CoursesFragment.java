@@ -28,7 +28,7 @@ import com.sowp.user.adapters.CourseAdapter;
 import com.sowp.user.R;
 import com.sowp.user.models.Course;
 import com.sowp.user.presenters.activities.CourseDescriptionActivity;
-import com.sowp.user.repositories.firebase.CourseRepository;
+import com.sowp.user.repositories.CourseRepository;
 
 import java.util.ArrayList;
 import java.util.List;

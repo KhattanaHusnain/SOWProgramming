@@ -1,4 +1,4 @@
-package com.sowp.user.utils;
+package com.sowp.user.services;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -125,7 +125,7 @@ public class UserProfilePopup {
 
     private void setProfileImage(User userData) {
         if (userData.getPhoto() != null && !userData.getPhoto().isEmpty()) {
-            Bitmap bitmap = Base64ImageUtils.base64ToBitmap(userData.getPhoto());
+            Bitmap bitmap = ImageService.base64ToBitmap(userData.getPhoto());
             if (bitmap != null) {
                 profileImageView.setImageBitmap(bitmap);
                 return;

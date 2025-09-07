@@ -21,8 +21,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.sowp.user.R;
 import com.sowp.user.models.User;
 import com.sowp.user.presenters.activities.Login;
-import com.sowp.user.repositories.firebase.UserRepository;
-import com.sowp.user.utils.UserAuthenticationUtils;
+import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;

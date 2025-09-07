@@ -20,12 +20,11 @@ import com.sowp.user.R;
 import com.sowp.user.presenters.fragments.ChatFragment;
 import com.sowp.user.presenters.fragments.CoursesFragment;
 import com.sowp.user.presenters.fragments.HomeFragment;
-import com.sowp.user.repositories.firebase.UserRepository;
-import com.sowp.user.utils.UserAuthenticationUtils;
+import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashMap;
 import java.util.Map;

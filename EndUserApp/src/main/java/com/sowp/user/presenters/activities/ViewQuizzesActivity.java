@@ -24,8 +24,8 @@ import com.sowp.user.R;
 import com.sowp.user.adapters.QuizAdapter;
 import com.sowp.user.models.Course;
 import com.sowp.user.models.Quiz;
-import com.sowp.user.repositories.firebase.CourseRepository;
-import com.sowp.user.repositories.firebase.QuizRepository;
+import com.sowp.user.repositories.CourseRepository;
+import com.sowp.user.repositories.QuizRepository;
 
 import java.util.ArrayList;
 import java.util.List;

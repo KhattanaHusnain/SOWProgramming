@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sowp.user.R;
 import com.sowp.user.adapters.AssignmentHistoryAdapter;
 import com.sowp.user.models.AssignmentAttempt;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.UserRepository;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;

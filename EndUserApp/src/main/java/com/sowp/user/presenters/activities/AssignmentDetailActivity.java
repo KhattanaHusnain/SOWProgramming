@@ -28,7 +28,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.sowp.user.R;
 import com.sowp.user.models.AssignmentAttempt;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.UserRepository;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 

@@ -195,21 +195,21 @@
     <string name="sample_image_count">3 images submitted</string>
     <string name="menu_description">Menu options</string>
 
-        <!-- Offline Course Activity -->
-        <string name="offline_courses_title">Offline Courses</string>
-        <string name="downloaded_courses_title">Downloaded Courses</string>
-        <string name="available_offline_description">Available for offline viewing</string>
-        <string name="no_offline_courses_title">No Offline Courses</string>
-        <string name="browse_courses">Browse Courses</string>
+    <!-- Offline Course Activity -->
+    <string name="offline_courses_title">Offline Courses</string>
+    <string name="downloaded_courses_title">Downloaded Courses</string>
+    <string name="available_offline_description">Available for offline viewing</string>
+    <string name="no_offline_courses_title">No Offline Courses</string>
+    <string name="browse_courses">Browse Courses</string>
 
-        <!-- Accessibility descriptions -->
-        <string name="offline_icon_description">Offline courses icon</string>
-        <string name="no_offline_courses_description">No offline courses available illustration</string>
-        <string name="refresh_courses_description">Refresh offline courses</string>
+    <!-- Accessibility descriptions -->
+    <string name="offline_icon_description">Offline courses icon</string>
+    <string name="no_offline_courses_description">No offline courses available illustration</string>
+    <string name="refresh_courses_description">Refresh offline courses</string>
 
-        <!-- Progress and status -->
-        <string name="loading_courses">Loading courses…</string>
-        <string name="course_count_format">%d courses available</string>
+    <!-- Progress and status -->
+    <string name="loading_courses">Loading courses…</string>
+    <string name="course_count_format">%d courses available</string>
 
     <string name="back">Back</string>
     <string name="profile">Profile</string>

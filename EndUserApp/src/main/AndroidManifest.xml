@@ -31,6 +31,9 @@
         android:theme="@style/Theme.SOWProgramming"
         tools:targetApi="31">
         <activity
+            android:name=".presenters.activities.CoursesProgressActivity"
+            android:exported="false" />
+        <activity
             android:name=".presenters.activities.ViewAssignmentsActivity"
             android:exported="false"
             android:theme="@style/Theme.SOWProgramming" />
@@ -85,8 +88,8 @@
         <activity
             android:name=".presenters.activities.VideoPlayerActivity"
             android:exported="false"
-            android:theme="@style/Theme.SOWProgramming.NoActionBar"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.SOWProgramming.NoActionBar" />
         <activity
             android:name=".presenters.activities.TakeQuizActivity"
             android:exported="false"
@@ -137,6 +140,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -146,6 +150,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <meta-data
             android:name="com.google.android.gms.client_id"
             android:value="@string/default_web_client_id" />

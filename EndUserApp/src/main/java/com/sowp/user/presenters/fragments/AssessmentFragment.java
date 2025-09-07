@@ -24,8 +24,8 @@ import com.sowp.user.models.Course;
 import com.sowp.user.models.User;
 import com.sowp.user.presenters.activities.ViewAssignmentsActivity;
 import com.sowp.user.presenters.activities.ViewQuizzesActivity;
-import com.sowp.user.repositories.firebase.CourseRepository;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.CourseRepository;
+import com.sowp.user.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;

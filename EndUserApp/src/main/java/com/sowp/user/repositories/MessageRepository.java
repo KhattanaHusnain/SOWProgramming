@@ -1,4 +1,4 @@
-package com.sowp.user.repositories.firebase;
+package com.sowp.user.repositories;
 
 import android.util.Log;
 import androidx.annotation.NonNull;

@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sowp.user.models.ChatMessage;
 import com.sowp.user.models.User;
 import com.sowp.user.R;
-import com.sowp.user.utils.Base64ImageUtils;
-import com.sowp.user.utils.MessageFormatter;
+import com.sowp.user.services.ImageService;
+import com.sowp.user.services.MessageFormatter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +91,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
             if (userData.getPhoto() != null && !userData.getPhoto().isEmpty()) {
                 try {
-                    Bitmap bitmap = Base64ImageUtils.base64ToBitmap(userData.getPhoto());
+                    Bitmap bitmap = ImageService.base64ToBitmap(userData.getPhoto());
                     if (bitmap != null) {
                         if (bitmap.getWidth() > MAX_IMAGE_SIZE || bitmap.getHeight() > MAX_IMAGE_SIZE) {
                             bitmap = Bitmap.createScaledBitmap(bitmap, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, true);
@@ -274,7 +274,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                     return;
                 }
 
-                Bitmap bitmap = Base64ImageUtils.base64ToBitmap(base64Image);
+                Bitmap bitmap = ImageService.base64ToBitmap(base64Image);
                 if (bitmap != null) {
                     if (bitmap.getWidth() > MAX_IMAGE_SIZE || bitmap.getHeight() > MAX_IMAGE_SIZE) {
                         bitmap = Bitmap.createScaledBitmap(bitmap, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, true);

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sowp.user.R;
 import com.sowp.user.adapters.QuestionDetailAdapter;
 import com.sowp.user.models.QuizAttempt;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.UserRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

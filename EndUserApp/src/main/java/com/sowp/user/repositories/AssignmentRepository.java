@@ -1,10 +1,9 @@
-package com.sowp.user.repositories.firebase;
+package com.sowp.user.repositories;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.sowp.user.models.Assignment;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

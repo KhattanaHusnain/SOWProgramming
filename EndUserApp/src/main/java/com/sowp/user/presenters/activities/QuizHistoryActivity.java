@@ -17,7 +17,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.sowp.user.R;
 import com.sowp.user.adapters.QuizHistoryAdapter;
 import com.sowp.user.models.QuizAttempt;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;

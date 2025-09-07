@@ -1,6 +1,5 @@
 package com.sowp.user.presenters.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.sowp.user.R;
-import com.sowp.user.repositories.firebase.TopicRepository;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.TopicRepository;
+import com.sowp.user.repositories.UserRepository;
 import com.sowp.user.adapters.TopicListAdapter;
 import com.sowp.user.models.Topic;
 
@@ -31,6 +30,7 @@ import java.util.List;
 public class TopicList extends AppCompatActivity {
     private static final int ITEMS_PER_PAGE = 10;
 
+    // UI Components
     private RecyclerView recyclerView;
     private View emptyView;
     private ProgressBar progressBar;
@@ -40,20 +40,24 @@ public class TopicList extends AppCompatActivity {
     private Spinner categorySpinner, semesterSpinner;
     private Toolbar toolbar;
 
+    // Data and Repository
     private TopicListAdapter adapter;
     private TopicRepository topicRepository;
     private UserRepository userRepository;
-
     private int courseId;
     private String[] topicCategories;
+
+    // Topic lists
     private List<Topic> allTopics = new ArrayList<>();
     private List<Topic> filteredTopics = new ArrayList<>();
 
+    // Pagination
     private int currentPage = 0;
     private int totalPages = 0;
     private int totalItems = 0;
     private boolean isLoading = false;
 
+    // Filter states
     private String currentSearchQuery = "";
     private String selectedCategory = "All Categories";
     private String selectedSemester = "All Semesters";
@@ -63,27 +67,42 @@ public class TopicList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
 
+        initializeRepositories();
+        extractIntentData();
+        initializeUI();
+        loadTopics();
+    }
+
+    private void initializeRepositories() {
         topicRepository = new TopicRepository();
         userRepository = new UserRepository(this);
+    }
 
+    private void extractIntentData() {
         courseId = getIntent().getIntExtra("courseID", 0);
+
         String categoriesString = getIntent().getStringExtra("topicCategories");
         if (categoriesString != null && !categoriesString.isEmpty()) {
             topicCategories = categoriesString.split(",");
+            // Trim whitespace
             for (int i = 0; i < topicCategories.length; i++) {
                 topicCategories[i] = topicCategories[i].trim();
             }
         } else {
             topicCategories = new String[0];
         }
-
-        initializeComponents();
-        setupUI();
-
-        loadTopicsFromFirestore();
     }
 
-    private void initializeComponents() {
+    private void initializeUI() {
+        findViews();
+        setupToolbar();
+        setupRecyclerView();
+        setupPagination();
+        setupSearch();
+        setupFilters();
+    }
+
+    private void findViews() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recycler_view);
         emptyView = findViewById(R.id.empty_view);
@@ -96,36 +115,26 @@ public class TopicList extends AppCompatActivity {
         semesterSpinner = findViewById(R.id.semesterSpinner);
     }
 
-    private void setupUI() {
-        setupToolbar();
-        setupRecyclerView();
-        setupPaginationButtons();
-        setupSearch();
-        setupFilters();
-    }
-
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Course Topics");
         }
-
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     private void setupRecyclerView() {
-        adapter = new TopicListAdapter(this, new ArrayList<>(), "ONLINE");
-        adapter.setOnTopicClickListener(this::updateTopicViews);
+        adapter = new TopicListAdapter(this, new ArrayList<>());
+        adapter.setOnTopicClickListener(this::onTopicClicked);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupPaginationButtons() {
+    private void setupPagination() {
         btnPrevious.setOnClickListener(v -> {
-            if (canGoPreviousPage()) {
+            if (canNavigateToPreviousPage()) {
                 currentPage--;
                 displayCurrentPage();
                 scrollToTop();
@@ -133,7 +142,7 @@ public class TopicList extends AppCompatActivity {
         });
 
         btnNext.setOnClickListener(v -> {
-            if (canGoNextPage()) {
+            if (canNavigateToNextPage()) {
                 currentPage++;
                 displayCurrentPage();
                 scrollToTop();
@@ -151,9 +160,9 @@ public class TopicList extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String newQuery = s.toString().trim();
-                if (!newQuery.equals(currentSearchQuery)) {
-                    currentSearchQuery = newQuery;
+                String query = s.toString().trim();
+                if (!query.equals(currentSearchQuery)) {
+                    currentSearchQuery = query;
                     applyFiltersAndSearch();
                 }
             }
@@ -166,10 +175,7 @@ public class TopicList extends AppCompatActivity {
     }
 
     private void setupCategoryFilter() {
-        List<String> categories = new ArrayList<>();
-        categories.add("All Categories");
-        categories.addAll(Arrays.asList(topicCategories));
-
+        List<String> categories = createCategoryList();
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -188,6 +194,13 @@ public class TopicList extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
+
+    private List<String> createCategoryList() {
+        List<String> categories = new ArrayList<>();
+        categories.add("All Categories");
+        categories.addAll(Arrays.asList(topicCategories));
+        return categories;
     }
 
     private void setupSemesterFilter() {
@@ -214,121 +227,115 @@ public class TopicList extends AppCompatActivity {
         });
     }
 
-    private void loadTopicsFromFirestore() {
+    private void loadTopics() {
         if (isLoading) return;
 
         setLoadingState(true);
-        allTopics.clear();
-        filteredTopics.clear();
-        currentPage = 0;
+        clearTopicLists();
 
         topicRepository.loadTopicsOfCourse(courseId, new TopicRepository.Callback() {
             @Override
             public void onSuccess(List<Topic> topics) {
-                allTopics.clear();
-                allTopics.addAll(topics);
-
-                updateSemesterFilter();
-
-                applyFiltersAndSearch();
-                setLoadingState(false);
+                handleTopicsLoadSuccess(topics);
             }
 
             @Override
             public void onFailure(String message) {
-                setLoadingState(false);
-                showEmptyState(true);
+                handleTopicsLoadFailure();
             }
         });
     }
 
+    private void clearTopicLists() {
+        allTopics.clear();
+        filteredTopics.clear();
+        currentPage = 0;
+    }
+
+    private void handleTopicsLoadSuccess(List<Topic> topics) {
+        allTopics.clear();
+        allTopics.addAll(topics);
+        updateSemesterFilter();
+        applyFiltersAndSearch();
+        setLoadingState(false);
+    }
+
+    private void handleTopicsLoadFailure() {
+        setLoadingState(false);
+        showEmptyState(true);
+    }
+
     private void updateSemesterFilter() {
-        List<String> semesters = new ArrayList<>();
-        semesters.add("All Semesters");
-
-        for (Topic topic : allTopics) {
-            if (topic.getSemester() != null && !topic.getSemester().isEmpty()) {
-                if (!semesters.contains(topic.getSemester())) {
-                    semesters.add(topic.getSemester());
-                }
-            }
-        }
-
+        List<String> semesters = extractSemestersFromTopics();
         ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, semesters);
         semesterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         semesterSpinner.setAdapter(semesterAdapter);
     }
 
+    private List<String> extractSemestersFromTopics() {
+        List<String> semesters = new ArrayList<>();
+        semesters.add("All Semesters");
+
+        for (Topic topic : allTopics) {
+            String semester = topic.getSemester();
+            if (semester != null && !semester.isEmpty() && !semesters.contains(semester)) {
+                semesters.add(semester);
+            }
+        }
+        return semesters;
+    }
+
     private void applyFiltersAndSearch() {
         filteredTopics.clear();
 
         for (Topic topic : allTopics) {
-            if (matchesFilters(topic)) {
+            if (topicMatchesAllFilters(topic)) {
                 filteredTopics.add(topic);
             }
         }
 
+        resetPaginationAndDisplay();
+    }
+
+    private boolean topicMatchesAllFilters(Topic topic) {
+        return matchesSearchQuery(topic) &&
+                matchesCategoryFilter(topic) &&
+                matchesSemesterFilter(topic);
+    }
+
+    private boolean matchesSearchQuery(Topic topic) {
+        if (currentSearchQuery.isEmpty()) return true;
+
+        String query = currentSearchQuery.toLowerCase();
+        return (topic.getName() != null && topic.getName().toLowerCase().contains(query)) ||
+                (topic.getDescription() != null && topic.getDescription().toLowerCase().contains(query)) ||
+                (topic.getTags() != null && topic.getTags().toLowerCase().contains(query)) ||
+                (topic.getCategories() != null && topic.getCategories().toLowerCase().contains(query));
+    }
+
+    private boolean matchesCategoryFilter(Topic topic) {
+        if (selectedCategory.equals("All Categories")) return true;
+
+        return topic.getCategories() != null &&
+                topic.getCategories().toLowerCase().contains(selectedCategory.toLowerCase());
+    }
+
+    private boolean matchesSemesterFilter(Topic topic) {
+        if (selectedSemester.equals("All Semesters")) return true;
+
+        return selectedSemester.equals(topic.getSemester());
+    }
+
+    private void resetPaginationAndDisplay() {
         currentPage = 0;
-        calculatePagination();
+        calculatePaginationData();
         displayCurrentPage();
     }
 
-    private boolean matchesFilters(Topic topic) {
-        if (!currentSearchQuery.isEmpty()) {
-            if (!topicMatchesSearch(topic, currentSearchQuery.toLowerCase())) {
-                return false;
-            }
-        }
-
-        if (!selectedCategory.equals("All Categories")) {
-            if (topic.getCategories() == null ||
-                    !topic.getCategories().toLowerCase().contains(selectedCategory.toLowerCase())) {
-                return false;
-            }
-        }
-
-        if (!selectedSemester.equals("All Semesters")) {
-            if (topic.getSemester() == null ||
-                    !topic.getSemester().equals(selectedSemester)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean topicMatchesSearch(Topic topic, String searchQuery) {
-        if (topic == null || searchQuery == null || searchQuery.isEmpty()) {
-            return true;
-        }
-
-        if (topic.getName() != null && topic.getName().toLowerCase().contains(searchQuery)) {
-            return true;
-        }
-
-        if (topic.getDescription() != null && topic.getDescription().toLowerCase().contains(searchQuery)) {
-            return true;
-        }
-
-        if (topic.getTags() != null && topic.getTags().toLowerCase().contains(searchQuery)) {
-            return true;
-        }
-
-        if (topic.getCategories() != null && topic.getCategories().toLowerCase().contains(searchQuery)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void calculatePagination() {
+    private void calculatePaginationData() {
         totalItems = filteredTopics.size();
-        totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
-
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
+        totalPages = Math.max(1, (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE));
 
         if (currentPage >= totalPages) {
             currentPage = Math.max(0, totalPages - 1);
@@ -364,26 +371,31 @@ public class TopicList extends AppCompatActivity {
     }
 
     private void updatePaginationUI() {
+        updatePageInfo();
+        updateNavigationButtons();
+    }
+
+    private void updatePageInfo() {
         if (totalItems == 0) {
             pageInfo.setText("No topics found");
         } else {
             String info = String.format("Page %d of %d (%d %s)",
-                    currentPage + 1,
-                    totalPages,
-                    totalItems,
+                    currentPage + 1, totalPages, totalItems,
                     totalItems == 1 ? "topic" : "topics");
             pageInfo.setText(info);
         }
-
-        btnPrevious.setEnabled(canGoPreviousPage());
-        btnNext.setEnabled(canGoNextPage());
     }
 
-    private boolean canGoPreviousPage() {
+    private void updateNavigationButtons() {
+        btnPrevious.setEnabled(canNavigateToPreviousPage());
+        btnNext.setEnabled(canNavigateToNextPage());
+    }
+
+    private boolean canNavigateToPreviousPage() {
         return currentPage > 0;
     }
 
-    private boolean canGoNextPage() {
+    private boolean canNavigateToNextPage() {
         return currentPage < totalPages - 1;
     }
 
@@ -396,7 +408,6 @@ public class TopicList extends AppCompatActivity {
     private void setLoadingState(boolean loading) {
         isLoading = loading;
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-
         if (loading) {
             showEmptyState(false);
         }
@@ -407,32 +418,47 @@ public class TopicList extends AppCompatActivity {
         recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    private void updateTopicViews(Topic topic) {
+    private void onTopicClicked(Topic topic) {
         if (topic == null) return;
 
+        // Update topic view count
+        updateTopicViewCount(topic);
+
+        // Update user's viewed topics (handled by adapter as well, but keeping for redundancy)
+        updateUserViewedTopics(topic);
+    }
+
+    private void updateTopicViewCount(Topic topic) {
         topicRepository.updateTopicViews(courseId, topic.getOrderIndex(), new TopicRepository.UpdateCallback() {
             @Override
             public void onSuccess() {
+                // Topic view count updated
             }
 
             @Override
             public void onFailure(String message) {
-            }
-        });
-
-        userRepository.addViewedTopic(courseId, topic.getOrderIndex(), new UserRepository.UserCallback() {
-            @Override
-            public void onSuccess(com.sowp.user.models.User user) {
-            }
-
-            @Override
-            public void onFailure(String message) {
+                // Handle silently
             }
         });
     }
 
+    private void updateUserViewedTopics(Topic topic) {
+        userRepository.addViewedTopic(courseId, topic.getOrderIndex(), new UserRepository.UserCallback() {
+            @Override
+            public void onSuccess(com.sowp.user.models.User user) {
+                // Successfully tracked
+            }
+
+            @Override
+            public void onFailure(String message) {
+                // Handle silently
+            }
+        });
+    }
+
+    // Public methods for external control
     public void refreshTopics() {
-        loadTopicsFromFirestore();
+        loadTopics();
     }
 
     public void clearFilters() {
@@ -449,7 +475,7 @@ public class TopicList extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!allTopics.isEmpty()) {
-            loadTopicsFromFirestore();
+            loadTopics();
         }
     }
 
@@ -462,7 +488,6 @@ public class TopicList extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (adapter != null) {
-        }
+        // Cleanup if needed
     }
 }

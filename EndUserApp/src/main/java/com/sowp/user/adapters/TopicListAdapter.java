@@ -12,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sowp.user.R;
 import com.sowp.user.models.Topic;
-import com.sowp.user.presenters.activities.OfflineTopicViewActivity;
+import com.sowp.user.models.User;
 import com.sowp.user.presenters.activities.TopicView;
+import com.sowp.user.repositories.UserRepository;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
@@ -25,17 +26,17 @@ import java.util.List;
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.TopicViewHolder> {
     private final Context context;
     private final List<Topic> topics;
-    String mode;
+    private final UserRepository userRepository;
     private OnTopicClickListener onTopicClickListener;
 
     public interface OnTopicClickListener {
         void onTopicClicked(Topic topic);
     }
 
-    public TopicListAdapter(Context context, List<Topic> topics, String mode) {
+    public TopicListAdapter(Context context, List<Topic> topics) {
         this.context = context;
-        this.topics = new ArrayList<>(topics);
-        this.mode = mode;
+        this.topics = new ArrayList<>(topics != null ? topics : new ArrayList<>());
+        this.userRepository = new UserRepository(context);
     }
 
     public void setOnTopicClickListener(OnTopicClickListener listener) {
@@ -52,12 +53,12 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
     @Override
     public void onBindViewHolder(@NonNull TopicViewHolder holder, int position) {
         Topic topic = topics.get(position);
-        holder.bind(topic, context, mode, onTopicClickListener);
+        holder.bind(topic, context, userRepository, onTopicClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return topics != null ? topics.size() : 0;
+        return topics.size();
     }
 
     public void updateTopics(List<Topic> newTopics) {
@@ -95,16 +96,36 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
             cardView = (MaterialCardView) itemView;
         }
 
-        public void bind(Topic topic, Context context, String mode, OnTopicClickListener clickListener) {
-            if (topic != null) {
-                // Set basic info
-                topicTitle.setText(topic.getName() != null ? topic.getName() : "Untitled Topic");
-                topicDescription.setText(topic.getDescription() != null ? topic.getDescription() : "No description available");
+        public void bind(Topic topic, Context context, UserRepository userRepository, OnTopicClickListener clickListener) {
+            if (topic == null) return;
 
-                // Display order index
-                topicOrder.setText("Lesson " + topic.getOrderIndex());
+            setupTopicInfo(topic);
+            setupVideoIndicator(topic);
+            setupClickListener(topic, context, userRepository, clickListener);
+        }
 
-                // Format and display creation date
+        private void setupTopicInfo(Topic topic) {
+            // Set title and description
+            topicTitle.setText(topic.getName() != null ? topic.getName() : "Untitled Topic");
+            topicDescription.setText(topic.getDescription() != null ? topic.getDescription() : "No description available");
+
+            // Set lesson order
+            topicOrder.setText("Lesson " + topic.getOrderIndex());
+
+            // Format creation date
+            setupCreationDate(topic);
+
+            // Set views count
+            if (topicViews != null) {
+                topicViews.setText(String.valueOf(topic.getViews()));
+            }
+
+            // Setup tags
+            setupTags(topic);
+        }
+
+        private void setupCreationDate(Topic topic) {
+            if (topicCreatedDate != null) {
                 if (topic.getCreatedAt() > 0) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
                     String formattedDate = dateFormat.format(new Date(topic.getCreatedAt()));
@@ -112,60 +133,84 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
                 } else {
                     topicCreatedDate.setText("Created: Unknown");
                 }
-
-                // Display views count
-                if (topicViews != null) {
-                    topicViews.setText(String.valueOf(topic.getViews()));
-                }
-
-                // Display tags if available
-                if (topicTags != null) {
-                    if (topic.getTags() != null && !topic.getTags().trim().isEmpty()) {
-                        topicTags.setText(topic.getTags());
-                        topicTags.setVisibility(View.VISIBLE);
-                    } else {
-                        topicTags.setVisibility(View.GONE);
-                    }
-                }
-
-                // Show video indicator if topic has video
-                if (videoIndicator != null) {
-                    if (topic.getVideoID() != null && !topic.getVideoID().trim().isEmpty()) {
-                        videoIndicator.setVisibility(View.VISIBLE);
-                    } else {
-                        videoIndicator.setVisibility(View.GONE);
-                    }
-                }
-
-                // Set click listeners
-                itemView.setOnClickListener(v -> {
-                    // Notify listener first (for view tracking)
-                    if (clickListener != null) {
-                        clickListener.onTopicClicked(topic);
-                    }
-
-                    // Then navigate
-                    if (mode.equals("ONLINE")) {
-                        navigateToTopicView(topic, context);
-                    } else {
-                        navigateToOfflineTopicView(topic, context);
-                    }
-                });
             }
         }
 
-        protected void navigateToTopicView(Topic topic, Context context) {
-            Intent intent = new Intent(context, TopicView.class);
-            intent.putExtra("TOPIC_ID", topic.getOrderIndex());
-            intent.putExtra("TOPIC_NAME", topic.getName());
-            intent.putExtra("TOPIC_CONTENT", topic.getContent());
-            intent.putExtra("VIDEO_ID", topic.getVideoID());
-            intent.putExtra("COURSE_ID", topic.getCourseId());
-            context.startActivity(intent);
+        private void setupTags(Topic topic) {
+            if (topicTags != null) {
+                String tags = topic.getTags();
+                if (tags != null && !tags.trim().isEmpty()) {
+                    topicTags.setText(tags);
+                    topicTags.setVisibility(View.VISIBLE);
+                } else {
+                    topicTags.setVisibility(View.GONE);
+                }
+            }
         }
 
-        private void navigateToOfflineTopicView(Topic topic, Context context) {
-            Intent intent = new Intent(context, OfflineTopicViewActivity.class);
+        private void setupVideoIndicator(Topic topic) {
+            if (videoIndicator != null) {
+                String videoId = topic.getVideoID();
+                if (videoId != null && !videoId.trim().isEmpty()) {
+                    videoIndicator.setVisibility(View.VISIBLE);
+                } else {
+                    videoIndicator.setVisibility(View.GONE);
+                }
+            }
+        }
+
+        private void setupClickListener(Topic topic, Context context, UserRepository userRepository, OnTopicClickListener clickListener) {
+            itemView.setOnClickListener(v -> {
+                // Update progress first
+                updateCourseProgress(topic, userRepository);
+
+                // Notify listener
+                if (clickListener != null) {
+                    clickListener.onTopicClicked(topic);
+                }
+
+                // Navigate to topic view
+                navigateToTopicView(topic, context);
+            });
+        }
+
+        private void updateCourseProgress(Topic topic, UserRepository userRepository) {
+            if (topic == null || userRepository == null) return;
+
+            int courseId = topic.getCourseId();
+            int topicId = topic.getOrderIndex();
+
+            if (courseId <= 0) return;
+
+            // Update course progress
+            userRepository.addViewedTopicToCourseProgress(courseId, topicId, new UserRepository.UserCallback() {
+                @Override
+                public void onSuccess(User user) {
+                    // Progress updated successfully
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    // Handle silently
+                }
+            });
+
+            // Update legacy viewed topics for backward compatibility
+            userRepository.addViewedTopic(courseId, topicId, new UserRepository.UserCallback() {
+                @Override
+                public void onSuccess(User user) {
+                    // Updated successfully
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    // Handle silently
+                }
+            });
+        }
+
+        private void navigateToTopicView(Topic topic, Context context) {
+            Intent intent = new Intent(context, TopicView.class);
             intent.putExtra("TOPIC_ID", topic.getOrderIndex());
             intent.putExtra("TOPIC_NAME", topic.getName());
             intent.putExtra("TOPIC_CONTENT", topic.getContent());

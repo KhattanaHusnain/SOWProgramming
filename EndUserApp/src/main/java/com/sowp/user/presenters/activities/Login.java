@@ -17,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.sowp.user.R;
 import com.sowp.user.models.User;
-import com.sowp.user.repositories.firebase.UserRepository;
-import com.sowp.user.utils.UserAuthenticationUtils;
+import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;

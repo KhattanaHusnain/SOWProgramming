@@ -1,4 +1,4 @@
-package com.sowp.user.utils;
+package com.sowp.user.services;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import com.sowp.user.models.Topic;
 import com.sowp.user.presenters.activities.TopicView;
 import com.sowp.user.presenters.activities.TakeQuizActivity;
 import com.sowp.user.presenters.activities.SubmitAssignmentActivity;
-import com.sowp.user.repositories.firebase.TopicRepository;
+import com.sowp.user.repositories.TopicRepository;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

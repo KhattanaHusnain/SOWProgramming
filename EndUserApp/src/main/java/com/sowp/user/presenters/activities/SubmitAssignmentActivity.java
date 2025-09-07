@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sowp.user.R;
 import com.sowp.user.models.Assignment;
 import com.sowp.user.models.AssignmentAttempt;
-import com.sowp.user.repositories.firebase.AssignmentRepository;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.AssignmentRepository;
+import com.sowp.user.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;

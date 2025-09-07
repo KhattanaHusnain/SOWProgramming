@@ -1,4 +1,4 @@
-package com.sowp.user.utils;
+package com.sowp.user.services;
 
 import androidx.room.TypeConverter;
 import java.util.Arrays;

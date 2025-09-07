@@ -32,13 +32,14 @@ import com.sowp.user.models.User;
 
 import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
 import com.sowp.user.presenters.activities.CourseDescriptionActivity;
+import com.sowp.user.presenters.activities.CoursesProgressActivity;
 import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.presenters.activities.QuizHistoryActivity;
-import com.sowp.user.repositories.firebase.AssignmentRepository;
-import com.sowp.user.repositories.firebase.CourseRepository;
-import com.sowp.user.repositories.firebase.QuizRepository;
-import com.sowp.user.repositories.firebase.UserRepository;
-import com.sowp.user.utils.UserAuthenticationUtils;
+import com.sowp.user.repositories.AssignmentRepository;
+import com.sowp.user.repositories.CourseRepository;
+import com.sowp.user.repositories.QuizRepository;
+import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -458,6 +459,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void navigateToEnrolledCourses() {
+        Intent intent = new Intent(getContext(), CoursesProgressActivity.class);
+        startActivity(intent);
     }
 
     private void navigateToCertificates() {

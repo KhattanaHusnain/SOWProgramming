@@ -1,4 +1,4 @@
-package com.sowp.user.utils;
+package com.sowp.user.services;
 
 import android.Manifest;
 import android.app.Activity;
@@ -35,7 +35,6 @@ import com.sowp.user.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -52,7 +51,7 @@ import okhttp3.Response;
  * Utility class for handling Base64 image operations including camera/gallery access,
  * permissions management, image processing, and full-screen viewing.
  */
-public class Base64ImageUtils {
+public class ImageService {
     private static final String TAG = "Base64ImageUtils";
 
     // Configuration constants

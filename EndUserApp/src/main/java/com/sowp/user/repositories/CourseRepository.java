@@ -1,4 +1,4 @@
-package com.sowp.user.repositories.firebase;
+package com.sowp.user.repositories;
 
 import android.content.Context;
 
@@ -112,5 +112,73 @@ public class CourseRepository {
                 .addOnFailureListener(e -> {
                     callback.onFailure("Error updating enrollment count");
                 });
+    }
+    // Add these methods to your existing CourseRepository class
+
+    public interface RatingCallback {
+        void onSuccess(float averageRating, int ratingCount);
+        void onFailure(String message);
+    }
+
+    public void getCourseRatingData(int courseId, RatingCallback callback) {
+        // Get rating data directly from the course document
+        db.collection("Course")
+                .document(String.valueOf(courseId))
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Double averageRating = documentSnapshot.getDouble("averageRating");
+                        Long ratingCount = documentSnapshot.getLong("ratingCount");
+
+                        callback.onSuccess(
+                                averageRating != null ? averageRating.floatValue() : 0.0f,
+                                ratingCount != null ? ratingCount.intValue() : 0
+                        );
+                    } else {
+                        callback.onSuccess(0.0f, 0);
+                    }
+                })
+                .addOnFailureListener(e -> callback.onFailure("Failed to load rating data: " + e.getMessage()));
+    }
+
+    public void calculateAndUpdateCourseRating(int courseId, Callback callback) {
+        // Calculate average from ratings subcollection
+        db.collection("Course")
+                .document(String.valueOf(courseId))
+                .collection("Ratings")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        // Update course with zero rating
+                        updateCourseRatingFields(courseId, 0.0f, 0, callback);
+                        return;
+                    }
+
+                    float totalRating = 0f;
+                    int ratingCount = 0;
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Double rating = document.getDouble("rating");
+                        if (rating != null) {
+                            totalRating += rating.floatValue();
+                            ratingCount++;
+                        }
+                    }
+
+                    float averageRating = ratingCount > 0 ? totalRating / ratingCount : 0f;
+                    updateCourseRatingFields(courseId, averageRating, ratingCount, callback);
+                })
+                .addOnFailureListener(e -> callback.onFailure("Failed to calculate rating: " + e.getMessage()));
+    }
+
+    private void updateCourseRatingFields(int courseId, float averageRating, int ratingCount, Callback callback) {
+        db.collection("Course")
+                .document(String.valueOf(courseId))
+                .update(
+                        "averageRating", averageRating,
+                        "ratingCount", ratingCount
+                )
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
+                .addOnFailureListener(e -> callback.onFailure("Failed to update course rating: " + e.getMessage()));
     }
 }

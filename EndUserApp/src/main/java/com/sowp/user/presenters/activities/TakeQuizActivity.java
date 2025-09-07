@@ -1,6 +1,5 @@
 package com.sowp.user.presenters.activities;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,8 +18,8 @@ import androidx.core.content.ContextCompat;
 import com.sowp.user.R;
 import com.sowp.user.models.Question;
 import com.sowp.user.models.User;
-import com.sowp.user.repositories.firebase.UserRepository;
-import com.sowp.user.utils.UserAuthenticationUtils;
+import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 

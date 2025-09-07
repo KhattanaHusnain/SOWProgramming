@@ -15,7 +15,7 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import com.sowp.user.R;
 import com.sowp.user.models.User;
-import com.sowp.user.repositories.firebase.UserRepository;
+import com.sowp.user.repositories.UserRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;

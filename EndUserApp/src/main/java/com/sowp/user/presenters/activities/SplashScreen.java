@@ -7,7 +7,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sowp.user.R;
-import com.sowp.user.utils.UserAuthenticationUtils;
+import com.sowp.user.services.UserAuthenticationUtils;
 
 public class SplashScreen extends AppCompatActivity {
     private UserAuthenticationUtils userAuthenticationUtils;

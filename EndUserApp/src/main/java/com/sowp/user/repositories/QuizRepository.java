@@ -1,11 +1,10 @@
-package com.sowp.user.repositories.firebase;
+package com.sowp.user.repositories;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.sowp.user.models.Quiz;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;

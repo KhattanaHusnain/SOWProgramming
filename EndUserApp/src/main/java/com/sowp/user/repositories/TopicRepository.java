@@ -1,4 +1,4 @@
-package com.sowp.user.repositories.firebase;
+package com.sowp.user.repositories;
 
 import com.sowp.user.models.Topic;
 import com.google.firebase.firestore.DocumentSnapshot;
