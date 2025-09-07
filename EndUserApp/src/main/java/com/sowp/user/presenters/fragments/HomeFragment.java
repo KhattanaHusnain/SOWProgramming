@@ -35,6 +35,7 @@ import com.sowp.user.presenters.activities.CourseDescriptionActivity;
 import com.sowp.user.presenters.activities.CoursesProgressActivity;
 import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.presenters.activities.QuizHistoryActivity;
+import com.sowp.user.presenters.activities.ViewNotificationsActivity;
 import com.sowp.user.repositories.AssignmentRepository;
 import com.sowp.user.repositories.CourseRepository;
 import com.sowp.user.repositories.QuizRepository;
@@ -441,6 +442,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void openNotifications() {
+        Intent intent = new Intent(getContext(), ViewNotificationsActivity.class);
+        startActivity(intent);
     }
 
     private void navigateToAllCourses() {
