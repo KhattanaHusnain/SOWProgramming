@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -105,7 +107,7 @@ public class Main extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (bottomNavigationView != null) {
             outState.putInt("selected_nav_item", bottomNavigationView.getSelectedItemId());
@@ -113,17 +115,15 @@ public class Main extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-            int selectedItemId = savedInstanceState.getInt("selected_nav_item", R.id.nav_home);
-            if (bottomNavigationView != null) {
-                bottomNavigationView.setSelectedItemId(selectedItemId);
-            }
-            Fragment targetFragment = fragmentMap.get(selectedItemId);
-            if (targetFragment != null) {
-                currentFragment = targetFragment;
-            }
+        int selectedItemId = savedInstanceState.getInt("selected_nav_item", R.id.nav_home);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(selectedItemId);
+        }
+        Fragment targetFragment = fragmentMap.get(selectedItemId);
+        if (targetFragment != null) {
+            currentFragment = targetFragment;
         }
     }
 
@@ -181,13 +181,11 @@ public class Main extends AppCompatActivity {
         TextInputEditText emailInput = dialogView.findViewById(R.id.email_input);
         TextInputEditText passwordInput = dialogView.findViewById(R.id.password_input);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && user.getEmail() != null) {
-            emailInput.setText(user.getEmail());
-        }
+        emailInput.setText(userAuthenticationUtils.getCurrentUserEmail());
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(dialogView)
+                .setCancelable(false)
                 .setPositiveButton("Link Account", null)
                 .create();
 
@@ -209,6 +207,7 @@ public class Main extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Exception error) {
+                        Toast.makeText(Main.this, "The password must be atleast 8 characters long, with one capital, one small, one numeric and one special character.", Toast.LENGTH_LONG).show();
                         positiveButton.setText("Link Account");
                         positiveButton.setEnabled(true);
                     }

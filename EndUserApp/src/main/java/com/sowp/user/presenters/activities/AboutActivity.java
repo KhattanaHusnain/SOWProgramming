@@ -54,7 +54,7 @@ public class AboutActivity extends AppCompatActivity {
         try {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -62,8 +62,8 @@ public class AboutActivity extends AppCompatActivity {
         try {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
             emailIntent.setData(Uri.parse("mailto:mujahid.husnain.56@gmail.com"));
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "NexCode App - Inquiry");
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello NexCode Team,\n\n");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SOWProgramming App - Inquiry");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello SOWProgramming Team,\n\n");
 
             if (emailIntent.resolveActivity(getPackageManager()) != null) {
                 startActivity(emailIntent);
