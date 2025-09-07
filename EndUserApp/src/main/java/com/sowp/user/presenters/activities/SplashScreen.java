@@ -17,7 +17,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.SplashTheme);
         setContentView(R.layout.activity_splash_screen);
-
+        userAuthenticationUtils = new UserAuthenticationUtils(this);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
