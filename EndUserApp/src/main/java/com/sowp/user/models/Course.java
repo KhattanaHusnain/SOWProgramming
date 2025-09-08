@@ -1,9 +1,5 @@
 package com.sowp.user.models;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.ColumnInfo;
-import androidx.room.Ignore;
 import com.google.firebase.database.PropertyName;
 
 import java.util.List;
@@ -102,7 +98,6 @@ public class Course {
     private double averageRating;
 
     // Default constructor
-    @Ignore
     public Course() {
     }
 
@@ -148,7 +143,6 @@ public class Course {
     }
 
     // Simplified constructor for basic course creation
-    @Ignore
     public Course(int id, String illustration, String title, String courseCode, String instructor,
                   int members, String description, String duration, String outline) {
         this.id = id;
