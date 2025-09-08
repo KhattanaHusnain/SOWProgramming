@@ -1,8 +1,5 @@
 package com.sowp.user.models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Ignore;
-
 import com.google.firebase.database.PropertyName;
 
 public class Topic {
@@ -52,7 +49,6 @@ public class Topic {
     // Default constructor required by Room
     public Topic() {}
 
-    @Ignore
     public Topic(int topicId, int courseId, String name, String description, String content,
                  String videoID, long createdAt, long updatedAt, boolean isPublic,
                  String tags, String categories, int views, String semester, int orderIndex) {
