@@ -19,7 +19,6 @@ public class AssignmentManagementActivity extends AppCompatActivity {
     private LinearLayout cardUploadAssignmenmt;
     private LinearLayout cardViewUncheckedAssignment;
     private TextView txtTotalQuizzes;
-    private TextView txtActiveQuizzes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public class AssignmentManagementActivity extends AppCompatActivity {
         cardUploadAssignmenmt = findViewById(R.id.cardUploadAssignment);
         cardViewUncheckedAssignment = findViewById(R.id.cardViewUncheckedAssignment);
         txtTotalQuizzes = findViewById(R.id.txtTotalQuizzes);
-        txtActiveQuizzes = findViewById(R.id.txtActiveQuizzes);
     }
 
     private void setClickListeners() {
@@ -93,7 +91,6 @@ public class AssignmentManagementActivity extends AppCompatActivity {
 
         // Update UI with the statistics
         txtTotalQuizzes.setText(String.valueOf(totalQuizzes));
-        txtActiveQuizzes.setText(String.valueOf(activeQuizzes));
     }
 
     // Simulate getting total quizzes count from database/API

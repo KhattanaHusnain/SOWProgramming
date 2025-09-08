@@ -61,6 +61,9 @@ public class SettingsActivity extends AppCompatActivity {
                 if(user.getRole().equals("User")) {
                     groupMsgToggle.setVisibility(View.GONE);
                 }
+                else {
+                    groupMsgToggle.setVisibility(View.VISIBLE);
+                }
             }
             @Override
             public void onFailure(String message) {

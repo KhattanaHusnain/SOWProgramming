@@ -22,19 +22,7 @@
 -keep class com.google.gson.** { *; }
 -dontwarn com.google.gson.**
 
-########################################
-# ROOM DATABASE
-########################################
--keep class androidx.room.** { *; }
--dontwarn androidx.room.**
 
-########################################
-# TENSORFLOW / PYTORCH
-########################################
--keep class org.tensorflow.** { *; }
--keep class org.pytorch.** { *; }
--dontwarn org.tensorflow.**
--dontwarn org.pytorch.**
 
 ########################################
 # GENERAL ANDROIDX
