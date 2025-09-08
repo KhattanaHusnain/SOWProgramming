@@ -1,79 +1,51 @@
 package com.sowp.user.models;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 import androidx.room.Ignore;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
+
 import com.google.firebase.database.PropertyName;
 
-@Entity(
-        tableName = "topics",
-        foreignKeys = @ForeignKey(
-                entity = Course.class,
-                parentColumns = "id",
-                childColumns = "courseId",
-                onDelete = ForeignKey.CASCADE
-        ),
-        indices = {@Index("courseId")}
-)
 public class Topic {
 
-    @PrimaryKey
-    @ColumnInfo(name = "topicId")
     @PropertyName("topicId")
     private int topicId;   // New explicit Topic ID (not auto-generated)
 
-    @ColumnInfo(name = "courseId")
     @PropertyName("courseId")
     private int courseId;
 
-    @ColumnInfo(name = "name")
     @PropertyName("name")
     private String name;
 
-    @ColumnInfo(name = "description")
     @PropertyName("description")
     private String description;
 
-    @ColumnInfo(name = "content")
     @PropertyName("content")
     private String content;
 
-    @ColumnInfo(name = "videoID")
     @PropertyName("videoID")
     private String videoID;
 
-    @ColumnInfo(name = "createdAt")
     @PropertyName("createdAt")
     private long createdAt;
 
-    @ColumnInfo(name = "updatedAt")
     @PropertyName("updatedAt")
     private long updatedAt;
 
-    @ColumnInfo(name = "isPublic")
     @PropertyName("isPublic")
     private boolean isPublic;
 
-    @ColumnInfo(name = "tags")
     @PropertyName("tags")
     private String tags;  // e.g., "OOP, Inheritance, Polymorphism"
 
-    @ColumnInfo(name = "categories")
     @PropertyName("categories")
     private String categories; // e.g., "Programming, Java"
 
-    @ColumnInfo(name = "views")
     @PropertyName("views")
     private int views;  // how many times this topic was viewed
 
-    @ColumnInfo(name = "semester")
     @PropertyName("semester")
     private String semester; // e.g., "Fall 2025"
 
-    @ColumnInfo(name = "orderIndex")
     @PropertyName("orderIndex")
     private int orderIndex; // for ordering topics inside a course
 

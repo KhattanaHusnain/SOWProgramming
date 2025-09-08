@@ -1,16 +1,35 @@
 package com.sowp.user.models;
 
+import com.google.firebase.firestore.PropertyName;
 import java.util.List;
 
 public class CourseProgress {
+
+    @PropertyName("courseId")
     private int courseId;
-    private String courseName; // Added course name field
+
+    @PropertyName("courseName")
+    private String courseName;
+
+    @PropertyName("enrolledAt")
     private Long enrolledAt;
+
+    @PropertyName("currentlyEnrolled")
     private boolean currentlyEnrolled;
+
+    @PropertyName("viewedTopics")
     private List<Integer> viewedTopics;
+
+    @PropertyName("userRating")
     private float userRating;
+
+    @PropertyName("completed")
     private boolean completed;
+
+    @PropertyName("completedAt")
     private Long completedAt;
+
+    @PropertyName("unenrolledAt")
     private Long unenrolledAt;
 
     // Default constructor (required for Firestore)
@@ -32,26 +51,32 @@ public class CourseProgress {
     }
 
     // Getters and Setters
+    @PropertyName("courseId")
     public int getCourseId() {
         return courseId;
     }
 
+    @PropertyName("courseId")
     public void setCourseId(int courseId) {
         this.courseId = courseId;
     }
 
+    @PropertyName("courseName")
     public String getCourseName() {
         return courseName;
     }
 
+    @PropertyName("courseName")
     public void setCourseName(String courseName) {
         this.courseName = courseName;
     }
 
+    @PropertyName("enrolledAt")
     public Long getEnrolledAt() {
         return enrolledAt;
     }
 
+    @PropertyName("enrolledAt")
     public void setEnrolledAt(Long enrolledAt) {
         this.enrolledAt = enrolledAt;
     }
@@ -60,42 +85,52 @@ public class CourseProgress {
         return enrolledAt != null ? enrolledAt : 0L;
     }
 
+    @PropertyName("currentlyEnrolled")
     public boolean isCurrentlyEnrolled() {
         return currentlyEnrolled;
     }
 
+    @PropertyName("currentlyEnrolled")
     public void setCurrentlyEnrolled(boolean currentlyEnrolled) {
         this.currentlyEnrolled = currentlyEnrolled;
     }
 
+    @PropertyName("viewedTopics")
     public List<Integer> getViewedTopics() {
         return viewedTopics;
     }
 
+    @PropertyName("viewedTopics")
     public void setViewedTopics(List<Integer> viewedTopics) {
         this.viewedTopics = viewedTopics;
     }
 
+    @PropertyName("userRating")
     public float getUserRating() {
         return userRating;
     }
 
+    @PropertyName("userRating")
     public void setUserRating(float userRating) {
         this.userRating = userRating;
     }
 
+    @PropertyName("completed")
     public boolean isCompleted() {
         return completed;
     }
 
+    @PropertyName("completed")
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
+    @PropertyName("completedAt")
     public Long getCompletedAt() {
         return completedAt;
     }
 
+    @PropertyName("completedAt")
     public void setCompletedAt(Long completedAt) {
         this.completedAt = completedAt;
     }
@@ -104,10 +139,12 @@ public class CourseProgress {
         return completedAt != null ? completedAt : 0L;
     }
 
+    @PropertyName("unenrolledAt")
     public Long getUnenrolledAt() {
         return unenrolledAt;
     }
 
+    @PropertyName("unenrolledAt")
     public void setUnenrolledAt(Long unenrolledAt) {
         this.unenrolledAt = unenrolledAt;
     }
