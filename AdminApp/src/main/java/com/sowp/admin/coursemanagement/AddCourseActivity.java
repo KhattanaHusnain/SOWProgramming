@@ -345,7 +345,6 @@ public class AddCourseActivity extends AppCompatActivity {
         course.put("description", getTextFromEditText(etDescription));
         course.put("outline", getTextFromEditText(etOutline));
         course.put("lectures", getIntegerFromEditText(etLectures));
-        course.put("members", getIntegerFromEditText(etMembers));
         course.put("noOfQuizzes", getIntegerFromEditText(etNoOfQuizzes));
         course.put("noOfAssignments", getIntegerFromEditText(etNoOfAssignments));
 
@@ -367,8 +366,6 @@ public class AddCourseActivity extends AppCompatActivity {
         course.put("createdAt", now);
         course.put("updatedAt", now);
 
-        // Default values
-        course.put("avgCourseRating", 0.0);
 
         db.collection("Course")
                 .document(docId)

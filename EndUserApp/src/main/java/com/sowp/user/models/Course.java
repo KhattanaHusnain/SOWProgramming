@@ -8,129 +8,98 @@ import com.google.firebase.database.PropertyName;
 
 import java.util.List;
 
-@Entity(tableName = "courses")
 public class Course {
 
-    @PrimaryKey
-    @ColumnInfo(name = "id")
+
     @PropertyName("id")
     private int id;
 
-    @ColumnInfo(name = "illustration")
     @PropertyName("illustration")
     private String illustration;
 
-    @ColumnInfo(name = "title")
     @PropertyName("title")
     private String title;
 
-    @ColumnInfo(name = "shortTitle")
     @PropertyName("shortTitle")
     private String shortTitle;
 
-    @ColumnInfo(name = "courseCode")
     @PropertyName("courseCode")
     private String courseCode;
 
-    @ColumnInfo(name = "instructor")
     @PropertyName("instructor")
     private String instructor;
 
-    @ColumnInfo(name = "members")
     @PropertyName("members")
     private int members;
 
-    @ColumnInfo(name = "description")
     @PropertyName("description")
     private String description;
 
-    @ColumnInfo(name = "duration")
     @PropertyName("duration")
     private String duration;
 
-    @ColumnInfo(name = "categoryArray")
     @PropertyName("categoryArray")
     private List<String> categoryArray;
 
-    @ColumnInfo(name = "departmentArray")
     @PropertyName("departmentArray")
     private List<String> departmentArray;
 
-    @ColumnInfo(name = "outline")
     @PropertyName("outline")
     private String outline;
 
-    @ColumnInfo(name = "createdAt")
     @PropertyName("createdAt")
     private long createdAt;
 
-    @ColumnInfo(name = "updatedAt")
     @PropertyName("updatedAt")
     private long updatedAt;
 
-    @ColumnInfo(name = "public")
     @PropertyName("public")
     private boolean isPublic;
 
-    @ColumnInfo(name = "lectures")
     @PropertyName("lectures")
     private int lectures;
 
-    @ColumnInfo(name = "completed")
     @PropertyName("completed")
     private boolean completed;
 
-    @ColumnInfo(name = "semester")
     @PropertyName("semester")
     private String semester;
 
-    @ColumnInfo(name = "tags")
     @PropertyName("tags")
     private List<String> tags;
 
-    @ColumnInfo(name = "preRequisite")
     @PropertyName("preRequisite")
     private List<String> preRequisite;
 
-    @ColumnInfo(name = "followUp")
     @PropertyName("followUp")
     private List<String> followUp;
 
-    @ColumnInfo(name = "creditHours")
     @PropertyName("creditHours")
     private int creditHours;
 
-    @ColumnInfo(name = "isLab")
     @PropertyName("isLab")
     private boolean isLab; // true for lab, false for theoretical
 
-    @ColumnInfo(name = "isComputer")
     @PropertyName("isComputer")
     private boolean isComputer; // true for computer-based, false for non-computer
 
-    @ColumnInfo(name = "language")
     @PropertyName("language")
     private String language;
 
-    @ColumnInfo(name = "noOfQuizzes")
     @PropertyName("noOfQuizzes")
     private int noOfQuizzes;
 
-    @ColumnInfo(name = "noOfAssignments")
     @PropertyName("noOfAssignments")
     private int noOfAssignments;
 
-    @ColumnInfo(name = "level")
     @PropertyName("level")
     private String level; // e.g., "Beginner", "Intermediate", "Advanced"
 
-    @ColumnInfo(name = "isPaid")
     @PropertyName("isPaid")
     private boolean isPaid;
 
-    @ColumnInfo(name = "avgCourseRating")
-    @PropertyName("avgCourseRating")
-    private double avgCourseRating;
+    @PropertyName("averageRating")
+    private double averageRating;
 
     // Default constructor
     @Ignore
@@ -145,7 +114,7 @@ public class Course {
                   String semester, List<String> tags, List<String> preRequisite,
                   List<String> followUp, int creditHours, boolean isLab, boolean isComputer,
                   String language, int noOfQuizzes, int noOfAssignments, String level,
-                  boolean isPaid, double avgCourseRating) {
+                  boolean isPaid, double averageRating) {
         this.id = id;
         this.illustration = illustration;
         this.title = title;
@@ -175,7 +144,7 @@ public class Course {
         this.noOfAssignments = noOfAssignments;
         this.level = level;
         this.isPaid = isPaid;
-        this.avgCourseRating = avgCourseRating;
+        this.averageRating = averageRating;
     }
 
     // Simplified constructor for basic course creation
@@ -199,7 +168,7 @@ public class Course {
         this.isLab = false;
         this.isComputer = false;
         this.isPaid = false;
-        this.avgCourseRating = 0.0;
+        this.averageRating = 0.0;
     }
 
     // Getters and Setters
@@ -464,13 +433,13 @@ public class Course {
         isPaid = paid;
     }
 
-    @PropertyName("avgCourseRating")
-    public double getAvgCourseRating() {
-        return avgCourseRating;
+    @PropertyName("averageRating")
+    public double getAverageRating() {
+        return averageRating;
     }
 
-    public void setAvgCourseRating(double avgCourseRating) {
-        this.avgCourseRating = avgCourseRating;
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
 
     // Progress method (keeping your existing logic)

@@ -119,7 +119,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             }
 
             if (ratingTextView != null) {
-                ratingTextView.setText(String.format(Locale.getDefault(), "%.1f", course.getAvgCourseRating()));
+                ratingTextView.setText(String.format(Locale.getDefault(), "%.1f", course.getAverageRating()));
             }
 
             courseCardView.setOnClickListener(v -> {
