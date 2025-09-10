@@ -91,15 +91,6 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         super.onViewCreated(view, savedInstanceState);
         getLifecycle().addObserver(this);
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(
-                getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
-                    }
-                }
-        );
     }
 
 

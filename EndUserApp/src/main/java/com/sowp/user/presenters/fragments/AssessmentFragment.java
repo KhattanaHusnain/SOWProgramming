@@ -71,15 +71,7 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
         super.onViewCreated(view, savedInstanceState);
         getLifecycle().addObserver(this);
         loadData();
-        requireActivity().getOnBackPressedDispatcher().addCallback(
-                getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
-                    }
-                }
-        );
+
     }
 
     @Override

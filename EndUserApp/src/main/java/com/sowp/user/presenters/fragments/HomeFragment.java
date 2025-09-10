@@ -105,27 +105,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         loadUserData();
         loadDashboardData();
         setupClickListeners();
-        requireActivity().getOnBackPressedDispatcher().addCallback(
-                getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-
-                            new AlertDialog.Builder(requireContext())
-                                    .setTitle("Exit App")
-                                    .setMessage("Do you really want to exit the app?")
-                                    .setPositiveButton("Exit", (dialog, which) -> {
-                                        requireActivity().finishAffinity();
-                                        // finishAffinity() closes all activities
-                                    })
-                                    .setNegativeButton("Cancel", (dialog, which) -> {
-                                        dialog.dismiss(); // just close dialog
-                                    })
-                                    .show();
-                    }
-                }
-        );
-
         return view;
     }
 

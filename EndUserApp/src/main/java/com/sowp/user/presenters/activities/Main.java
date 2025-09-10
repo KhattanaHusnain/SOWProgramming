@@ -216,4 +216,14 @@ public class Main extends AppCompatActivity {
 
         dialog.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(currentFragment instanceof HomeFragment) {
+            new AlertDialog.Builder(this).setTitle("Exit App").setMessage("Do you really want to exit the app?")
+                    .setPositiveButton("Exit",(dialog, which)->finishAffinity()).setNegativeButton("Cancel",(dialog,which)->dialog.dismiss());
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        }
+    }
 }
