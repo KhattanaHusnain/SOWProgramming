@@ -67,27 +67,27 @@
                         android:orientation="horizontal">
 
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="Full Name"
-                        app:boxStrokeWidth="1dp"
-                        app:boxStrokeColor="@color/primary"
-                        app:hintTextColor="@color/primary"
-                        app:boxBackgroundMode="outline">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/et_profile_name"
-                            android:layout_width="match_parent"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="User Name"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="#2C3E50"
-                            android:gravity="center" />
+                            android:layout_weight="1"
+                            android:hint="Full Name"
+                            app:boxStrokeWidth="1dp"
+                            app:boxStrokeColor="@color/primary"
+                            app:hintTextColor="@color/primary"
+                            app:boxBackgroundMode="outline">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_profile_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="User Name"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="#2C3E50"
+                                android:gravity="center" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
 
                         <ImageView
                             android:id="@+id/iv_profile_verification"
@@ -131,7 +131,8 @@
                         android:minWidth="120dp"
                         android:text="User"
                         android:textSize="14sp"
-                        android:textColor="@color/primary"/>
+                        android:textColor="@color/primary"
+                        android:inputType="none"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -202,7 +203,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
@@ -275,15 +275,17 @@
                         app:hintTextColor="@color/primary"
                         app:startIconDrawable="@drawable/ic_school"
                         app:startIconTint="#27AE60"
-                        app:boxBackgroundMode="outline">
+                        app:boxBackgroundMode="outline"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/et_degree"
+                        <AutoCompleteTextView
+                            android:id="@+id/spinner_degree"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Not specified"
                             android:textSize="16sp"
-                            android:textColor="#2C3E50" />
+                            android:textColor="#2C3E50"
+                            android:inputType="none" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -305,16 +307,17 @@
                         app:hintTextColor="@color/primary"
                         app:startIconDrawable="@drawable/ic_book"
                         app:startIconTint="#27AE60"
-                        app:boxBackgroundMode="outline">
+                        app:boxBackgroundMode="outline"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/et_semester"
+                        <AutoCompleteTextView
+                            android:id="@+id/spinner_semester"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Not specified"
                             android:textSize="16sp"
                             android:textColor="#2C3E50"
-                            android:inputType="number" />
+                            android:inputType="none" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

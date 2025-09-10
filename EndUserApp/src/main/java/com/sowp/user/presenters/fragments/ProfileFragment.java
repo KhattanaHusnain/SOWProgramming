@@ -19,7 +19,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.sowp.user.R;
 import com.sowp.user.models.User;
+import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
 import com.sowp.user.presenters.activities.Login;
+import com.sowp.user.presenters.activities.QuizHistoryActivity;
 import com.sowp.user.repositories.UserRepository;
 import com.sowp.user.services.ImageService;
 import com.sowp.user.services.UserAuthenticationUtils;
@@ -186,11 +188,13 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
 
     private void setupClickListeners() {
         assignmentHistory.setOnClickListener(view -> {
-            // TODO: Navigate to assignment history
+            Intent intent = new Intent(getContext(), AssignmentHistoryActivity.class);
+            startActivity(intent);
         });
 
         quizHistory.setOnClickListener(view -> {
-            // TODO: Navigate to quiz history
+            Intent intent = new Intent(getContext(), QuizHistoryActivity.class);
+            startActivity(intent);
         });
 
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {

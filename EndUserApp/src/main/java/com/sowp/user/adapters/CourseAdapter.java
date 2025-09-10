@@ -74,7 +74,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         private final TextView lecturesTextView;
         private final TextView membersTextView;
         private final TextView createdAtTextView;
-        private final TextView publicStatusTextView;
         private final TextView instructorTextView;
         private final TextView levelTextView;
         private final TextView ratingTextView;
@@ -90,7 +89,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             lecturesTextView = itemView.findViewById(R.id.lecturesTextView);
             membersTextView = itemView.findViewById(R.id.membersTextView);
             createdAtTextView = itemView.findViewById(R.id.createdAtTextView);
-            publicStatusTextView = itemView.findViewById(R.id.publicStatusTextView);
             instructorTextView = itemView.findViewById(R.id.instructorTextView);
             levelTextView = itemView.findViewById(R.id.levelTextView);
             ratingTextView = itemView.findViewById(R.id.ratingTextView);
@@ -108,7 +106,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             lecturesTextView.setText(formatLectures(course));
             membersTextView.setText(formatMembers(course));
             createdAtTextView.setText(formatCreatedDate(course));
-            publicStatusTextView.setText(getVisibilityStatus(course));
 
             if (instructorTextView != null) {
                 instructorTextView.setText(course.getInstructor());
@@ -180,8 +177,5 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             }
         }
 
-        private String getVisibilityStatus(Course course) {
-            return course.isPublic() ? "PUBLIC" : "PRIVATE";
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.sowp.user.models;
+package com.sowp.admin;
 
 import com.google.firebase.firestore.PropertyName;
 import java.util.concurrent.TimeUnit;

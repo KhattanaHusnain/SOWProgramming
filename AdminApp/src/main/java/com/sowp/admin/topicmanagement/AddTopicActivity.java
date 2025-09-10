@@ -17,8 +17,10 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.sowp.admin.NotificationHelper;
 import com.sowp.admin.R;
 import com.sowp.admin.coursemanagement.Course;
 
@@ -40,7 +42,6 @@ public class AddTopicActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private List<Course> courseList;
     private Course selectedCourse;
-    private List<String> availableCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,6 @@ public class AddTopicActivity extends AppCompatActivity {
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
         courseList = new ArrayList<>();
-        availableCategories = new ArrayList<>();
 
         // Initialize views
         initViews();
@@ -58,7 +58,7 @@ public class AddTopicActivity extends AppCompatActivity {
         // Load courses from Firestore
         loadCourses();
 
-        // Set click listener
+        // Set click listeners
         btnBack.setOnClickListener(v -> finish());
         btnAddTopic.setOnClickListener(v -> addTopicToFirestore());
     }
@@ -91,7 +91,7 @@ public class AddTopicActivity extends AppCompatActivity {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Course course = document.toObject(Course.class);
-                            course.setId(Integer.parseInt(document.getId())); // Assuming document ID is courseId
+                            course.setId(Integer.parseInt(document.getId()));
                             courseList.add(course);
                             courseNames.add(course.getTitle() + " (" + course.getCourseCode() + ")");
                         }
@@ -117,14 +117,10 @@ public class AddTopicActivity extends AppCompatActivity {
 
     private void loadCategoriesForCourse(Course course) {
         chipGroupCategories.removeAllViews();
-        availableCategories.clear();
 
         if (course.getTopicCategories() != null) {
-            availableCategories.addAll(course.getTopicCategories());
-
             for (String category : course.getTopicCategories()) {
                 Chip chip = new Chip(this);
-                Toast.makeText(this, "Category: " + category, Toast.LENGTH_LONG).show();
                 chip.setText(category);
                 chip.setCheckable(true);
                 chip.setClickable(true);
@@ -138,9 +134,6 @@ public class AddTopicActivity extends AppCompatActivity {
 
         showProgressBar(true);
 
-        long now = System.currentTimeMillis();
-
-        // Get next topic ID (you might want to implement a different strategy)
         getNextTopicId(selectedCourse.getId(), (nextTopicId) -> {
             // Prepare topic data
             Map<String, Object> topicData = new HashMap<>();
@@ -150,8 +143,8 @@ public class AddTopicActivity extends AppCompatActivity {
             topicData.put("description", getTextFromEditText(etDescription));
             topicData.put("content", getTextFromEditText(etContent));
             topicData.put("videoID", getTextFromEditText(etVideoId));
-            topicData.put("createdAt", now);
-            topicData.put("updatedAt", now);
+            topicData.put("createdAt", System.currentTimeMillis());
+            topicData.put("updatedAt", System.currentTimeMillis());
             topicData.put("isPublic", switchIsPublic.isChecked());
             topicData.put("tags", getTextFromEditText(etTags));
             topicData.put("categories", getSelectedCategories());
@@ -159,44 +152,79 @@ public class AddTopicActivity extends AppCompatActivity {
             topicData.put("semester", getTextFromEditText(etSemester));
             topicData.put("orderIndex", nextTopicId);
 
-            // Add topic to Firestore
+            // Add topic to Firestore and increment lectures count
             db.collection("Course")
                     .document(String.valueOf(selectedCourse.getId()))
                     .collection("Topics")
                     .document(String.valueOf(nextTopicId))
                     .set(topicData)
-                    .addOnCompleteListener(task -> {
+                    .addOnSuccessListener(aVoid -> {
+                        NotificationHelper.addNotification("New Topic added in Course: " + selectedCourse.getTitle());
+                        incrementLecturesCount();
+                    })
+                    .addOnFailureListener(e -> {
                         showProgressBar(false);
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Topic added successfully!", Toast.LENGTH_LONG).show();
-                            clearForm();
-                        } else {
-                            Exception e = task.getException();
-                            Toast.makeText(this, "Error adding topic: " + (e != null ? e.getMessage() : "Unknown error"),
-                                    Toast.LENGTH_LONG).show();
-                            android.util.Log.e("AddTopic", "Firestore write failed", e);
-                        }
+                        Toast.makeText(this, "Error adding topic: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        android.util.Log.e("AddTopic", "Firestore write failed", e);
                     });
         });
+    }
+
+    private void incrementLecturesCount() {
+        db.collection("Course")
+                .document(String.valueOf(selectedCourse.getId()))
+                .update("lectures", FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> {
+                    showProgressBar(false);
+                    Toast.makeText(this, "Topic added successfully!", Toast.LENGTH_LONG).show();
+                    clearForm();
+                })
+                .addOnFailureListener(e -> {
+                    showProgressBar(false);
+                    Toast.makeText(this, "Topic added but failed to update lecture count: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                    android.util.Log.e("AddTopic", "Failed to increment lectures count", e);
+                    clearForm();
+                });
     }
 
     private void getNextTopicId(int courseId, OnTopicIdCallback callback) {
         db.collection("Course")
                 .document(String.valueOf(courseId))
                 .collection("Topics")
-                .orderBy("orderIndex", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .orderBy("topicId", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .limit(1)
                 .get()
                 .addOnCompleteListener(task -> {
-                    int nextId = 1; // Default starting ID
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                    int nextId = 1;
+
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
                         DocumentSnapshot lastTopic = task.getResult().getDocuments().get(0);
-                        Long lastTopicId = lastTopic.getLong("orderIndex");
-                        if (lastTopicId != null) {
-                            nextId = lastTopicId.intValue() + 1;
+                        Object topicIdObj = lastTopic.get("topicId");
+
+                        if (topicIdObj instanceof Long) {
+                            nextId = ((Long) topicIdObj).intValue() + 1;
+                        } else if (topicIdObj instanceof Integer) {
+                            nextId = (Integer) topicIdObj + 1;
+                        } else if (topicIdObj instanceof String) {
+                            try {
+                                nextId = Integer.parseInt((String) topicIdObj) + 1;
+                            } catch (NumberFormatException e) {
+                                Long orderIndex = lastTopic.getLong("orderIndex");
+                                nextId = (orderIndex != null) ? orderIndex.intValue() + 1 : 1;
+                            }
+                        } else {
+                            Long orderIndex = lastTopic.getLong("orderIndex");
+                            nextId = (orderIndex != null) ? orderIndex.intValue() + 1 : 1;
                         }
                     }
+
                     callback.onTopicId(nextId);
+                })
+                .addOnFailureListener(e -> {
+                    android.util.Log.e("AddTopic", "Failed to get next topic ID", e);
+                    Toast.makeText(AddTopicActivity.this, "Error getting topic ID, using default", Toast.LENGTH_SHORT).show();
+                    callback.onTopicId(1);
                 });
     }
 
@@ -249,11 +277,6 @@ public class AddTopicActivity extends AppCompatActivity {
         return editText.getText() != null ? editText.getText().toString().trim() : "";
     }
 
-    private int getIntegerFromEditText(TextInputEditText editText) {
-        String text = getTextFromEditText(editText);
-        return TextUtils.isEmpty(text) ? 0 : Integer.parseInt(text);
-    }
-
     private void showProgressBar(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         btnAddTopic.setEnabled(!show);
@@ -270,6 +293,5 @@ public class AddTopicActivity extends AppCompatActivity {
         chipGroupCategories.removeAllViews();
         switchIsPublic.setChecked(true);
         selectedCourse = null;
-        availableCategories.clear();
     }
 }

@@ -246,20 +246,7 @@
                 android:textSize="11sp"
                 tools:text="Created on Dec 15, 2024" />
 
-            <!-- Public Status Badge -->
-            <TextView
-                android:id="@+id/publicStatusTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/visibility_badge_bg"
-                android:paddingStart="8dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
-                android:textColor="@color/info"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                tools:text="PUBLIC" />
+
 
         </LinearLayout>
 

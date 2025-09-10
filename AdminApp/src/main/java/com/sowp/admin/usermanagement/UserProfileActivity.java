@@ -44,8 +44,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     // UI Components
     private ImageView ivProfileLarge, ivProfileVerification;
-    private TextInputEditText etProfileName, etBirthdate, etDegree, etSemester;
-    private AutoCompleteTextView spinnerRole, spinnerGender;
+    private TextInputEditText etProfileName, etBirthdate;
+    private AutoCompleteTextView spinnerRole, spinnerGender, spinnerDegree, spinnerSemester;
     private TextView tvProfileEmail;
     private TextView tvEnrolledCount, tvAssignmentAvg, tvQuizAvg;
     private TextView tvCreatedDate;
@@ -68,7 +68,6 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
 
         // Get user email from intent
         userEmail = getIntent().getStringExtra("USER_EMAIL");
@@ -100,8 +99,8 @@ public class UserProfileActivity extends AppCompatActivity {
         spinnerGender = findViewById(R.id.spinner_gender);
 
         // Academic information
-        etDegree = findViewById(R.id.et_degree);
-        etSemester = findViewById(R.id.et_semester);
+        spinnerDegree = findViewById(R.id.spinner_degree);
+        spinnerSemester = findViewById(R.id.spinner_semester);
 
         // Statistics
         tvEnrolledCount = findViewById(R.id.tv_enrolled_count);
@@ -170,6 +169,41 @@ public class UserProfileActivity extends AppCompatActivity {
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, genders);
         spinnerGender.setAdapter(genderAdapter);
+
+        // Degree dropdown
+        String[] degrees = {
+                "Computer Science",
+                "Information Technology",
+                "Software Engineering",
+                "Computer Engineering",
+                "Data Science",
+                "Cybersecurity",
+                "Artificial Intelligence",
+                "Web Development",
+                "Mobile App Development",
+                "Information Systems",
+                "Computer Networks",
+                "Game Development"
+        };
+        ArrayAdapter<String> degreeAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, degrees);
+        spinnerDegree.setAdapter(degreeAdapter);
+
+        // Semester dropdown
+        String[] semesters = {
+                "1st Semester",
+                "2nd Semester",
+                "3rd Semester",
+                "4th Semester",
+                "5th Semester",
+                "6th Semester",
+                "7th Semester",
+                "8th Semester",
+                "Graduated"
+        };
+        ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, semesters);
+        spinnerSemester.setAdapter(semesterAdapter);
     }
 
     private void showFullScreenImage() {
@@ -256,8 +290,8 @@ public class UserProfileActivity extends AppCompatActivity {
         String updatedRole = spinnerRole.getText().toString().trim();
         String updatedBirthdate = etBirthdate.getText().toString().trim();
         String updatedGender = spinnerGender.getText().toString().trim();
-        String updatedDegree = etDegree.getText().toString().trim();
-        String updatedSemester = etSemester.getText().toString().trim();
+        String updatedDegree = spinnerDegree.getText().toString().trim();
+        String updatedSemester = spinnerSemester.getText().toString().trim();
 
         // Validate required fields
         if (updatedName.isEmpty()) {
@@ -273,14 +307,8 @@ public class UserProfileActivity extends AppCompatActivity {
         updates.put("role", updatedRole);
         updates.put("birthdate", updatedBirthdate.equals("Not provided") ? "" : updatedBirthdate);
         updates.put("gender", updatedGender.equals("Not specified") ? "" : updatedGender);
-        updates.put("degree", updatedDegree.equals("Not specified") ? "" : updatedDegree);
-
-        // Handle semester - store as string to match User model
-        if (!updatedSemester.equals("Not specified") && !updatedSemester.isEmpty()) {
-            updates.put("semester", updatedSemester);
-        } else {
-            updates.put("semester", "");
-        }
+        updates.put("degree", updatedDegree);
+        updates.put("semester", updatedSemester);
 
         // Add image if changed
         if (selectedImageBase64 != null) {
@@ -327,13 +355,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 currentUser.setDegree((String) updates.get("degree"));
             }
             if (updates.containsKey("semester")) {
-                // Convert to string since User model expects string
-                Object semesterObj = updates.get("semester");
-                if (semesterObj instanceof Integer) {
-                    currentUser.setSemester(String.valueOf(semesterObj));
-                } else if (semesterObj instanceof String) {
-                    currentUser.setSemester((String) semesterObj);
-                }
+                currentUser.setSemester((String) updates.get("semester"));
             }
             if (updates.containsKey("photo")) {
                 currentUser.setPhoto((String) updates.get("photo"));
@@ -383,8 +405,8 @@ public class UserProfileActivity extends AppCompatActivity {
         spinnerGender.setText(currentUser.getDisplayGender(), false);
 
         // Academic information
-        etDegree.setText(currentUser.getDisplayDegree());
-        etSemester.setText(currentUser.getDisplaySemester());
+        spinnerDegree.setText(currentUser.getDisplayDegree(), false);
+        spinnerSemester.setText(currentUser.getDisplaySemester(), false);
 
         // Statistics
         tvEnrolledCount.setText(String.valueOf(currentUser.getEnrolledCoursesCount()));

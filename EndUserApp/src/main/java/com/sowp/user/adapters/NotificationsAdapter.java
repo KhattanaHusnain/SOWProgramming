@@ -42,7 +42,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         Notification notification = notifications.get(position);
 
         // Set notification ID
-        holder.tvNotificationId.setText("Notification #" + notification.getNotificationId());
+        holder.tvNotificationId.setText("Notification #" + notification.getId());
 
         // Set content
         holder.tvNotificationContent.setText(notification.getContent());

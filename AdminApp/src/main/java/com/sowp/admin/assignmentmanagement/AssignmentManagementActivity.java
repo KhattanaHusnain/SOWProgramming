@@ -16,99 +16,66 @@ public class AssignmentManagementActivity extends AppCompatActivity {
 
     private ImageView btnBack;
     private LinearLayout cardViewAssignments;
-    private LinearLayout cardUploadAssignmenmt;
+    private LinearLayout cardUploadAssignment;
     private LinearLayout cardViewUncheckedAssignment;
-    private TextView txtTotalQuizzes;
+    private TextView txtTotalAssignments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_management);
 
-        // Initialize views
         initializeViews();
-
-        // Set click listeners
         setClickListeners();
-
-        // Load quiz statistics
-        loadQuizStatistics();
+        loadAssignmentStatistics();
     }
 
     private void initializeViews() {
         btnBack = findViewById(R.id.btnBack);
         cardViewAssignments = findViewById(R.id.cardViewAssignments);
-        cardUploadAssignmenmt = findViewById(R.id.cardUploadAssignment);
+        cardUploadAssignment = findViewById(R.id.cardUploadAssignment);
         cardViewUncheckedAssignment = findViewById(R.id.cardViewUncheckedAssignment);
-        txtTotalQuizzes = findViewById(R.id.txtTotalQuizzes);
+        txtTotalAssignments = findViewById(R.id.txtTotalAssignments);
     }
 
     private void setClickListeners() {
+        btnBack.setOnClickListener(v -> onBackPressed());
 
-        // Back button click listener
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
+        cardViewAssignments.setOnClickListener(v -> {
+            Intent intent = new Intent(AssignmentManagementActivity.this, ViewCoursesActivity.class);
+            intent.putExtra("cameForAssignments", true);
+            startActivity(intent);
         });
 
-        // View Quizzes List card click listener
-        cardViewAssignments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AssignmentManagementActivity.this, ViewCoursesActivity.class);
-                intent.putExtra("cameForAssignments", true);
-                startActivity(intent);
-            }
+        cardUploadAssignment.setOnClickListener(v -> {
+            Intent intent = new Intent(AssignmentManagementActivity.this, UploadAssignmentActivity.class);
+            startActivity(intent);
         });
 
-        // Upload New Quiz card click listener
-        cardUploadAssignmenmt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AssignmentManagementActivity.this, UploadAssignmentActivity.class);
-                startActivity(intent);
-            }
-        });
-        // View Unchecked Assignments card click listener
-        cardViewUncheckedAssignment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AssignmentManagementActivity.this, ViewUncheckedAssignmentsActivity.class);
-                startActivity(intent);
-            }
+        cardViewUncheckedAssignment.setOnClickListener(v -> {
+            Intent intent = new Intent(AssignmentManagementActivity.this, ViewUncheckedAssignmentsActivity.class);
+            startActivity(intent);
         });
     }
 
-    private void loadQuizStatistics() {
+    private void loadAssignmentStatistics() {
         // This method would typically load data from a database or API
         // For now, we'll use dummy data
-
-        // Simulate loading quiz statistics
-        int totalQuizzes = getTotalQuizzesCount();
-        int activeQuizzes = getActiveQuizzesCount();
+        int totalAssignments = getTotalAssignmentsCount();
 
         // Update UI with the statistics
-        txtTotalQuizzes.setText(String.valueOf(totalQuizzes));
+        txtTotalAssignments.setText(String.valueOf(totalAssignments));
     }
 
-    // Simulate getting total quizzes count from database/API
-    private int getTotalQuizzesCount() {
+    // Simulate getting total assignments count from database/API
+    private int getTotalAssignmentsCount() {
         // TODO: Replace with actual database query or API call
         return 12; // Dummy data
-    }
-
-    // Simulate getting active quizzes count from database/API
-    private int getActiveQuizzesCount() {
-        // TODO: Replace with actual database query or API call
-        return 8; // Dummy data
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Optional: Add custom back navigation logic here
         finish();
     }
 
@@ -116,7 +83,6 @@ public class AssignmentManagementActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Refresh statistics when returning to this activity
-        loadQuizStatistics();
+        loadAssignmentStatistics();
     }
-
 }

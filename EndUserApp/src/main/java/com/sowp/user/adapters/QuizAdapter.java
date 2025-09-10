@@ -63,7 +63,6 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
         private final TextView tvTotalQuestions;
         private final TextView tvPassingScore;
         private final TextView tvQuizLevel;
-        private final TextView tvQuizStatus;
         private final CardView quizCardView;
 
         public QuizViewHolder(@NonNull View itemView) {
@@ -75,7 +74,6 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
             tvTotalQuestions = itemView.findViewById(R.id.tvTotalQuestions);
             tvPassingScore = itemView.findViewById(R.id.tvPassingScore);
             tvQuizLevel = itemView.findViewById(R.id.tvQuizLevel);
-            tvQuizStatus = itemView.findViewById(R.id.tvQuizStatus);
             quizCardView = itemView.findViewById(R.id.quizCardView);
         }
 
@@ -88,7 +86,6 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
             tvTotalQuestions.setText(String.valueOf(quiz.getTotalQuestions()));
             tvPassingScore.setText(quiz.getPassingScore() + "%");
             tvQuizLevel.setText(quiz.getLevel() != null ? quiz.getLevel() : "Beginner");
-            tvQuizStatus.setText(quiz.isActive() ? "ACTIVE" : "INACTIVE");
 
             // Set course name (you'll need to fetch this from courseRepository)
             tvCourseName.setText("Course " + quiz.getCourseId());

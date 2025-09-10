@@ -143,6 +143,19 @@
     <string name="learning_buddies">Learning Buddies</string>
     <string name="find_study_partners">Find study partners</string>
     <string name="invite_friends">Invite Friends</string>
+    <string name="assignment_management">Assignment Management</string>
+    <string name="manage_assignments_efficiently">Manage your assignments efficiently</string>
+    <string name="total_assignments">Total Assignments</string>
+    <string name="view_assignment_list">1. View Assignment List</string>
+    <string name="browse_manage_assignments">Browse and manage existing assignments</string>
+    <string name="upload_new_assignment">2. Upload a New Assignment</string>
+    <string name="create_upload_assignment_content">Create and upload new assignment content</string>
+    <string name="view_unchecked_assignments">3. View Unchecked Assignments</string>
+    <string name="view_unchecked_grade_users">View unchecked assignments and grade users</string>
+    <string name="view_assignments">View Assignments</string>
+    <string name="upload_assignment">Upload Assignment</string>
+    <string name="unchecked_assignments">Unchecked Assignments</string>
+    <string name="navigate_forward">Navigate Forward</string>
 
     <!-- Account Settings Section -->
     <string name="privacy_settings">Privacy Settings</string>

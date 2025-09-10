@@ -23,6 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.sowp.admin.NotificationHelper;
 import com.sowp.admin.R;
 
 import java.io.ByteArrayOutputStream;
@@ -374,6 +375,7 @@ public class AddCourseActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     showProgressBar(false);
                     if (task.isSuccessful()) {
+                        NotificationHelper.addNotification("New Course Added: " + course.get("title"));
                         Toast.makeText(this, "Course added successfully!", Toast.LENGTH_LONG).show();
                         clearForm();
                     } else {

@@ -318,25 +318,4 @@ public class ViewNotificationsActivity extends AppCompatActivity {
         return true;
     }
 
-    // Method to manually add a notification (for testing purposes)
-    public void addTestNotification() {
-        Notification testNotification = new Notification(
-                (int) (System.currentTimeMillis() % 100000),
-                (int) (Math.random() * 1000),
-                "This is a test notification with some content to display",
-                System.currentTimeMillis()
-        );
-
-        firestore.collection("Notifications")
-                .document(String.valueOf(testNotification.getId()))
-                .set(testNotification)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Test notification added successfully");
-                    Toast.makeText(this, "Test notification added", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error adding test notification", e);
-                    Toast.makeText(this, "Error adding test notification", Toast.LENGTH_SHORT).show();
-                });
-    }
 }

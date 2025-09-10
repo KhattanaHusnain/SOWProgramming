@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,8 +21,10 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.sowp.admin.NotificationHelper;
 import com.sowp.admin.R;
 import com.sowp.admin.coursemanagement.Course;
 
@@ -51,11 +52,9 @@ public class UploadQuizActivity extends AppCompatActivity {
     private List<String> selectedCategories;
     private FirebaseFirestore firestore;
 
-    // Semester options
+    // Options arrays
     private String[] semesterOptions = {"1st Semester", "2nd Semester", "3rd Semester", "4th Semester",
             "5th Semester", "6th Semester", "7th Semester", "8th Semester"};
-
-    // Level options
     private String[] levelOptions = {"Beginner", "Intermediate", "Advanced", "Expert"};
 
     @Override
@@ -69,17 +68,10 @@ public class UploadQuizActivity extends AppCompatActivity {
         selectedCategories = new ArrayList<>();
         firestore = FirebaseFirestore.getInstance();
 
-        // Initialize views
         initializeViews();
-
-        // Set click listeners
         setClickListeners();
-
-        // Load courses from Firebase
-        loadCoursesFromFirebase();
-
-        // Setup spinners
         setupSpinners();
+        loadCoursesFromFirebase();
     }
 
     private void initializeViews() {
@@ -98,13 +90,8 @@ public class UploadQuizActivity extends AppCompatActivity {
     }
 
     private void setClickListeners() {
-        // Back button
         btnBack.setOnClickListener(v -> finish());
-
-        // Add question button
         btnAddQuestion.setOnClickListener(v -> showAddQuestionDialog());
-
-        // Upload quiz button
         btnUploadQuiz.setOnClickListener(v -> uploadQuiz());
     }
 
@@ -114,7 +101,6 @@ public class UploadQuizActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, semesterOptions);
         semesterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSemester.setAdapter(semesterAdapter);
-
         spinnerSemester.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -130,7 +116,6 @@ public class UploadQuizActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, levelOptions);
         levelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLevel.setAdapter(levelAdapter);
-
         spinnerLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -179,7 +164,7 @@ public class UploadQuizActivity extends AppCompatActivity {
         spinnerCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) { // Skip "Select a course" option
+                if (position > 0) {
                     selectedCourse = coursesList.get(position - 1);
                     loadCategoriesForCourse();
                 } else {
@@ -342,15 +327,6 @@ public class UploadQuizActivity extends AppCompatActivity {
         return questionView;
     }
 
-    private void saveDraft() {
-        if (!validateBasicQuizData()) {
-            return;
-        }
-
-        showToast("Quiz saved as draft");
-        // TODO: Implement actual save functionality for drafts
-    }
-
     private void uploadQuiz() {
         if (!validateCompleteQuizData()) {
             return;
@@ -360,13 +336,17 @@ public class UploadQuizActivity extends AppCompatActivity {
         uploadQuizToFirebase(quiz);
     }
 
-    private boolean validateBasicQuizData() {
+    private boolean validateCompleteQuizData() {
         if (selectedCourse == null) {
             showToast("Please select a course");
             return false;
         }
         if (selectedSemester == null) {
             showToast("Please select a semester");
+            return false;
+        }
+        if (selectedLevel == null) {
+            showToast("Please select quiz level");
             return false;
         }
         if (etQuizTitle.getText().toString().trim().isEmpty()) {
@@ -379,25 +359,11 @@ public class UploadQuizActivity extends AppCompatActivity {
             etDescription.requestFocus();
             return false;
         }
-        return true;
-    }
-
-    private boolean validateCompleteQuizData() {
-        if (!validateBasicQuizData()) {
-            return false;
-        }
-
-        if (selectedLevel == null) {
-            showToast("Please select quiz level");
-            return false;
-        }
-
         if (etPassingScore.getText().toString().trim().isEmpty()) {
             showToast("Passing score is required");
             etPassingScore.requestFocus();
             return false;
         }
-
         if (questionsList.isEmpty()) {
             showToast("At least one question is required");
             return false;
@@ -426,7 +392,6 @@ public class UploadQuizActivity extends AppCompatActivity {
     private void uploadQuizToFirebase(Quiz quiz) {
         showToast("Uploading quiz...");
 
-        // First get the next quiz ID for this course
         getNextQuizId(selectedCourse.getId(), nextQuizId -> {
             quiz.setQuizId(nextQuizId);
 
@@ -465,14 +430,34 @@ public class UploadQuizActivity extends AppCompatActivity {
         firestore.collection("Course")
                 .document(String.valueOf(courseId))
                 .collection("Quizzes")
+                .orderBy("quizId", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(1)
                 .get()
                 .addOnCompleteListener(task -> {
                     int nextId = 1;
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        nextId = querySnapshot.size() + 1;
+
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        DocumentSnapshot lastDocument = task.getResult().getDocuments().get(0);
+                        Object quizIdObj = lastDocument.get("quizId");
+
+                        if (quizIdObj instanceof Long) {
+                            nextId = ((Long) quizIdObj).intValue() + 1;
+                        } else if (quizIdObj instanceof Integer) {
+                            nextId = (Integer) quizIdObj + 1;
+                        } else if (quizIdObj instanceof String) {
+                            try {
+                                nextId = Integer.parseInt((String) quizIdObj) + 1;
+                            } catch (NumberFormatException e) {
+                                nextId = 1;
+                            }
+                        }
                     }
+
                     callback.onCallback(nextId);
+                })
+                .addOnFailureListener(e -> {
+                    showToast("Error getting next quiz ID, using default: " + e.getMessage());
+                    callback.onCallback(1);
                 });
     }
 
@@ -499,8 +484,8 @@ public class UploadQuizActivity extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> {
                         uploadedCount[0]++;
                         if (uploadedCount[0] == totalQuestions) {
-                            showToast("Quiz uploaded successfully!");
-                            finish();
+                            NotificationHelper.addNotification("New Quiz added in Course: " + selectedCourse.getTitle());
+                            incrementQuizCount();
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -509,11 +494,25 @@ public class UploadQuizActivity extends AppCompatActivity {
         }
     }
 
+    private void incrementQuizCount() {
+        firestore.collection("Course")
+                .document(String.valueOf(selectedCourse.getId()))
+                .update("noOfQuizzes", FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> {
+                    showToast("Quiz uploaded successfully!");
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    showToast("Quiz uploaded but failed to update quiz count: " + e.getMessage());
+                    android.util.Log.e("UploadQuiz", "Failed to increment quiz count", e);
+                    finish();
+                });
+    }
+
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    // Callback interface for getting next quiz ID
     private interface OnQuizIdCallback {
         void onCallback(int nextId);
     }
