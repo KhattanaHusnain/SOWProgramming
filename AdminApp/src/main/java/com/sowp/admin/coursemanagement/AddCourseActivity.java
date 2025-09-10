@@ -136,6 +136,7 @@ public class AddCourseActivity extends AppCompatActivity {
             byte[] imageBytes = outputStream.toByteArray();
             base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
+            assert inputStream != null;
             inputStream.close();
             outputStream.close();
 
