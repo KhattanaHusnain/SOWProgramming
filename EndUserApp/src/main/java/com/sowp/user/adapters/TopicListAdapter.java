@@ -183,7 +183,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
             if (courseId <= 0) return;
 
             // Update course progress
-            userRepository.addViewedTopicToCourseProgress(courseId, topicId, new UserRepository.UserCallback() {
+            userRepository.addViewedTopic(courseId, topicId, new UserRepository.UserCallback() {
                 @Override
                 public void onSuccess(User user) {
                     // Progress updated successfully
