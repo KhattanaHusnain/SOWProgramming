@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import com.sowp.user.R;
 import com.sowp.user.adapters.CourseAdapter;
 import com.sowp.user.models.Course;
 import com.sowp.user.models.User;
+import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.presenters.activities.ViewAssignmentsActivity;
 import com.sowp.user.presenters.activities.ViewQuizzesActivity;
 import com.sowp.user.repositories.CourseRepository;
@@ -69,6 +71,15 @@ public class AssessmentFragment extends Fragment implements CourseAdapter.OnCour
         super.onViewCreated(view, savedInstanceState);
         getLifecycle().addObserver(this);
         loadData();
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                    }
+                }
+        );
     }
 
     @Override

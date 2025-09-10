@@ -1,6 +1,8 @@
 package com.sowp.user.presenters.fragments;
 
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,7 @@ import com.sowp.user.models.ChatMessage;
 import com.sowp.user.R;
 import com.sowp.user.adapters.ChatAdapter;
 import com.sowp.user.models.User;
+import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.repositories.MessageRepository;
 import com.sowp.user.repositories.UserRepository;
 import com.sowp.user.services.ProfanityFilter;
@@ -84,6 +87,22 @@ public class ChatFragment extends Fragment implements
         });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getLifecycle().addObserver(this);
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                    }
+                }
+        );
     }
 
     @Override

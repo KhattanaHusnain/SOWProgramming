@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -28,6 +29,7 @@ import com.sowp.user.adapters.CourseAdapter;
 import com.sowp.user.R;
 import com.sowp.user.models.Course;
 import com.sowp.user.presenters.activities.CourseDescriptionActivity;
+import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.repositories.CourseRepository;
 
 import java.util.ArrayList;
@@ -80,6 +82,15 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         setupRecyclerView();
         setupSearchAndFilters();
         loadCourses();
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                    }
+                }
+        );
     }
 
     @Override

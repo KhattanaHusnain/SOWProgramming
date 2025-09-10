@@ -106,6 +106,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return view;
     }
 
+
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onStart(owner);

@@ -58,6 +58,7 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
 
     public static class QuizViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvQuizTitle;
+        private final TextView tvQuizIcon;
         private final TextView tvCourseName;
         private final TextView tvQuizDescription;
         private final TextView tvTotalQuestions;
@@ -69,6 +70,7 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
             super(itemView);
 
             tvQuizTitle = itemView.findViewById(R.id.tvQuizTitle);
+            tvQuizIcon = itemView.findViewById(R.id.tvQuizIcon);
             tvCourseName = itemView.findViewById(R.id.tvCourseName);
             tvQuizDescription = itemView.findViewById(R.id.tvQuizDescription);
             tvTotalQuestions = itemView.findViewById(R.id.tvTotalQuestions);
@@ -82,6 +84,7 @@ public class QuizAdapter extends RecyclerView.Adapter<QuizAdapter.QuizViewHolder
 
             // Populate quiz data
             tvQuizTitle.setText(quiz.getTitle() != null ? quiz.getTitle() : "Untitled Quiz");
+            tvQuizIcon.setText( String.valueOf(quiz.getQuizId()));
             tvQuizDescription.setText(quiz.getDescription() != null ? quiz.getDescription() : "No description available");
             tvTotalQuestions.setText(String.valueOf(quiz.getTotalQuestions()));
             tvPassingScore.setText(quiz.getPassingScore() + "%");

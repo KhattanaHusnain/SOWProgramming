@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import com.sowp.user.R;
 import com.sowp.user.models.User;
 import com.sowp.user.presenters.activities.AssignmentHistoryActivity;
 import com.sowp.user.presenters.activities.Login;
+import com.sowp.user.presenters.activities.Main;
 import com.sowp.user.presenters.activities.QuizHistoryActivity;
 import com.sowp.user.repositories.UserRepository;
 import com.sowp.user.services.ImageService;
@@ -83,6 +85,23 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         setupClickListeners();
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getLifecycle().addObserver(this);
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                    }
+                }
+        );
+    }
+
 
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
