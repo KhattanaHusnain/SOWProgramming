@@ -1,5 +1,6 @@
 package com.sowp.user.presenters.fragments;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -43,12 +45,13 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     private static final int PAGE_SIZE = 10;
 
     private EditText searchEditText;
+    private ImageButton filterToggleButton;
+    private LinearLayout filtersContainer;
     private Spinner categorySpinner;
     private Spinner semesterSpinner;
     private Spinner levelSpinner;
-    private CheckBox publicOnlyCheckBox;
-    private Button clearFiltersButton;
-    private TextView resultsCountTextView;
+    private ImageButton clearFiltersButton;
+    private ImageButton applyFiltersButton;
     private ProgressBar progressBar;
     private RecyclerView coursesRecyclerView;
     private LinearLayout emptyStateLayout;
@@ -68,7 +71,12 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     private String selectedCategory = "All";
     private String selectedSemester = "All";
     private String selectedLevel = "All";
-    private boolean showOnlyPublic = false;
+
+    // Filter state management
+    private String tempSelectedCategory = "All";
+    private String tempSelectedSemester = "All";
+    private String tempSelectedLevel = "All";
+    private boolean isFiltersVisible = false;
 
     // Pagination
     private int currentPage = 1;
@@ -100,7 +108,11 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
                 new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                        if (isFiltersVisible) {
+                            hideFilters();
+                        } else {
+                            ((Main) requireActivity()).bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                        }
                     }
                 }
         );
@@ -140,12 +152,13 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         courseRepository = new CourseRepository(getContext());
 
         searchEditText = view.findViewById(R.id.searchEditText);
+        filterToggleButton = view.findViewById(R.id.filterToggleButton);
+        filtersContainer = view.findViewById(R.id.filtersContainer);
         categorySpinner = view.findViewById(R.id.categorySpinner);
         semesterSpinner = view.findViewById(R.id.semesterSpinner);
         levelSpinner = view.findViewById(R.id.levelSpinner);
-        publicOnlyCheckBox = view.findViewById(R.id.publicOnlyCheckBox);
         clearFiltersButton = view.findViewById(R.id.clearFiltersButton);
-        resultsCountTextView = view.findViewById(R.id.resultsCountTextView);
+        applyFiltersButton = view.findViewById(R.id.applyFiltersButton);
         progressBar = view.findViewById(R.id.progressBar);
         coursesRecyclerView = view.findViewById(R.id.coursesRecyclerView);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
@@ -194,6 +207,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     }
 
     private void setupSearchAndFilters() {
+        // Search functionality (immediate search)
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -208,11 +222,14 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
             public void afterTextChanged(Editable s) {}
         });
 
+        // Filter toggle button
+        filterToggleButton.setOnClickListener(v -> toggleFilters());
+
+        // Spinner listeners (store temporary values)
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = parent.getItemAtPosition(position).toString();
-                applyFiltersAndSearch();
+                tempSelectedCategory = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -222,8 +239,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         semesterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedSemester = parent.getItemAtPosition(position).toString();
-                applyFiltersAndSearch();
+                tempSelectedSemester = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -233,20 +249,16 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         levelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedLevel = parent.getItemAtPosition(position).toString();
-                applyFiltersAndSearch();
+                tempSelectedLevel = parent.getItemAtPosition(position).toString();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        publicOnlyCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            showOnlyPublic = isChecked;
-            applyFiltersAndSearch();
-        });
-
-        clearFiltersButton.setOnClickListener(v -> clearFilters());
+        // Filter action buttons
+        clearFiltersButton.setOnClickListener(v -> clearTempFilters());
+        applyFiltersButton.setOnClickListener(v -> applyTempFilters());
     }
 
     private void setupPagination() {
@@ -263,6 +275,67 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
                 updateDisplayedCourses();
             }
         });
+    }
+
+    private void toggleFilters() {
+        if (isFiltersVisible) {
+            hideFilters();
+        } else {
+            showFilters();
+        }
+    }
+
+    private void showFilters() {
+        isFiltersVisible = true;
+        filtersContainer.setVisibility(View.VISIBLE);
+        filterToggleButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+
+        // Set current filter values to spinners
+        setSpinnerSelection(categorySpinner, selectedCategory);
+        setSpinnerSelection(semesterSpinner, selectedSemester);
+        setSpinnerSelection(levelSpinner, selectedLevel);
+
+        // Update temp values
+        tempSelectedCategory = selectedCategory;
+        tempSelectedSemester = selectedSemester;
+        tempSelectedLevel = selectedLevel;
+    }
+
+    private void hideFilters() {
+        isFiltersVisible = false;
+        filtersContainer.setVisibility(View.GONE);
+        filterToggleButton.setImageResource(android.R.drawable.ic_menu_sort_by_size);
+
+        // Reset temp values to current applied values
+        tempSelectedCategory = selectedCategory;
+        tempSelectedSemester = selectedSemester;
+        tempSelectedLevel = selectedLevel;
+    }
+
+    private void setSpinnerSelection(Spinner spinner, String value) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
+        int position = adapter.getPosition(value);
+        if (position >= 0) {
+            spinner.setSelection(position);
+        }
+    }
+
+    private void clearTempFilters() {
+        categorySpinner.setSelection(0);
+        semesterSpinner.setSelection(0);
+        levelSpinner.setSelection(0);
+        tempSelectedCategory = "All";
+        tempSelectedSemester = "All";
+        tempSelectedLevel = "All";
+    }
+
+    private void applyTempFilters() {
+        selectedCategory = tempSelectedCategory;
+        selectedSemester = tempSelectedSemester;
+        selectedLevel = tempSelectedLevel;
+
+        applyFiltersAndSearch();
+        hideFilters();
     }
 
     private void loadCourses() {
@@ -338,9 +411,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         boolean matchesLevel = selectedLevel.equals("All") ||
                 (course.getLevel() != null && selectedLevel.equals(course.getLevel()));
 
-        boolean matchesPublic = !showOnlyPublic || course.isPublic();
-
-        return matchesSearch && matchesCategory && matchesSemester && matchesLevel && matchesPublic;
+        return matchesSearch && matchesCategory && matchesSemester && matchesLevel;
     }
 
     private boolean courseMatchesSearchQuery(Course course, String query) {
@@ -435,16 +506,7 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
     }
 
     private void updateUI() {
-        updateResultsCount();
         updateEmptyState();
-    }
-
-    private void updateResultsCount() {
-        if (resultsCountTextView != null) {
-            String countText = String.format("Showing %d of %d courses",
-                    displayedCourses.size(), filteredCourses.size());
-            resultsCountTextView.setText(countText);
-        }
     }
 
     private void updateEmptyState() {
@@ -459,20 +521,23 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         }
     }
 
-    private void clearFilters() {
+    private void clearAllFilters() {
         searchEditText.setText("");
         categorySpinner.setSelection(0);
         semesterSpinner.setSelection(0);
         levelSpinner.setSelection(0);
-        publicOnlyCheckBox.setChecked(false);
 
         currentSearchQuery = "";
         selectedCategory = "All";
         selectedSemester = "All";
         selectedLevel = "All";
-        showOnlyPublic = false;
+
+        tempSelectedCategory = "All";
+        tempSelectedSemester = "All";
+        tempSelectedLevel = "All";
 
         applyFiltersAndSearch();
+        hideFilters();
     }
 
     private void setLoadingState(boolean loading) {
@@ -488,6 +553,14 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
 
         if (clearFiltersButton != null) {
             clearFiltersButton.setEnabled(!loading);
+        }
+
+        if (applyFiltersButton != null) {
+            applyFiltersButton.setEnabled(!loading);
+        }
+
+        if (filterToggleButton != null) {
+            filterToggleButton.setEnabled(!loading);
         }
     }
 
@@ -519,12 +592,13 @@ public class CoursesFragment extends Fragment implements CourseAdapter.OnCourseC
         super.onDestroyView();
 
         searchEditText = null;
+        filterToggleButton = null;
+        filtersContainer = null;
         categorySpinner = null;
         semesterSpinner = null;
         levelSpinner = null;
-        publicOnlyCheckBox = null;
         clearFiltersButton = null;
-        resultsCountTextView = null;
+        applyFiltersButton = null;
         progressBar = null;
         coursesRecyclerView = null;
         emptyStateLayout = null;

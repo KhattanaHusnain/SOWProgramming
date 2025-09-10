@@ -26,187 +26,218 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Filters and Search Container -->
+    <!-- Search and Filter Toggle Container -->
     <LinearLayout
-        android:id="@+id/filtersContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
         android:background="@color/white"
         android:elevation="2dp">
 
-        <!-- Search Bar -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:boxStrokeColor="@color/primary"
-            app:hintTextColor="@color/primary"
-            app:startIconTint="@color/gray_medium"
-            app:endIconTint="@color/gray_medium">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Search courses..."
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:background="@drawable/search_background"
-                android:backgroundTint="@color/surface"
-                android:drawablePadding="12dp"
-                android:drawableTint="@color/gray_medium"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_hint"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Filter Row 1: Category and Semester -->
+        <!-- Search Bar with Filter Toggle -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
-
-            <!-- Category Filter -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="4dp" />
-
-                <Spinner
-                    android:id="@+id/categorySpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/card_background"
-                    android:backgroundTint="@color/gray_light"
-                    android:padding="8dp" />
-
-            </LinearLayout>
-
-            <!-- Semester Filter -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Semester"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="4dp" />
-
-                <Spinner
-                    android:id="@+id/semesterSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/card_background"
-                    android:backgroundTint="@color/gray_light"
-                    android:padding="8dp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Filter Row 2: Level and Clear Filters -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:padding="12dp"
             android:gravity="center_vertical">
 
-            <!-- Level Filter -->
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:orientation="vertical">
+                app:boxStrokeColor="@color/primary"
+                app:hintTextColor="@color/primary"
+                app:startIconTint="@color/gray_medium"
+                app:endIconTint="@color/gray_medium">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchEditText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Level"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="4dp" />
+                    android:hint="Search courses..."
+                    android:drawableStart="@android:drawable/ic_menu_search"
+                    android:background="@drawable/search_background"
+                    android:backgroundTint="@color/surface"
+                    android:drawablePadding="12dp"
+                    android:drawableTint="@color/gray_medium"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:inputType="text" />
 
-                <Spinner
-                    android:id="@+id/levelSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/card_background"
-                    android:backgroundTint="@color/gray_light"
-                    android:padding="8dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
-
-            <!-- Clear Filters Button -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:orientation="vertical"
-                android:gravity="bottom">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/clearFiltersButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:text="Clear"
-                    android:textSize="12sp"
-                    android:textColor="@color/primary"
-                    android:minHeight="0dp"
-                    app:strokeColor="@color/primary"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            </LinearLayout>
+            <!-- Filter Toggle Icon Button -->
+            <ImageButton
+                android:id="@+id/filterToggleButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
+                android:scaleType="centerInside"
+                app:tint="@color/primary"
+                android:contentDescription="Toggle filters" />
 
         </LinearLayout>
 
-        <!-- Results Count and Public Only -->
+        <!-- Collapsible Filters Container -->
         <LinearLayout
+            android:id="@+id/filtersContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="12dp">
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="@color/gray_light"
+            android:visibility="gone"
+            android:animateLayoutChanges="true">
 
-            <TextView
-                android:id="@+id/resultsCountTextView"
-                android:layout_width="0dp"
+            <!-- Filters Grid Layout -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Showing 0 courses"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary" />
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/publicOnlyCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Public Only"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                app:buttonTint="@color/primary" />
+                <!-- Filter Row 1: Category and Semester -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <!-- Category Filter -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Category"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="2dp" />
+
+                        <Spinner
+                            android:id="@+id/categorySpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/card_background"
+                            android:backgroundTint="@color/white"
+                            android:padding="6dp"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <!-- Semester Filter -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Semester"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="2dp" />
+
+                        <Spinner
+                            android:id="@+id/semesterSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/card_background"
+                            android:backgroundTint="@color/white"
+                            android:padding="6dp"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Filter Row 2: Level and Action Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <!-- Level Filter -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Level"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="2dp" />
+
+                        <Spinner
+                            android:id="@+id/levelSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/card_background"
+                            android:backgroundTint="@color/white"
+                            android:padding="6dp"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <!-- Filter Action Buttons -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="16dp">
+
+                        <!-- Clear Filters Icon Button -->
+                        <ImageButton
+                            android:id="@+id/clearFiltersButton"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginBottom="8dp"
+                            android:src="@android:drawable/ic_menu_revert"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="8dp"
+                            android:scaleType="centerInside"
+                            app:tint="@color/gray_medium"
+                            android:contentDescription="Clear filters" />
+
+                        <!-- Apply Filters Icon Button -->
+                        <ImageButton
+                            android:id="@+id/applyFiltersButton"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginBottom="8dp"
+                            android:src="@android:drawable/ic_menu_send"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/primary"
+                            android:padding="8dp"
+                            android:scaleType="centerInside"
+                            app:tint="@color/white"
+                            android:contentDescription="Apply filters" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
