@@ -122,7 +122,7 @@ public class UserRepository {
                 gender, birthdate, degree, semester, role, notification, createdAt, false);
 
         firestore.collection("User")
-                .document(user.getEmail())
+                .document(user.getEmail().toLowerCase())
                 .set(user)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
