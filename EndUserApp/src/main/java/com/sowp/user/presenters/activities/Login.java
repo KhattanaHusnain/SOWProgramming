@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.Firebase;
 import com.sowp.user.R;
 import com.sowp.user.models.User;
 import com.sowp.user.repositories.UserRepository;
@@ -43,8 +44,6 @@ public class Login extends AppCompatActivity {
     UserRepository userRepository;
     UserAuthenticationUtils userAuthenticationUtils;
     User user;
-    private FirebaseAuth mAuth;
-
     // Loading state
 
     @Override
@@ -55,7 +54,6 @@ public class Login extends AppCompatActivity {
         // Initialize Firebase
         userRepository = new UserRepository(this);
         userAuthenticationUtils = new UserAuthenticationUtils(this);
-        mAuth = FirebaseAuth.getInstance();
 
         // Initialize UI components
         initializeViews();
@@ -179,10 +177,13 @@ public class Login extends AppCompatActivity {
 
         // All validations passed, proceed with login
         loginButton.setEnabled(false);
-        loginButton.setText(null);
+        loginButton.setText("Logging in...");
         loginProgress.setVisibility(View.VISIBLE);
         emailInput.setEnabled(false);
         passwordInput.setEnabled(false);
+
+        // Login with email and password
+
 
 
         userAuthenticationUtils.login(email, password, new UserAuthenticationUtils.Callback() {

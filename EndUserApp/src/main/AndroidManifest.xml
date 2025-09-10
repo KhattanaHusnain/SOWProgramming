@@ -76,18 +76,7 @@
             android:name=".presenters.activities.SettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.SOWProgramming" />
-        <activity
-            android:name=".presenters.activities.OfflineTopicViewActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SOWProgramming" />
-        <activity
-            android:name=".presenters.activities.OfflineTopicListActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SOWProgramming" />
-        <activity
-            android:name=".presenters.activities.OfflineCourseActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SOWProgramming" />
+
         <activity
             android:name=".presenters.activities.VideoPlayerActivity"
             android:exported="false"
@@ -139,7 +128,6 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

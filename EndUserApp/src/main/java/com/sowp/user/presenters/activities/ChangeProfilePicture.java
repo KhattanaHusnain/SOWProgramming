@@ -1,16 +1,8 @@
 package com.sowp.user.presenters.activities;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -19,14 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.sowp.user.R;
+import com.sowp.user.services.ImageService;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,21 +24,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChangeProfilePicture extends AppCompatActivity {
-
-    private static final int IMAGE_QUALITY = 80;
-    private static final int MAX_IMAGE_SIZE = 400;
-    private static final String FILE_PROVIDER_AUTHORITY = ".fileprovider";
+public class ChangeProfilePicture extends AppCompatActivity implements ImageService.ImageCallback {
 
     private CircleImageView profileImage;
     private FloatingActionButton btnChangePhoto;
@@ -60,15 +38,10 @@ public class ChangeProfilePicture extends AppCompatActivity {
     private String profileImageBase64 = "";
     private String originalImageBase64 = "";
     private boolean imageChanged = false;
-    private Uri photoUri;
-    private File currentPhotoFile;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
-
-    private ActivityResultLauncher<Intent> imagePickerLauncher;
-    private ActivityResultLauncher<Uri> cameraLauncher;
-    private ActivityResultLauncher<String[]> permissionLauncher;
+    private ImageService imageService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +52,7 @@ public class ChangeProfilePicture extends AppCompatActivity {
         initializeFirebase();
         initializeViews();
         setupToolbar();
-        initializeActivityResultLaunchers();
+        initializeImageService();
         setupClickListeners();
         loadCurrentProfileImage();
     }
@@ -111,258 +84,62 @@ public class ChangeProfilePicture extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
-    private void initializeActivityResultLaunchers() {
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            handleSelectedImage(imageUri);
-                        }
-                    }
-                }
-        );
-
-        cameraLauncher = registerForActivityResult(
-                new ActivityResultContracts.TakePicture(),
-                success -> {
-                    if (success && photoUri != null) {
-                        handleSelectedImage(photoUri);
-                    } else {
-                        if (currentPhotoFile != null && currentPhotoFile.exists()) {
-                            currentPhotoFile.delete();
-                        }
-                        showError("Failed to capture photo");
-                    }
-                }
-        );
-
-        permissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestMultiplePermissions(),
-                permissions -> {
-                    boolean cameraGranted = Boolean.TRUE.equals(permissions.get(Manifest.permission.CAMERA));
-                    boolean storageGranted = isStoragePermissionGranted(permissions);
-
-                    if (cameraGranted && storageGranted) {
-                        showImageSourceDialog();
-                    } else {
-                        showPermissionDeniedMessage();
-                    }
-                }
-        );
-    }
-
-    private boolean isStoragePermissionGranted(java.util.Map<String, Boolean> permissions) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return Boolean.TRUE.equals(permissions.get(Manifest.permission.READ_MEDIA_IMAGES));
-        } else {
-            return Boolean.TRUE.equals(permissions.get(Manifest.permission.READ_EXTERNAL_STORAGE));
-        }
+    private void initializeImageService() {
+        imageService = new ImageService(this, this);
     }
 
     private void setupClickListeners() {
-        btnChangePhoto.setOnClickListener(v -> checkPermissionsAndShowDialog());
-        btnTakePhoto.setOnClickListener(v -> openCamera());
-        btnChooseGallery.setOnClickListener(v -> openImagePicker());
+        btnChangePhoto.setOnClickListener(v -> imageService.requestPermissions());
+        btnTakePhoto.setOnClickListener(v -> imageService.openCamera());
+        btnChooseGallery.setOnClickListener(v -> imageService.openGallery());
         btnSave.setOnClickListener(v -> saveProfileImage());
         btnCancel.setOnClickListener(v -> cancelChanges());
     }
 
-    private void checkPermissionsAndShowDialog() {
-        String[] permissions = getRequiredPermissions();
-
-        if (hasAllPermissions(permissions)) {
-            showImageSourceDialog();
-        } else {
-            permissionLauncher.launch(permissions);
-        }
-    }
-
-    private String[] getRequiredPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_MEDIA_IMAGES
-            };
-        } else {
-            return new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            };
-        }
-    }
-
-    private boolean hasAllPermissions(String[] permissions) {
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void showImageSourceDialog() {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("Choose Photo Source")
-                .setMessage("How would you like to update your profile picture?")
-                .setPositiveButton("Camera", (dialog, which) -> openCamera())
-                .setNegativeButton("Gallery", (dialog, which) -> openImagePicker())
-                .setNeutralButton("Cancel", null)
-                .show();
-    }
-
-    private void openImagePicker() {
-        try {
-            Intent intent;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
-            } else {
-                intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-            }
-
-            if (intent.resolveActivity(getPackageManager()) == null) {
-                intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-            }
-
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                imagePickerLauncher.launch(Intent.createChooser(intent, "Select Profile Picture"));
-            } else {
-                showError("No gallery app available");
-            }
-
-        } catch (Exception e) {
-            showError("Failed to open gallery");
-        }
-    }
-
-    private void openCamera() {
-        try {
-            cleanupTempFile();
-            photoUri = createImageUri();
-
-            if (photoUri != null) {
-                cameraLauncher.launch(photoUri);
-            } else {
-                showError("Failed to create photo file");
-            }
-        } catch (Exception e) {
-            showError("Camera not available");
-        }
-    }
-
-    private Uri createImageUri() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "PROFILE_" + timeStamp + "_";
-
-        File storageDir = new File(getExternalFilesDir(null), "profile_photos");
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-        }
-
-        currentPhotoFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-        String authority = getPackageName() + FILE_PROVIDER_AUTHORITY;
-
-        return FileProvider.getUriForFile(this, authority, currentPhotoFile);
-    }
-
-    private void handleSelectedImage(Uri imageUri) {
+    // ImageService.ImageCallback implementation
+    @Override
+    public void onImageSelected(String base64String) {
         showLoading(true);
         statusText.setText("Processing image...");
 
         new Thread(() -> {
             try {
-                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                if (inputStream == null) {
-                    runOnUiThread(() -> {
-                        showLoading(false);
-                        showError("Failed to read image file");
-                    });
-                    return;
-                }
-
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                inputStream.close();
+                // Convert base64 to bitmap for display
+                Bitmap bitmap = ImageService.base64ToBitmap(base64String);
 
                 if (bitmap != null) {
-                    bitmap = handleImageRotation(imageUri, bitmap);
-                    Bitmap finalBitmap = bitmap;
-                    runOnUiThread(() -> processAndDisplayImage(finalBitmap));
+                    runOnUiThread(() -> {
+                        profileImage.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+                        profileImage.setImageBitmap(bitmap);
+
+                        profileImageBase64 = base64String;
+                        imageChanged = true;
+                        showLoading(false);
+                        updateUIAfterImageSelection();
+                    });
                 } else {
                     runOnUiThread(() -> {
                         showLoading(false);
-                        showError("Failed to load image");
+                        showError("Failed to process image");
                     });
                 }
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    showError("Error processing image. Please try again.");
+                    showError("Error processing image");
                 });
             }
         }).start();
     }
 
-    private Bitmap handleImageRotation(Uri imageUri, Bitmap bitmap) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            if (inputStream != null) {
-                ExifInterface exif = new ExifInterface(inputStream);
-                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                inputStream.close();
-
-                int rotationInDegrees = exifToDegrees(rotation);
-
-                if (rotationInDegrees != 0) {
-                    Matrix matrix = new Matrix();
-                    matrix.postRotate(rotationInDegrees);
-                    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                }
-            }
-        } catch (Exception e) {
-            // Ignore rotation errors, return original bitmap
-        }
-
-        return bitmap;
+    @Override
+    public void onError(String error) {
+        showError(error);
     }
 
-    private int exifToDegrees(int exifOrientation) {
-        switch (exifOrientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90: return 90;
-            case ExifInterface.ORIENTATION_ROTATE_180: return 180;
-            case ExifInterface.ORIENTATION_ROTATE_270: return 270;
-            default: return 0;
-        }
-    }
-
-    private void processAndDisplayImage(Bitmap bitmap) {
-        try {
-            Bitmap resizedBitmap = resizeBitmapMaintainAspect(bitmap, MAX_IMAGE_SIZE);
-
-            profileImage.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-            profileImage.setImageBitmap(resizedBitmap);
-
-            new Thread(() -> {
-                String base64 = bitmapToBase64(resizedBitmap);
-
-                runOnUiThread(() -> {
-                    profileImageBase64 = base64;
-                    imageChanged = true;
-                    showLoading(false);
-                    updateUIAfterImageSelection();
-                });
-            }).start();
-
-        } catch (Exception e) {
-            showLoading(false);
-            showError("Error processing image");
-        }
+    @Override
+    public void onPermissionDenied() {
+        showPermissionDeniedMessage();
     }
 
     private void updateUIAfterImageSelection() {
@@ -411,8 +188,6 @@ public class ChangeProfilePicture extends AppCompatActivity {
                                     Snackbar.LENGTH_LONG)
                             .setAction("DONE", v -> finish())
                             .show();
-
-                    cleanupTempFile();
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
@@ -435,11 +210,10 @@ public class ChangeProfilePicture extends AppCompatActivity {
 
     private void resetToOriginalImage() {
         if (!originalImageBase64.isEmpty()) {
-            try {
-                byte[] decodedBytes = Base64.decode(originalImageBase64, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            Bitmap bitmap = ImageService.base64ToBitmap(originalImageBase64);
+            if (bitmap != null) {
                 profileImage.setImageBitmap(bitmap);
-            } catch (Exception e) {
+            } else {
                 profileImage.setImageResource(R.drawable.ic_profile);
             }
         } else {
@@ -451,8 +225,6 @@ public class ChangeProfilePicture extends AppCompatActivity {
         statusText.setText("Tap the camera icon to change your photo");
         statusText.setTextColor(ContextCompat.getColor(this, R.color.text_secondary));
         actionButtonsContainer.setVisibility(View.GONE);
-
-        cleanupTempFile();
     }
 
     private void loadCurrentProfileImage() {
@@ -475,14 +247,11 @@ public class ChangeProfilePicture extends AppCompatActivity {
                             originalImageBase64 = photoBase64;
                             profileImageBase64 = photoBase64;
 
-                            try {
-                                byte[] decodedBytes = Base64.decode(photoBase64, Base64.DEFAULT);
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                            Bitmap bitmap = ImageService.base64ToBitmap(photoBase64);
+                            if (bitmap != null) {
                                 profileImage.setImageBitmap(bitmap);
-                                statusText.setText("Tap the camera icon to change your photo");
-                            } catch (Exception e) {
-                                statusText.setText("Tap the camera icon to change your photo");
                             }
+                            statusText.setText("Tap the camera icon to change your photo");
                         } else {
                             statusText.setText("Tap the camera icon to change your photo");
                         }
@@ -523,46 +292,12 @@ public class ChangeProfilePicture extends AppCompatActivity {
                 .setMessage("This app needs camera and storage permissions to change your profile picture. " +
                         "Please grant permissions in app settings.")
                 .setPositiveButton("Settings", (dialog, which) -> {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    android.content.Intent intent = new android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(android.net.Uri.parse("package:" + getPackageName()));
                     startActivity(intent);
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-    }
-
-    private Bitmap resizeBitmapMaintainAspect(Bitmap bitmap, int maxSize) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        if (width <= maxSize && height <= maxSize) {
-            return bitmap;
-        }
-
-        float ratio = Math.min((float) maxSize / width, (float) maxSize / height);
-        int newWidth = Math.round(width * ratio);
-        int newHeight = Math.round(height * ratio);
-
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-    }
-
-    private String bitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
-
-    private void cleanupTempFile() {
-        if (currentPhotoFile != null && currentPhotoFile.exists()) {
-            try {
-                currentPhotoFile.delete();
-                currentPhotoFile = null;
-                photoUri = null;
-            } catch (Exception e) {
-                // Ignore cleanup errors
-            }
-        }
     }
 
     @Override
@@ -577,6 +312,8 @@ public class ChangeProfilePicture extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cleanupTempFile();
+        if (imageService != null) {
+            imageService.onDestroy();
+        }
     }
 }

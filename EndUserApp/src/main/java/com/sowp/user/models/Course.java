@@ -154,7 +154,6 @@ public class Course {
         this.description = description;
         this.duration = duration;
         this.outline = outline;
-        // Initialize default values
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = System.currentTimeMillis();
         this.isPublic = true;

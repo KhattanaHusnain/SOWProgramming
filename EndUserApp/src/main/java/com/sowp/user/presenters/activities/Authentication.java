@@ -2,19 +2,21 @@ package com.sowp.user.presenters.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
 import com.sowp.user.R;
 import com.sowp.user.models.User;
 import com.sowp.user.repositories.UserRepository;
 
 public class Authentication extends AppCompatActivity {
 
-    private Button loginButton, signupButton;
+    private MaterialButton loginButton, signupButton;
     private ImageButton googleLoginButton;
     private UserRepository userRepository;
 
@@ -22,7 +24,6 @@ public class Authentication extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
-
         initializeViews();
         setupClickListeners();
     }
@@ -35,7 +36,12 @@ public class Authentication extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        loginButton.setOnClickListener(v -> navigateToLogin());
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigateToLogin();
+            }
+        });
         signupButton.setOnClickListener(v -> navigateToSignup());
         googleLoginButton.setOnClickListener(v -> signInWithGoogle());
     }
@@ -50,7 +56,7 @@ public class Authentication extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 runOnUiThread(() ->
-                        Toast.makeText(Authentication.this, "Google Sign In Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(Authentication.this, message, Toast.LENGTH_SHORT).show()
                 );
             }
         });

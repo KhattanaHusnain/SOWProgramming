@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId "com.sowp.user"
         minSdk 24
-        targetSdk 35
-        versionCode 6
+        targetSdk 36
+        versionCode 7
         versionName '1.4'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

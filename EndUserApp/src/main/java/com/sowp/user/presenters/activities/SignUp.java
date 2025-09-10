@@ -1,16 +1,10 @@
 package com.sowp.user.presenters.activities;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,25 +14,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 
 import com.sowp.user.R;
 import com.sowp.user.models.User;
 import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.ImageService;
 import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -65,13 +56,10 @@ public class SignUp extends AppCompatActivity {
     private String[] semesterOptions = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "Graduated"};
 
     private String profileImageBase64 = "";
-    private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private ActivityResultLauncher<Intent> imagePickerLauncher;
-    private ActivityResultLauncher<String> permissionLauncher;
-
-    UserRepository userRepository;
-    UserAuthenticationUtils userAuthenticationUtils;
+    private UserRepository userRepository;
+    private UserAuthenticationUtils userAuthenticationUtils;
+    private ImageService imageService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,33 +69,10 @@ public class SignUp extends AppCompatActivity {
         userRepository = new UserRepository(this);
         userAuthenticationUtils = new UserAuthenticationUtils(this);
 
-        initializeActivityResultLaunchers();
         initializeViews();
+        initializeImageService();
         setupDropdowns();
         setupClickListeners();
-    }
-
-    private void initializeActivityResultLaunchers() {
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            handleSelectedImage(imageUri);
-                        }
-                    }
-                }
-        );
-
-        permissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        openImagePicker();
-                    }
-                }
-        );
     }
 
     private void initializeViews() {
@@ -131,6 +96,32 @@ public class SignUp extends AppCompatActivity {
         progressSign = findViewById(R.id.progressSign);
     }
 
+    private void initializeImageService() {
+        imageService = new ImageService(this, new ImageService.ImageCallback() {
+            @Override
+            public void onImageSelected(String base64String) {
+                profileImageBase64 = base64String;
+
+                // Convert base64 to bitmap and display
+                Bitmap bitmap = ImageService.base64ToBitmap(base64String);
+                if (bitmap != null) {
+                    profilePicture.setImageBitmap(bitmap);
+                    profilePicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(SignUp.this, error, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                showPermissionDialog();
+            }
+        });
+    }
+
     private void setupDropdowns() {
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, genderOptions);
@@ -148,11 +139,9 @@ public class SignUp extends AppCompatActivity {
     private void setupClickListeners() {
         backButton.setOnClickListener(v -> finish());
         dobInput.setOnClickListener(v -> showDatePicker());
-        signupButton.setOnClickListener(view -> {
-            validateAndCreateAccount();
-        });
+        signupButton.setOnClickListener(view -> validateAndCreateAccount());
 
-        profilePictureCard.setOnClickListener(v -> checkPermissionAndOpenGallery());
+        profilePictureCard.setOnClickListener(v -> showImageSourceDialog());
 
         googleButton.setOnClickListener(v -> {
             userRepository.signInWithGoogle(new UserRepository.GoogleSignInCallback() {
@@ -163,11 +152,7 @@ public class SignUp extends AppCompatActivity {
 
                 @Override
                 public void onFailure(String message) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
-                    });
+                    runOnUiThread(() -> Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show());
                 }
             });
         });
@@ -179,57 +164,22 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    private void checkPermissionAndOpenGallery() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            openImagePicker();
-        } else {
-            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
+    private void showImageSourceDialog() {
+        // Request permissions first, ImageService will handle showing the dialog
+        imageService.requestPermissions();
     }
 
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        imagePickerLauncher.launch(Intent.createChooser(intent, "Select Profile Picture"));
-    }
-
-    private void handleSelectedImage(Uri imageUri) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-            if (bitmap != null) {
-                Bitmap resizedBitmap = resizeBitmap(bitmap, 300, 300);
-                profilePicture.setImageBitmap(resizedBitmap);
-                profilePicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                profileImageBase64 = bitmapToBase64(resizedBitmap);
-            }
-        } catch (FileNotFoundException e) {
-        }
-    }
-
-    private Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxWidth;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxHeight;
-            width = (int) (height * bitmapRatio);
-        }
-
-        return Bitmap.createScaledBitmap(bitmap, width, height, true);
-    }
-
-    private String bitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    private void showPermissionDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Permissions Required")
+                .setMessage("Camera and storage permissions are needed to add profile pictures. Please grant permissions in app settings.")
+                .setPositiveButton("Settings", (dialog, which) -> {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(android.net.Uri.parse("package:" + getPackageName()));
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showDatePicker() {
@@ -237,11 +187,13 @@ public class SignUp extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     String date = selectedYear + "-" + String.format("%02d", (selectedMonth + 1)) + "-" + String.format("%02d", selectedDay);
                     dobInput.setText(date);
                 }, year, month, day);
+
         calendar.add(Calendar.YEAR, -15);
         datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         datePickerDialog.show();
@@ -268,6 +220,7 @@ public class SignUp extends AppCompatActivity {
         }
 
         if (!termsCheckbox.isChecked()) {
+            Toast.makeText(this, "Please accept terms and conditions", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -276,7 +229,6 @@ public class SignUp extends AppCompatActivity {
         progressSign.setVisibility(View.VISIBLE);
 
         userAuthenticationUtils.register(email, password, new UserAuthenticationUtils.Callback() {
-
             @Override
             public void onSuccess() {
                 userRepository.createUser(email, password, fullName, profileImageBase64, phone, gender, dob, degree, semester, "User", notifications, System.currentTimeMillis(), new UserRepository.RegistrationCallback() {
@@ -293,6 +245,7 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onFailure(String message) {
                         resetSignupButton();
+                        Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -300,13 +253,14 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 resetSignupButton();
+                Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void resetSignupButton() {
         signupButton.setEnabled(true);
-        signupButton.setText("Creat Account");
+        signupButton.setText("Create Account");
         progressSign.setVisibility(View.GONE);
     }
 
@@ -427,5 +381,13 @@ public class SignUp extends AppCompatActivity {
         boolean hasSpecialChar = password.matches(".*[!@#$%^&*(),.?\":{}|<>'~`=/-].*");
 
         return hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (imageService != null) {
+            imageService.onDestroy();
+        }
     }
 }

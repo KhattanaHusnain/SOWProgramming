@@ -24,6 +24,7 @@ import com.sowp.user.R;
 import com.sowp.user.models.Course;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.sowp.user.services.ImageService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +71,6 @@ public class CourseDescriptionActivity extends AppCompatActivity {
 
     private CourseRepository courseRepository;
     private UserRepository userRepository;
-    private TopicRepository topicRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,6 @@ public class CourseDescriptionActivity extends AppCompatActivity {
 
         courseRepository = new CourseRepository(this);
         userRepository = new UserRepository(this);
-        topicRepository = new TopicRepository();
     }
 
     private void showLoading() {
@@ -311,22 +310,20 @@ public class CourseDescriptionActivity extends AppCompatActivity {
 
     private void loadBase64Image(String base64Image) {
         if (base64Image != null && !base64Image.isEmpty() && ivCourseIllustration != null) {
-            try {
-                byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                if (decodedByte != null) {
-                    ivCourseIllustration.setImageBitmap(decodedByte);
-                } else {
-                    ivCourseIllustration.setImageResource(R.drawable.ic_course);
-                }
-            } catch (Exception e) {
+            // Use ImageService's base64ToBitmap method instead of manual decoding
+            Bitmap decodedBitmap = ImageService.base64ToBitmap(base64Image);
+
+            if (decodedBitmap != null) {
+                ivCourseIllustration.setImageBitmap(decodedBitmap);
+            } else {
+                // Fallback to default image if conversion fails
                 ivCourseIllustration.setImageResource(R.drawable.ic_course);
             }
         } else if (ivCourseIllustration != null) {
+            // Set default image if no base64 data
             ivCourseIllustration.setImageResource(R.drawable.ic_course);
         }
     }
-
     private void enrollInCourse() {
         courseRepository.updateEnrollmentCount(courseId, new CourseRepository.Callback() {
             @Override

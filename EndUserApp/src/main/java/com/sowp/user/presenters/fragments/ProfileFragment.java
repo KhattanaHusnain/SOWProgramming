@@ -2,13 +2,12 @@ package com.sowp.user.presenters.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +21,7 @@ import com.sowp.user.R;
 import com.sowp.user.models.User;
 import com.sowp.user.presenters.activities.Login;
 import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.ImageService;
 import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.android.material.button.MaterialButton;
 
@@ -39,16 +39,16 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
     private TextView txtEnrolledCourses, txtCompletedCourses, txtFavouriteCourses;
     private TextView txtAssignmentsTaken;
     private TextView txtQuizzesTaken;
-    private MaterialButton assignmentHistory, quizeHistory;
+    private MaterialButton assignmentHistory, quizHistory; // Fixed typo
 
     private TextView txtCertificatesCount;
 
     private SwitchCompat switchNotifications;
     private LinearLayout layoutLogout;
 
-    private View skeletonPersonalInfo;
-    private View skeletonProgress;
-    private View skeletonCertificates;
+    private ProgressBar loadingProgress;
+    private TextView loadingText;
+    private View loadingContainer;
     private View actualContent;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -69,12 +69,12 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
 
         initialize(view);
         setupSwipeRefresh();
-        showSkeletonLoading(true);
+        showLoading(true);
 
         if (userAuthenticationUtils.isUserLoggedIn()) {
             loadUserData();
         } else {
-            showSkeletonLoading(false);
+            showLoading(false);
             swipeRefreshLayout.setRefreshing(false);
         }
 
@@ -101,7 +101,6 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
         }
-        stopShimmerAnimation();
     }
 
     @Override
@@ -121,9 +120,9 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
 
-        skeletonPersonalInfo = view.findViewById(R.id.skeleton_personal_info);
-        skeletonProgress = view.findViewById(R.id.skeleton_progress);
-        skeletonCertificates = view.findViewById(R.id.skeleton_certificates);
+        loadingContainer = view.findViewById(R.id.loading_container);
+        loadingProgress = view.findViewById(R.id.loading_progress);
+        loadingText = view.findViewById(R.id.loading_text);
         actualContent = view.findViewById(R.id.actual_content);
 
         profileImageView = view.findViewById(R.id.profile_image);
@@ -141,7 +140,7 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         txtAssignmentsTaken = view.findViewById(R.id.txt_assignments_taken);
         txtQuizzesTaken = view.findViewById(R.id.txt_quizzes_taken);
         assignmentHistory = view.findViewById(R.id.assignmentHistory);
-        quizeHistory = view.findViewById(R.id.quizeHistory);
+        quizHistory = view.findViewById(R.id.quizHistory); // Fixed typo
 
         txtCertificatesCount = view.findViewById(R.id.txt_certificates_count);
 
@@ -175,59 +174,23 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         }
     }
 
-    private void showSkeletonLoading(boolean show) {
+    private void showLoading(boolean show) {
         if (show) {
-            if (skeletonPersonalInfo != null) skeletonPersonalInfo.setVisibility(View.VISIBLE);
-            if (skeletonProgress != null) skeletonProgress.setVisibility(View.VISIBLE);
-            if (skeletonCertificates != null) skeletonCertificates.setVisibility(View.VISIBLE);
-
+            if (loadingContainer != null) loadingContainer.setVisibility(View.VISIBLE);
             if (actualContent != null) actualContent.setVisibility(View.GONE);
-            startShimmerAnimation();
         } else {
-            if (skeletonPersonalInfo != null) skeletonPersonalInfo.setVisibility(View.GONE);
-            if (skeletonProgress != null) skeletonProgress.setVisibility(View.GONE);
-            if (skeletonCertificates != null) skeletonCertificates.setVisibility(View.GONE);
-
+            if (loadingContainer != null) loadingContainer.setVisibility(View.GONE);
             if (actualContent != null) actualContent.setVisibility(View.VISIBLE);
-            stopShimmerAnimation();
-        }
-    }
-
-    private void startShimmerAnimation() {
-        if (skeletonPersonalInfo != null) {
-            skeletonPersonalInfo.animate()
-                    .alpha(0.3f)
-                    .setDuration(1000)
-                    .withEndAction(() -> {
-                        if (skeletonPersonalInfo.getVisibility() == View.VISIBLE) {
-                            skeletonPersonalInfo.animate()
-                                    .alpha(1.0f)
-                                    .setDuration(1000)
-                                    .withEndAction(this::startShimmerAnimation)
-                                    .start();
-                        }
-                    })
-                    .start();
-        }
-    }
-
-    private void stopShimmerAnimation() {
-        if (skeletonPersonalInfo != null) {
-            skeletonPersonalInfo.clearAnimation();
-        }
-        if (skeletonProgress != null) {
-            skeletonProgress.clearAnimation();
-        }
-        if (skeletonCertificates != null) {
-            skeletonCertificates.clearAnimation();
         }
     }
 
     private void setupClickListeners() {
         assignmentHistory.setOnClickListener(view -> {
+            // TODO: Navigate to assignment history
         });
 
-        quizeHistory.setOnClickListener(view -> {
+        quizHistory.setOnClickListener(view -> {
+            // TODO: Navigate to quiz history
         });
 
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -252,7 +215,7 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
                     swipeRefreshLayout.setRefreshing(false);
                 }
 
-                showSkeletonLoading(false);
+                showLoading(false);
                 updateUIWithUserData();
             }
 
@@ -262,18 +225,18 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
                     swipeRefreshLayout.setRefreshing(false);
                 }
 
-                showSkeletonLoading(false);
+                showLoading(false);
             }
         });
     }
 
     private void updateUIWithUserData() {
+        // Use ImageService method to convert base64 to bitmap
         if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
-            try {
-                byte[] decodedString = Base64.decode(user.getPhoto(), Base64.DEFAULT);
-                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                profileImageView.setImageBitmap(decodedBitmap);
-            } catch (Exception e) {
+            Bitmap profileBitmap = ImageService.base64ToBitmap(user.getPhoto());
+            if (profileBitmap != null) {
+                profileImageView.setImageBitmap(profileBitmap);
+            } else {
                 profileImageView.setImageResource(R.drawable.ic_profile);
             }
         } else {
@@ -287,24 +250,24 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         txtGender.setText(user.getGender() != null ? user.getGender() : "Not specified");
         txtDegree.setText(user.getDegree() != null ? user.getDegree() : "Not specified");
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        // Fixed date format to match XML style
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
         Date date = new Date(user.getCreatedAt());
         String accountCreated = dateFormat.format(date);
         txtAccountCreated.setText(accountCreated);
 
         txtEnrolledCourses.setText(user.getEnrolledCourses() != null ? user.getEnrolledCourses().size() + "" : "0");
-        txtCompletedCourses.setText("0");
+        txtCompletedCourses.setText(user.getCompletedCourses() != null ? user.getCompletedCourses().size() + "" : "0");
         txtFavouriteCourses.setText(user.getFavorites() != null ? user.getFavorites().size() + "" : "0");
         txtAssignmentsTaken.setText(user.getAssignments() != null ? user.getAssignments().size() + "" : "0");
         txtQuizzesTaken.setText(user.getQuizzes() != null ? user.getQuizzes().size() + "" : "0");
-        txtCertificatesCount.setText("0");
+        txtCertificatesCount.setText(user.getCertificates() != null ? user.getCertificates().size() + "" : "0");
     }
 
     private void cleanup() {
         user = null;
         userRepository = null;
         userAuthenticationUtils = null;
-        stopShimmerAnimation();
     }
 
     @Override
@@ -325,13 +288,13 @@ public class ProfileFragment extends Fragment implements DefaultLifecycleObserve
         txtAssignmentsTaken = null;
         txtQuizzesTaken = null;
         assignmentHistory = null;
-        quizeHistory = null;
+        quizHistory = null; // Fixed typo
         txtCertificatesCount = null;
         switchNotifications = null;
         layoutLogout = null;
-        skeletonPersonalInfo = null;
-        skeletonProgress = null;
-        skeletonCertificates = null;
+        loadingContainer = null;
+        loadingProgress = null;
+        loadingText = null;
         actualContent = null;
         swipeRefreshLayout = null;
 

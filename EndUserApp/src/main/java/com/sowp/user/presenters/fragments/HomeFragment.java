@@ -40,6 +40,7 @@ import com.sowp.user.repositories.AssignmentRepository;
 import com.sowp.user.repositories.CourseRepository;
 import com.sowp.user.repositories.QuizRepository;
 import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.ImageService;
 import com.sowp.user.services.UserAuthenticationUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -369,15 +370,13 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void updateUserProfileUI(User user) {
-        userFullName.setText(user.getFullName() != null ? user.getFullName() : "User");
-        userDegree.setText(user.getDegree() != null ? user.getDegree() : "No Degree Assigned");
-        userEmail.setText(user.getEmail() != null ? user.getEmail() : "No Email Assigned");
+        userFullName.setText( !user.getFullName().isEmpty() ? user.getFullName() : "User");
+        userDegree.setText( !user.getDegree().isEmpty() ? user.getDegree() : "No Degree Assigned");
+        userEmail.setText( !user.getEmail().isEmpty() ? user.getEmail() : "No Email Assigned");
 
         if (user.getPhoto() != null && !user.getPhoto().isEmpty()) {
             try {
-                byte[] decodedString = Base64.decode(user.getPhoto(), Base64.DEFAULT);
-                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                profileImage.setImageBitmap(decodedBitmap);
+                profileImage.setImageBitmap(ImageService.base64ToBitmap(user.getPhoto()));
             } catch (Exception e) {
                 profileImage.setImageResource(R.drawable.ic_profile);
             }

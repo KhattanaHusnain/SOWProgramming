@@ -236,9 +236,13 @@ public class UserAuthenticationUtils {
             // Create Google ID Token
             Bundle credentialData = customCredential.getData();
             GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
-
-            // Sign in to Firebase with the token
-            firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken(), callback);
+            String email = googleIdTokenCredential.getId();
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    callback.onFailure("Google isn't providing a valid email address of your account.");
+            } else {
+                // Sign in to Firebase with the token
+                firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken(), callback);
+            }
         } else {
             if( cancellationSignal.isCanceled() ) {
                 return;

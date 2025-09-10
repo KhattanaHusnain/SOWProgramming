@@ -2,11 +2,9 @@ package com.sowp.user.presenters.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,20 +25,17 @@ import com.sowp.user.models.Assignment;
 import com.sowp.user.models.AssignmentAttempt;
 import com.sowp.user.repositories.AssignmentRepository;
 import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.ImageService;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class SubmitAssignmentActivity extends AppCompatActivity {
-
-    private static final int PICK_IMAGES_REQUEST = 1;
+public class SubmitAssignmentActivity extends AppCompatActivity implements ImageService.ImageCallback {
 
     private TextView titleTextView;
     private TextView descriptionTextView;
@@ -60,12 +55,13 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
     private int courseId;
     private int assignmentId;
     private Assignment assignment;
-    private List<Uri> selectedImageUris = new ArrayList<>();
+    private List<String> selectedImageBase64List = new ArrayList<>();
     private SelectedImagesAdapter selectedImagesAdapter;
 
     private AssignmentRepository assignmentRepository;
     private UserRepository userRepository;
     private FirebaseAuth firebaseAuth;
+    private ImageService imageService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +70,7 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
         initializeRepositories();
         initializeViews();
+        initializeImageService();
         getAssignmentDataFromIntent();
         setupRecyclerView();
         setupClickListeners();
@@ -103,6 +100,10 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         categoriesTextView = findViewById(R.id.categoriesTextView);
     }
 
+    private void initializeImageService() {
+        imageService = new ImageService(this, this);
+    }
+
     private void getAssignmentDataFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {
@@ -123,8 +124,31 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        selectImagesButton.setOnClickListener(v -> openImagePicker());
+        selectImagesButton.setOnClickListener(v -> imageService.requestPermissions());
         submitButton.setOnClickListener(v -> submitAssignment());
+    }
+
+    // ImageService.ImageCallback implementation
+    @Override
+    public void onImageSelected(String base64String) {
+        if (!selectedImageBase64List.contains(base64String)) {
+            selectedImageBase64List.add(base64String);
+            selectedImagesAdapter.notifyDataSetChanged();
+            updateUIState();
+            Toast.makeText(this, "Image added successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Image already selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onError(String error) {
+        Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onPermissionDenied() {
+        Toast.makeText(this, "Permission denied. Cannot select images.", Toast.LENGTH_LONG).show();
     }
 
     private void loadAssignmentData() {
@@ -206,8 +230,8 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
         for (String base64Image : assignment.getBase64Images()) {
             try {
-                byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                // Use ImageService for consistent base64 to bitmap conversion
+                Bitmap bitmap = ImageService.base64ToBitmap(base64Image);
 
                 if (bitmap != null) {
                     ImageView imageView = new ImageView(this);
@@ -228,132 +252,34 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         }
     }
 
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGES_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGES_REQUEST && resultCode == RESULT_OK && data != null) {
-            handleImageSelection(data);
-        }
-    }
-
-    private void handleImageSelection(Intent data) {
-        List<Uri> newImageUris = new ArrayList<>();
-
-        if (data.getClipData() != null) {
-            int count = data.getClipData().getItemCount();
-            for (int i = 0; i < count; i++) {
-                Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                if (!selectedImageUris.contains(imageUri)) {
-                    newImageUris.add(imageUri);
-                    selectedImageUris.add(imageUri);
-                }
-            }
-        } else if (data.getData() != null) {
-            Uri imageUri = data.getData();
-            if (!selectedImageUris.contains(imageUri)) {
-                newImageUris.add(imageUri);
-                selectedImageUris.add(imageUri);
-            }
-        }
-
-        selectedImagesAdapter.notifyDataSetChanged();
-        updateUIState();
-    }
-
     private void updateUIState() {
-        boolean hasImages = !selectedImageUris.isEmpty();
+        boolean hasImages = !selectedImageBase64List.isEmpty();
 
         submitButton.setEnabled(hasImages);
         submitButton.setAlpha(hasImages ? 1.0f : 0.5f);
         selectedImagesContainer.setVisibility(hasImages ? View.VISIBLE : View.GONE);
+
+        // Update button text to show image count
+        if (hasImages) {
+            selectImagesButton.setText("Add More Images (" + selectedImageBase64List.size() + ")");
+        } else {
+            selectImagesButton.setText("Select Images");
+        }
     }
 
     private void submitAssignment() {
-        if (selectedImageUris.isEmpty()) {
+        if (selectedImageBase64List.isEmpty()) {
+            Toast.makeText(this, "Please select at least one image", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
             return;
         }
 
         showLoading(true);
-        processAndSubmitImages();
-    }
-
-    private void processAndSubmitImages() {
-        new Thread(() -> {
-            try {
-                List<String> base64Images = convertImagesToBase64();
-                runOnUiThread(() -> submitToFirestore(base64Images));
-            } catch (Exception e) {
-                runOnUiThread(() -> showLoading(false));
-            }
-        }).start();
-    }
-
-    private List<String> convertImagesToBase64() throws IOException {
-        List<String> base64Images = new ArrayList<>();
-
-        for (Uri imageUri : selectedImageUris) {
-            try (InputStream inputStream = getContentResolver().openInputStream(imageUri)) {
-                if (inputStream == null) {
-                    throw new IOException("Cannot open image stream");
-                }
-
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                if (bitmap == null) {
-                    throw new IOException("Cannot decode image");
-                }
-
-                bitmap = resizeBitmapIfNeeded(bitmap);
-                String base64String = bitmapToBase64(bitmap);
-                base64Images.add(base64String);
-                bitmap.recycle();
-            }
-        }
-
-        return base64Images;
-    }
-
-    private Bitmap resizeBitmapIfNeeded(Bitmap bitmap) {
-        int maxDimension = 1024;
-
-        if (bitmap.getWidth() <= maxDimension && bitmap.getHeight() <= maxDimension) {
-            return bitmap;
-        }
-
-        float ratio = Math.min(
-                (float) maxDimension / bitmap.getWidth(),
-                (float) maxDimension / bitmap.getHeight()
-        );
-
-        int newWidth = Math.round(bitmap.getWidth() * ratio);
-        int newHeight = Math.round(bitmap.getHeight() * ratio);
-
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-    }
-
-    private String bitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
-        byte[] byteArray = outputStream.toByteArray();
-
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            // Silent error handling
-        }
-
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        submitToFirestore(selectedImageBase64List);
     }
 
     private void submitToFirestore(List<String> base64Images) {
@@ -404,16 +330,27 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         submitButton.setVisibility(View.GONE);
         selectedImagesContainer.setVisibility(View.GONE);
         submissionTitleTextView.setText("Assignment Submitted");
+
+        Toast.makeText(this, "Assignment submitted successfully!", Toast.LENGTH_LONG).show();
     }
 
     private void handleSubmissionFailure(Exception e) {
         showLoading(false);
+        Toast.makeText(this, "Failed to submit assignment. Please try again.", Toast.LENGTH_LONG).show();
     }
 
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         submitButton.setEnabled(!show);
         selectImagesButton.setEnabled(!show);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (imageService != null) {
+            imageService.onDestroy();
+        }
     }
 
     private class SelectedImagesAdapter extends RecyclerView.Adapter<SelectedImagesAdapter.ImageViewHolder> {
@@ -428,13 +365,13 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-            Uri imageUri = selectedImageUris.get(position);
-            holder.bind(imageUri, position);
+            String base64Image = selectedImageBase64List.get(position);
+            holder.bind(base64Image, position);
         }
 
         @Override
         public int getItemCount() {
-            return selectedImageUris.size();
+            return selectedImageBase64List.size();
         }
 
         class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -447,26 +384,32 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
                 removeButton = itemView.findViewById(R.id.removeImageButton);
             }
 
-            public void bind(Uri imageUri, int position) {
-                loadImageIntoView(imageUri);
+            public void bind(String base64Image, int position) {
+                loadImageIntoView(base64Image);
                 setupRemoveButton(position);
             }
 
-            private void loadImageIntoView(Uri imageUri) {
+            private void loadImageIntoView(String base64Image) {
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                    imageView.setImageBitmap(bitmap);
-                } catch (IOException e) {
+                    // Use ImageService for consistent base64 to bitmap conversion
+                    Bitmap bitmap = ImageService.base64ToBitmap(base64Image);
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                    } else {
+                        imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+                    }
+                } catch (Exception e) {
                     imageView.setImageResource(android.R.drawable.ic_menu_gallery);
                 }
             }
 
             private void setupRemoveButton(int position) {
                 removeButton.setOnClickListener(v -> {
-                    selectedImageUris.remove(position);
+                    selectedImageBase64List.remove(position);
                     notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, selectedImageUris.size());
+                    notifyItemRangeChanged(position, selectedImageBase64List.size());
                     updateUIState();
+                    Toast.makeText(SubmitAssignmentActivity.this, "Image removed", Toast.LENGTH_SHORT).show();
                 });
             }
         }

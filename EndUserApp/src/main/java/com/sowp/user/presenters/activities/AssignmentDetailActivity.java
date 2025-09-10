@@ -2,9 +2,7 @@ package com.sowp.user.presenters.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +27,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.sowp.user.R;
 import com.sowp.user.models.AssignmentAttempt;
 import com.sowp.user.repositories.UserRepository;
+import com.sowp.user.services.ImageService;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 
@@ -391,7 +390,8 @@ public class AssignmentDetailActivity extends AppCompatActivity {
 
     private void loadSingleImage(String base64Image, int imageIndex, boolean isLast) {
         try {
-            Bitmap bitmap = decodeBase64ToBitmap(base64Image);
+            // Use ImageService for consistent base64 to bitmap conversion
+            Bitmap bitmap = ImageService.base64ToBitmap(base64Image);
             runOnUiThread(() -> {
                 handleImageLoadResult(bitmap, imageIndex, isLast);
             });
@@ -402,11 +402,6 @@ public class AssignmentDetailActivity extends AppCompatActivity {
                 if (isLast) imageLoadingProgress.setVisibility(View.GONE);
             });
         }
-    }
-
-    private Bitmap decodeBase64ToBitmap(String base64Image) {
-        byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     private void handleImageLoadResult(Bitmap bitmap, int imageIndex, boolean isLast) {
