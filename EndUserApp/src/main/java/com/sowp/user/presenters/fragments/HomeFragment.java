@@ -1,5 +1,6 @@
 package com.sowp.user.presenters.fragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -103,6 +105,27 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         loadUserData();
         loadDashboardData();
         setupClickListeners();
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle("Exit App")
+                                    .setMessage("Do you really want to exit the app?")
+                                    .setPositiveButton("Exit", (dialog, which) -> {
+                                        requireActivity().finishAffinity();
+                                        // finishAffinity() closes all activities
+                                    })
+                                    .setNegativeButton("Cancel", (dialog, which) -> {
+                                        dialog.dismiss(); // just close dialog
+                                    })
+                                    .show();
+                    }
+                }
+        );
+
         return view;
     }
 
