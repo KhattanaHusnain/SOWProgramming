@@ -1,5 +1,6 @@
 package com.sowp.user.presenters.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -90,8 +91,6 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this, AboutActivity.class));
             else if(item.getItemId()==R.id.settings)
                 startActivity(new Intent(this, SettingsActivity.class));
-            else if(item.getItemId()==R.id.chatbot) {
-            }
             else if(item.getItemId()==R.id.logout) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(this, Authentication.class));
@@ -217,6 +216,7 @@ public class Main extends AppCompatActivity {
         dialog.show();
     }
 
+    @SuppressLint({"GestureBackNavigation", "MissingSuperCall"})
     @Override
     public void onBackPressed() {
         if(currentFragment instanceof HomeFragment) {

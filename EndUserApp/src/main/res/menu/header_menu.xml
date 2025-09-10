@@ -4,10 +4,7 @@
         android:id="@+id/settings"
         android:title="Settings"
         android:icon="@drawable/ic_settings" />
-    <item
-        android:id="@+id/chatbot"
-        android:title="Chatbot"
-        android:icon="@drawable/ic_chat" />
+
     <item
         android:id="@+id/about"
         android:title="About"
