@@ -80,9 +80,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
         private final TextView topicOrder;
         private final TextView topicCreatedDate;
         private final TextView topicViews;
-        private final TextView topicTags;
         private final View videoIndicator;
-        private final MaterialCardView cardView;
 
         TopicViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,9 +89,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
             topicOrder = itemView.findViewById(R.id.topic_order);
             topicCreatedDate = itemView.findViewById(R.id.topic_created_date);
             topicViews = itemView.findViewById(R.id.topic_views);
-            topicTags = itemView.findViewById(R.id.topic_tags);
             videoIndicator = itemView.findViewById(R.id.video_indicator);
-            cardView = (MaterialCardView) itemView;
         }
 
         public void bind(Topic topic, Context context, UserRepository userRepository, OnTopicClickListener clickListener) {
@@ -110,7 +106,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
             topicDescription.setText(topic.getDescription() != null ? topic.getDescription() : "No description available");
 
             // Set lesson order
-            topicOrder.setText("Lesson " + topic.getOrderIndex());
+            topicOrder.setText(String.valueOf(topic.getOrderIndex()));
 
             // Format creation date
             setupCreationDate(topic);
@@ -120,8 +116,6 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
                 topicViews.setText(String.valueOf(topic.getViews()));
             }
 
-            // Setup tags
-            setupTags(topic);
         }
 
         private void setupCreationDate(Topic topic) {
@@ -136,17 +130,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.Topi
             }
         }
 
-        private void setupTags(Topic topic) {
-            if (topicTags != null) {
-                String tags = topic.getTags();
-                if (tags != null && !tags.trim().isEmpty()) {
-                    topicTags.setText(tags);
-                    topicTags.setVisibility(View.VISIBLE);
-                } else {
-                    topicTags.setVisibility(View.GONE);
-                }
-            }
-        }
+
 
         private void setupVideoIndicator(Topic topic) {
             if (videoIndicator != null) {

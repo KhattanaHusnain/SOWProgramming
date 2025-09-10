@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.sowp.user.R;
 import com.sowp.user.repositories.TopicRepository;
 import com.sowp.user.repositories.UserRepository;
@@ -24,7 +25,6 @@ import com.sowp.user.adapters.TopicListAdapter;
 import com.sowp.user.models.Topic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TopicList extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class TopicList extends AppCompatActivity {
     private TextView pageInfo;
     private MaterialButton btnPrevious, btnNext;
     private TextInputEditText searchEditText;
-    private Spinner categorySpinner, semesterSpinner;
+    private Spinner categorySpinner;
     private Toolbar toolbar;
 
     // Data and Repository
@@ -45,7 +45,7 @@ public class TopicList extends AppCompatActivity {
     private TopicRepository topicRepository;
     private UserRepository userRepository;
     private int courseId;
-    private String[] topicCategories;
+    private List<String> topicCategories = new ArrayList<>();
 
     // Topic lists
     private List<Topic> allTopics = new ArrayList<>();
@@ -60,7 +60,6 @@ public class TopicList extends AppCompatActivity {
     // Filter states
     private String currentSearchQuery = "";
     private String selectedCategory = "All Categories";
-    private String selectedSemester = "All Semesters";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +80,16 @@ public class TopicList extends AppCompatActivity {
     private void extractIntentData() {
         courseId = getIntent().getIntExtra("courseID", 0);
 
-        String categoriesString = getIntent().getStringExtra("topicCategories");
-        if (categoriesString != null && !categoriesString.isEmpty()) {
-            topicCategories = categoriesString.split(",");
-            // Trim whitespace
-            for (int i = 0; i < topicCategories.length; i++) {
-                topicCategories[i] = topicCategories[i].trim();
-            }
-        } else {
-            topicCategories = new String[0];
-        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Course")
+                .document(String.valueOf(courseId))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        topicCategories = (List<String>) task.getResult().get("topicCategories");
+                        setupCategoryFilter();
+                    }
+                });
     }
 
     private void initializeUI() {
@@ -99,7 +98,6 @@ public class TopicList extends AppCompatActivity {
         setupRecyclerView();
         setupPagination();
         setupSearch();
-        setupFilters();
     }
 
     private void findViews() {
@@ -112,7 +110,6 @@ public class TopicList extends AppCompatActivity {
         btnNext = findViewById(R.id.btnNext);
         searchEditText = findViewById(R.id.searchEditText);
         categorySpinner = findViewById(R.id.categorySpinner);
-        semesterSpinner = findViewById(R.id.semesterSpinner);
     }
 
     private void setupToolbar() {
@@ -169,10 +166,6 @@ public class TopicList extends AppCompatActivity {
         });
     }
 
-    private void setupFilters() {
-        setupCategoryFilter();
-        setupSemesterFilter();
-    }
 
     private void setupCategoryFilter() {
         List<String> categories = createCategoryList();
@@ -198,34 +191,10 @@ public class TopicList extends AppCompatActivity {
 
     private List<String> createCategoryList() {
         List<String> categories = new ArrayList<>();
-        categories.add("All Categories");
-        categories.addAll(Arrays.asList(topicCategories));
+        categories.addAll(topicCategories);
         return categories;
     }
 
-    private void setupSemesterFilter() {
-        List<String> semesters = new ArrayList<>();
-        semesters.add("All Semesters");
-
-        ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, semesters);
-        semesterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        semesterSpinner.setAdapter(semesterAdapter);
-
-        semesterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String newSemester = (String) parent.getItemAtPosition(position);
-                if (!newSemester.equals(selectedSemester)) {
-                    selectedSemester = newSemester;
-                    applyFiltersAndSearch();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
 
     private void loadTopics() {
         if (isLoading) return;
@@ -255,7 +224,6 @@ public class TopicList extends AppCompatActivity {
     private void handleTopicsLoadSuccess(List<Topic> topics) {
         allTopics.clear();
         allTopics.addAll(topics);
-        updateSemesterFilter();
         applyFiltersAndSearch();
         setLoadingState(false);
     }
@@ -265,26 +233,6 @@ public class TopicList extends AppCompatActivity {
         showEmptyState(true);
     }
 
-    private void updateSemesterFilter() {
-        List<String> semesters = extractSemestersFromTopics();
-        ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, semesters);
-        semesterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        semesterSpinner.setAdapter(semesterAdapter);
-    }
-
-    private List<String> extractSemestersFromTopics() {
-        List<String> semesters = new ArrayList<>();
-        semesters.add("All Semesters");
-
-        for (Topic topic : allTopics) {
-            String semester = topic.getSemester();
-            if (semester != null && !semester.isEmpty() && !semesters.contains(semester)) {
-                semesters.add(semester);
-            }
-        }
-        return semesters;
-    }
 
     private void applyFiltersAndSearch() {
         filteredTopics.clear();
@@ -300,8 +248,7 @@ public class TopicList extends AppCompatActivity {
 
     private boolean topicMatchesAllFilters(Topic topic) {
         return matchesSearchQuery(topic) &&
-                matchesCategoryFilter(topic) &&
-                matchesSemesterFilter(topic);
+                matchesCategoryFilter(topic);
     }
 
     private boolean matchesSearchQuery(Topic topic) {
@@ -321,11 +268,7 @@ public class TopicList extends AppCompatActivity {
                 topic.getCategories().toLowerCase().contains(selectedCategory.toLowerCase());
     }
 
-    private boolean matchesSemesterFilter(Topic topic) {
-        if (selectedSemester.equals("All Semesters")) return true;
 
-        return selectedSemester.equals(topic.getSemester());
-    }
 
     private void resetPaginationAndDisplay() {
         currentPage = 0;
@@ -464,10 +407,8 @@ public class TopicList extends AppCompatActivity {
     public void clearFilters() {
         searchEditText.setText("");
         categorySpinner.setSelection(0);
-        semesterSpinner.setSelection(0);
         currentSearchQuery = "";
         selectedCategory = "All Categories";
-        selectedSemester = "All Semesters";
         applyFiltersAndSearch();
     }
 

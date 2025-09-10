@@ -26,117 +26,92 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content Container -->
-    <RelativeLayout
+    <!-- Filters and Search Container -->
+    <LinearLayout
+        android:id="@+id/filtersContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/white"
+        android:elevation="2dp">
 
-        <!-- Filters and Search Container -->
-        <LinearLayout
-            android:id="@+id/filtersContainer"
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@color/white"
-            android:elevation="2dp">
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/primary"
+            app:startIconTint="@color/gray_medium"
+            app:endIconTint="@color/gray_medium">
 
-            <!-- Search Bar -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchLayout"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
-                app:startIconTint="@color/gray_medium"
-                app:endIconTint="@color/gray_medium">
+                android:hint="Search topics..."
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:background="@drawable/search_background"
+                android:backgroundTint="@color/surface"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/gray_medium"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint"
+                android:inputType="text" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/searchEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Search topics..."
-                    android:drawableStart="@android:drawable/ic_menu_search"
-                    android:background="@drawable/search_background"
-                    android:backgroundTint="@color/surface"
-                    android:drawablePadding="12dp"
-                    android:drawableTint="@color/gray_medium"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_hint"
-                    android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
+        <!-- Filter Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <!-- Filter Row -->
+            <!-- Category Filter -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
 
-                <!-- Category Filter -->
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="vertical">
+                    android:text="Category"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Category"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="4dp" />
-
-                    <Spinner
-                        android:id="@+id/categorySpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/card_background"
-                        android:backgroundTint="@color/gray_light"
-                        android:padding="8dp" />
-
-                </LinearLayout>
-
-                <!-- Semester Filter -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Semester"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="4dp" />
-
-                    <Spinner
-                        android:id="@+id/semesterSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/card_background"
-                        android:backgroundTint="@color/gray_light"
-                        android:padding="8dp" />
-
-                </LinearLayout>
+                <Spinner
+                    android:id="@+id/categorySpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/card_background"
+                    android:backgroundTint="@color/gray_light"
+                    android:padding="8dp" />
 
             </LinearLayout>
 
+
         </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Content Container with RecyclerView -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/filtersContainer"
             android:layout_above="@id/paginationLayout"
             android:padding="8dp"
             android:clipToPadding="false"
